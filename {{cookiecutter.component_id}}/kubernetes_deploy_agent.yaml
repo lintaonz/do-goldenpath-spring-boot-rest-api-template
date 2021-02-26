@@ -1,0 +1,9 @@
+spec:
+  containers:
+    - name: helm
+      image: twgorg/do-jenkinsk8sagent:helm3.1.1baseimage
+      command:
+        - cat
+      tty: true
+  imagePullSecrets:
+    - name: regsecret

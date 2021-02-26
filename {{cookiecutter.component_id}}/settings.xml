@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </releases>
+                    <id>central</id>
+                    <name>central</name>
+                    <url>https://nexus-dev-aws.twg.co.nz/repository/maven-public</url>
+                </repository>
+            </repositories>
+            <id>warehouse</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>warehouse</activeProfile>
+    </activeProfiles>
+    <servers>
+        <server>
+            <username>developer</username>
+            <password>developer123</password>
+            <id>central</id>
+        </server>
+        <server>
+            <id>registry-1.docker.io</id>
+            <username>zjenkinstwg</username>
+            <password>{1zErPyyBRtgHuPhemp2EbQ43xsSKd6xSLOw0f5eMGGo=}</password>
+            <configuration>
+                <email>yamini.kondapaturi@thewarehouse.co.nz</email>
+            </configuration>
+        </server>
+    </servers>
+    <mirrors>
+        <mirror>
+            <id>central</id>
+            <name>use Nexus for all the things</name>
+            <url>https://nexus-dev-aws.twg.co.nz/repository/maven-public</url>
+            <mirrorOf>*</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>

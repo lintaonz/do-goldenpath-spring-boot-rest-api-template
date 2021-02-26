@@ -1,0 +1,37 @@
+apiVersion: backstage.io/v1alpha1
+kind: Template
+metadata:
+  # unique name per namespace for the template
+  name: do-goldenpath-spring-boot-rest-api-template
+  # title of the template
+  title: Golden Path Spring Boot REST API Template
+  # a description of the template
+  description: Build a Golden Path RESTful API with Spring Boot
+  # some tags to display in the frontend
+  tags:
+    - api
+    - goldenpath
+    - java
+    - rest 
+  spec:
+    # which templater key to use in the templaters builder
+    templater: cookiecutter
+    # what does this template create
+    type: service
+    # if the template is not in the same directory as this file, then specify it's location
+    path: '.'
+    # the schema for the from which is displayed in the frontend
+    # it should follow JSON schema for forms: https://jsonforms.io/
+    schema:
+      required:
+        - component_id
+        - description
+      properties:
+        component_id:
+          title: Name
+          type: string
+          description: Unique name of the component
+        description:
+          title: Description
+          type: string
+          description: Description of the component

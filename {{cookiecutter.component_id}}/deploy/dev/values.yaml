@@ -1,0 +1,45 @@
+nameOverride: {{cookiecutter.artifact_id}}
+
+image:
+  repository: 'twgorg/{{cookiecutter.artifact_id}}'
+
+metrics:
+  enabled: true
+
+extraLabels:
+  metrics: prometheus
+
+podAnnotations:
+  co.elastic.logs/enabled: 'true'
+
+replicas: 2
+
+resources:
+  limits:
+    memory: '256Mi'
+    cpu: '100m'
+  requests:
+    memory: '32Mi'
+    cpu: '25m'
+
+containerPort: 8080
+
+ingress:
+  host: 'do-dev.twg.co.nz'
+  prefix: '/{{cookiecutter.artifact_id}}'
+  stripPrefix: false
+
+configmap:
+  enabled: false
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 60
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 60
