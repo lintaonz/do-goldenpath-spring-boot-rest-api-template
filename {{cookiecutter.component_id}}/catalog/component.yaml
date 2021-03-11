@@ -4,12 +4,12 @@ metadata:
   name: "{{cookiecutter.artifact_id}}"
   description: "{{cookiecutter.artifact_id}} Java REST API"
   annotations:
-  backstage.io/techdocs-ref: "bitbucket:https://bitbucket.org/twgnz/{{cookiecutter.artifact_id}}.git"
-  jenkins.io/github-folder: "job/{{cookiecutter.artifact_id}}/job/master"
-  jenkins.io/build-pipeline: "{{cookiecutter.artifact_id}}"
-  jenkins.io/deploy-pipeline: "{{cookiecutter.artifact_id}}-deploy"
-tags:
-  - java
+    backstage.io/techdocs-ref: "bitbucket:https://bitbucket.org/twgnz/{{cookiecutter.artifact_id}}.git"
+    jenkins.io/github-folder: "job/{{cookiecutter.artifact_id}}/job/master"
+    jenkins.io/build-pipeline: "{{cookiecutter.artifact_id}}"
+    jenkins.io/deploy-pipeline: "{{cookiecutter.artifact_id}}-deploy"
+  tags:
+    - java
 spec:
   type: service
   lifecycle: experimental
