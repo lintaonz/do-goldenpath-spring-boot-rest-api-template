@@ -10,4 +10,4 @@ spec:
   lifecycle: experimental
   owner: {{cookiecutter.owner}}
   definition: |
-    $yaml: src/main/resouces/{{cookiecutter.artifact_id}}-api.yaml
+    $yaml: https://bitbucket.org/twgnz/{{cookiecutter.component_id}}/src/master/src/main/resources/api/{{cookiecutter.component_id}}-api.yaml
