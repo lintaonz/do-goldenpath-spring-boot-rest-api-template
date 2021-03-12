@@ -9,5 +9,5 @@ spec:
   type: openapi
   lifecycle: experimental
   owner: {{cookiecutter.owner}}
-  definition: |
-    $yaml: https://bitbucket.org/twgnz/{{cookiecutter.component_id}}/src/master/src/main/resources/api/{{cookiecutter.component_id}}-api.yaml
+  definition:
+    $text: ../src/main/resources/openapi/{{cookiecutter.artifact_id}}-api.yaml

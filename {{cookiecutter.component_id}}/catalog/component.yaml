@@ -15,4 +15,4 @@ spec:
   lifecycle: experimental
   owner: guest
   implementsApis:
-    - "{{cookiecutter.artifact_id}}-api.yaml"
+    - "{{cookiecutter.artifact_id}}"
