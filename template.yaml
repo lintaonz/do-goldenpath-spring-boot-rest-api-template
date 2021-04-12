@@ -100,7 +100,7 @@ spec:
 
     - id: publish
       name: Publish
-      action: publish:bitbucket
+      action: publish:bitbucket:twgnz-custom
       input:
         allowedHosts: ['bitbucket.org']
         description: 'This is {{ parameters.name }}'
