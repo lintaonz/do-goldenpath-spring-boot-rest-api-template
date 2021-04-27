@@ -36,6 +36,8 @@ spec:
           oneOf:
             - const: "AI"
               title: "AI - Analytics and Insights"
+            - const: "B2B"
+              title: "Salesforce B2B project"
             - const: "DE"
               title: "DE - Salesforce Commerce Cloud (Demandware)"
             - const: "DO"
