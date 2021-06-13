@@ -110,6 +110,13 @@ spec:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
 
+    - id: pipeline
+      name: Pipeline
+      action: publish:jenkins:twgnz-custom
+      input:
+        project: '{{ parameters.project }}'
+        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
+
     - id: register
       name: Register
       action: catalog:register
