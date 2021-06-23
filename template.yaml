@@ -28,6 +28,10 @@ spec:
         org:
           title: Organization
           type: string
+          description: Bitbucket organization workspace
+          oneOf:
+            - const: "twgnz"
+              title: "TWGNZ"
         project:
           title: Project
           type: string
