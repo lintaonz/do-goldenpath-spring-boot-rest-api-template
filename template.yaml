@@ -60,6 +60,8 @@ spec:
               title: "ISOC - IS Operations cloud Squad"
             - const: "LOYAL"
               title: "LOYAL - Loyalty"
+            - const: "LPA"
+              title: "LPA - Loyalty, Payment and Advisory"
             - const: "MDM"
               title: "MDM - Master Data Management"
             - const: "MER"
