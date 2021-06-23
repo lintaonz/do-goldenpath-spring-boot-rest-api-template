@@ -82,6 +82,7 @@ spec:
       required:
         - name
         - description
+        - owner
       properties:
         name:
           title: Unique name of the component
@@ -89,6 +90,14 @@ spec:
         description:
           title: Description for the component
           type: string
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
@@ -99,7 +108,7 @@ spec:
         url: ./template
         values:
           component_id: '{{ parameters.name }}'
-          owner: '{{ parameters.org }}'
+          owner: '{{ parameters.owner }}'
           # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
           artifact_id: '\{{ cookiecutter.component_id }}'
           java_package_name: '\{{ cookiecutter.component_id|replace("-", "") }}'
