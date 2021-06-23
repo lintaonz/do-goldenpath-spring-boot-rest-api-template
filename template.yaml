@@ -31,7 +31,7 @@ spec:
           description: Bitbucket organization workspace
           oneOf:
             - const: "twgnz"
-              title: "TWGNZ"
+              title: "TWGNZ - The Warehouse Group"
         project:
           title: Project
           type: string
