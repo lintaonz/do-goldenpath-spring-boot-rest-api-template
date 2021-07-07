@@ -46,6 +46,8 @@ spec:
               title: "DE - Salesforce Commerce Cloud (Demandware)"
             - const: "DO"
               title: "DO - Devops"
+            - const: "ERPFI"
+              title: "ERPFI - Enterprise Resource Planning Financials"
             - const: "ESB"
               title: "ESB - Enterprise Service Bus"
             - const: "FF"
