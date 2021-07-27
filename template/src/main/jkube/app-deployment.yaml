@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: EPAY_URL
+              value: http://localhost:8090
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://localhost:5432/mydb
+            - name: SPRING_DATASOURCE_USERNAME
+              value: myuser
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: mypassword
+          image: twgorg/${project.artifactId}:${project.version}
+          ports:
+            - containerPort: 8080
+            - containerPort: 8050
+          livenessProbe:
+            failureThreshold: 24
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8050
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            periodSeconds: 5
+          readinessProbe:
+            failureThreshold: 24
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8050
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            periodSeconds: 5
+          securityContext:
+            privileged: false
+        - name: wiremock
+          image: rodolpheche/wiremock:2.27.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8090
+            - containerPort: 8443
+          args: ["/bin/sh", "-c", "java $JAVA_OPTS -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8090"]
+        - name: postgres
+          image: postgres:12-alpine
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: mypassword
+            - name: POSTGRES_DB
+              value: mydb

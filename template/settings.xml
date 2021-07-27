@@ -28,14 +28,6 @@
             <password>developer123</password>
             <id>central</id>
         </server>
-        <server>
-            <id>registry-1.docker.io</id>
-            <username>zjenkinstwg</username>
-            <password>{1zErPyyBRtgHuPhemp2EbQ43xsSKd6xSLOw0f5eMGGo=}</password>
-            <configuration>
-                <email>yamini.kondapaturi@thewarehouse.co.nz</email>
-            </configuration>
-        </server>
     </servers>
     <mirrors>
         <mirror>

@@ -1,0 +1,97 @@
+apiVersion: backstage.io/v1beta2
+kind: Template
+metadata:
+  # unique name per namespace for the template
+  name: do-goldenpath-spring-boot-rest-api-template3
+  # title of the template
+  title: Golden Path Spring Boot REST API 3
+  # a description of the template
+  description: Build a Golden Path RESTful API with Spring Boot
+  # some tags to display in the frontend
+  tags:
+    - api
+    - goldenpath
+    - java
+    - rest
+spec:
+  owner: devops
+  type: service
+  # if the template is not in the current directory where this definition is kept then specify
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPickerBitbucketCloud
+          ui:options:
+            allowedHosts:
+              - bitbucket.org
+    - title: Fill in component details
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+
+
+
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:cookiecutter
+      input:
+        url: ./template
+        values:
+          component_id: '{{ parameters.name }}'
+          owner: '{{ parameters.owner }}'
+          # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
+          artifact_id: '\{{ cookiecutter.component_id }}'
+          java_package_name: '\{{ cookiecutter.component_id|replace("-", "") }}'
+          description: 'We promise to update this description \{{cookiecutter.owner}}'
+          http_port: 8080
+
+    - id: publish
+      name: Publish
+      action: publish:bitbucket
+      input:
+        allowedHosts: ['bitbucket.org']
+        description: 'This is {{ parameters.name }}'
+        repoUrl: '{{ parameters.repoUrl }}'
+        # org: '{{ parameters.org }}'
+        # project: '{{ parameters.project }}'
+        # repo: '{{ parameters.name }}'
+        
+        #project: '{{ parameters.project }}'
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    remoteUrl: '{{ steps.publish.output.remoteUrl }}'
+    entityRef: '{{ steps.register.output.entityRef }}'

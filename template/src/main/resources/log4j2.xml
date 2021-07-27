@@ -2,7 +2,7 @@
 <Configuration status="DEBUG">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <EcsLayout serviceName="my-app"/>
+            <EcsLayout serviceName="{{cookiecutter.artifact_id}}"/>
                 <KeyValuePair key="ecs.version" value="1.4.0"/>
         </Console>
     </Appenders>
