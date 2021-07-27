@@ -31,11 +31,11 @@ ingress:
 
 resources:
   limits:
-    memory: '384Mi'
-    cpu: '250m'
+    memory: '512Mi'
+    cpu: '400m'
   requests:
     memory: '256Mi'
-    cpu: '125m'
+    cpu: '250m'
 
 serviceAccount:
   # Specifies whether a service account should be created
