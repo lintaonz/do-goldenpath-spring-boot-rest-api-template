@@ -29,11 +29,10 @@ ingress:
   tls:
     enabled: true
 
-
 resources:
   limits:
-    memory: '250m'
-    cpu: '384Mi'
+    memory: '384Mi'
+    cpu: '250m'
   requests:
     memory: '256Mi'
     cpu: '125m'
