@@ -84,7 +84,7 @@ pipeline {
             }
             if ("${env.BRANCH_NAME}" == 'master') {
               print "Pushing docker image for master branch"
-              sh "docker push ${serviceName}:${env.GIT_COMMIT}"
+              sh "docker push twgorg/${serviceName}:${env.GIT_COMMIT}"
             }
           }
         }

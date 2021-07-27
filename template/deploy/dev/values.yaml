@@ -1,10 +1,12 @@
 nameOverride: {{cookiecutter.artifact_id}}
+# use command line parameter in pipeline to keep it dynamic per build
+#appVersion: someVersionForApplication
 
 image:
   repository: 'twgorg/{{cookiecutter.artifact_id}}'
+  # tag: use appVersion
 
-metrics:
-  enabled: true
+replicas: 1
 
 extraLabels:
   metrics: prometheus
@@ -12,34 +14,85 @@ extraLabels:
 podAnnotations:
   co.elastic.logs/enabled: 'true'
 
-replicas: 2
+  # product group in elasticsearch to provide same lifecycle policies and patterns
+  twg.elastic.logs/product: "{{cookiecutter.prefix}}"
+podLabels:
+
+extraEnvs:
+  - name: ENV
+    value: dev
+
+ingress:
+  host: '/{{cookiecutter.prefix}}-dev-aks.twg.co.nz'
+  prefix: '/{{cookiecutter.artifact_id}}'
+  stripPrefix: true
+  tls:
+    enabled: true
+
 
 resources:
   limits:
-    memory: '256Mi'
-    cpu: '100m'
+    memory: '250m'
+    cpu: '384Mi'
   requests:
-    memory: '32Mi'
-    cpu: '25m'
+    memory: '256Mi'
+    cpu: '125m'
 
-containerPort: 8080
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-ingress:
-  host: 'do-dev.twg.co.nz'
-  prefix: '/{{cookiecutter.artifact_id}}'
-  stripPrefix: false
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
 
 configmap:
   enabled: false
 
-livenessProbe:
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 60
+metrics:
+  enabled: true
 
+livenessProbe:
+  enabled: true
+  override:
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8050
+    failureThreshold: 5
+    initialDelaySeconds: 180
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
 readinessProbe:
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 60
+  enabled: true
+  override:
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8050
+    failureThreshold: 5
+    initialDelaySeconds: 180
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
