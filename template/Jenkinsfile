@@ -17,18 +17,6 @@ def namespaceProd = '{{cookiecutter.prefix}}-prod'
 def docker_registry_url = 'https://index.docker.io/v1/'
 def docker_registry_cred_id = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
 
-def kubernetes_build_agent = """
-spec:
-  containers:
-  - name: build
-    image: twgorg/ff-build:latest
-    command:
-    - cat
-    tty: true
-  imagePullSecrets:
-  - name: regsecret
-"""
-
 def kubernetes_deploy_agent = """
 spec:
   containers:
