@@ -23,7 +23,7 @@ extraEnvs:
     value: dev
 
 ingress:
-  host: '/{{cookiecutter.prefix}}-dev-aks.twg.co.nz'
+  host: '{{cookiecutter.prefix}}-dev-aks.twg.co.nz'
   prefix: '/{{cookiecutter.artifact_id}}'
   stripPrefix: true
   tls:

@@ -23,7 +23,7 @@ extraEnvs:
     value: test
 
 ingress:
-  host: '/{{cookiecutter.prefix}}-test-aks.twg.co.nz'
+  host: '{{cookiecutter.prefix}}-test-aks.twg.co.nz'
   prefix: '/{{cookiecutter.artifact_id}}'
   stripPrefix: true
   tls:
