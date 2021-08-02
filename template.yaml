@@ -15,7 +15,7 @@ metadata:
     - rest
 spec:
   owner: devops
-  type: service
+  type: microservice
   # if the template is not in the current directory where this definition is kept then specify
 
   # these are the steps which are rendered in the frontend with the form input
