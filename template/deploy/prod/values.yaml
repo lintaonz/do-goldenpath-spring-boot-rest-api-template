@@ -67,7 +67,7 @@ livenessProbe:
   enabled: true
   override:
     httpGet:
-      path: /actuator/health/liveness
+      path: /health/liveness
       port: 8050
     failureThreshold: 5
     initialDelaySeconds: 180
@@ -78,7 +78,7 @@ readinessProbe:
   enabled: true
   override:
     httpGet:
-      path: /actuator/health/readiness
+      path: /health/readiness
       port: 8050
     failureThreshold: 5
     initialDelaySeconds: 180
