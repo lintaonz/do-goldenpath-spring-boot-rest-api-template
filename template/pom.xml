@@ -54,22 +54,27 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-      </plugin>
-      <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
         <version>5.2.0</version>
         <executions>
           <execution>
             <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/openapi/openapi-spec.yaml
-              </inputSpec>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/openapi-spec.yaml</inputSpec>
+              <output>${project.basedir}</output>
               <generatorName>spring</generatorName>
-              <apiPackage>nz.co.twg.{{cookiecutter.java_package_name}}.api</apiPackage>
-              <modelPackage>nz.co.twg.{{cookiecutter.java_package_name}}.model</modelPackage>
+              <configOptions>
+                <sourceFolder>src/gen/java</sourceFolder>
+                <basePackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi</basePackage>
+                <apiPackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi.api</apiPackage>
+                <modelPackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi.model</modelPackage>
+                <delegatePattern>true</delegatePattern>
+                <interfaceOnly>true</interfaceOnly>
+                <skipDefaultInterface>true</skipDefaultInterface>
+              </configOptions>
+              <generateApiTests>false</generateApiTests>
+              <generateModelTests>false</generateModelTests>
+              <generateSupportingFiles>false</generateSupportingFiles>
             </configuration>
             <goals>
               <goal>generate</goal>
@@ -92,10 +97,10 @@
                 <arg>-XautoNameResolution</arg>
               </args>
               <schemaLanguage>WSDL</schemaLanguage>
-              <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.model.jaxb</generatePackage>
-              <generateDirectory>${project.basedir}/target/generated-sources/jaxb2-wsdl/src/main/java
+              <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.wsdl</generatePackage>
+              <generateDirectory>${project.basedir}/src/gen/java
               </generateDirectory>
-              <schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
+              <schemaDirectory>${project.basedir}/src/main/resources/wsdl</schemaDirectory>
               <schemaIncludes>
                 <include>*.wsdl</include>
               </schemaIncludes>
@@ -110,10 +115,10 @@
               <args>
                 <arg>-XautoNameResolution</arg>
               </args>
-              <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.jaxb.custom</generatePackage>
-              <generateDirectory>${project.basedir}/target/generated-sources/jaxb2-xsd/src/main/java
+              <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.xsd</generatePackage>
+              <generateDirectory>${project.basedir}/src/gen/java
               </generateDirectory>
-              <schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
+              <schemaDirectory>${project.basedir}/src/main/resources/xsd</schemaDirectory>
               <schemaIncludes>
                 <include>*.xsd</include>
               </schemaIncludes>
@@ -126,6 +131,56 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M5</version>
       </plugin>
+            <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/resources/sdem</sourceDirectory>
+                    <outputDirectory>${project.basedir}/src/gen/java</outputDirectory>
+                    <targetPackage>nz.co.twg.{{cookiecutter.java_package_name}}.sdem</targetPackage>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.4.2.Final</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/gen/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -229,7 +284,7 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
-      <version>1.2.32</version>
+      <version>1.5.10</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
     <dependency>
@@ -420,13 +475,18 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.4.5</version>
+      <version>3.5.7</version>
     </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
-    </dependency>
+      <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.4.2.Final</version>
+        </dependency>
   </dependencies>
 
   <profiles>
