@@ -2,11 +2,11 @@ apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
   # unique name per namespace for the template
-  name: do-goldenpath-spring-boot-rest-api-template2
+  name: do-goldenpath-spring-boot-rest-api-template 2 - testing
   # title of the template
-  title: Golden Path Spring Boot REST API Template2
+  title: Golden Path Spring Boot REST API Template 2 - testing
   # a description of the template
-  description: Build a Golden Path RESTful API with Spring Boot
+  description: Just for testing purposes
   # some tags to display in the frontend
   tags:
     - api
@@ -15,50 +15,82 @@ metadata:
     - rest
 spec:
   owner: devops
-  type: service
+  type: microservice
   # if the template is not in the current directory where this definition is kept then specify
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Choose a location
+    - title: Choose Bitbucket Project
       required:
-        - repoUrl
+        - org
+        - project
       properties:
-        repoUrl:
-          title: Repository Location
+        org:
+          title: Organization
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-              - gitlab.com
-              - dev.azure.com
-              - bitbucket.org
-              - custom.bitbucket.com
-    - title: Fill in component details
+          description: Bitbucket organization workspace
+          oneOf:
+            - const: "twgnz"
+              title: "TWGNZ - The Warehouse Group"
+        project:
+          title: Project
+          type: string
+          description: Bitbucket project name
+          ui:autofocus: true
+          oneOf:
+            - const: "AI"
+              title: "AI - Analytics and Insights"
+            - const: "B2B"
+              title: "B2B - Salesforce B2B project"
+            - const: "DE"
+              title: "DE - Salesforce Commerce Cloud (Demandware)"
+            - const: "DO"
+              title: "DO - Devops"
+            - const: "ERPFI"
+              title: "ERPFI - Enterprise Resource Planning Financials"
+            - const: "ESB"
+              title: "ESB - Enterprise Service Bus"
+            - const: "FF"
+              title: "FF - Fulfillment"
+            - const: "GEP"
+              title: "GEP - Salesforce Group eCommerce Platform"
+            - const: "IHUB"
+              title: "IHUB - Integration Hub"
+            - const: "IN"
+              title: "IN - In-house apps"
+            - const: "INTEG"
+              title: "INTEG - Integration"
+            - const: "IS"
+              title: "IS - Infrastructure"
+            - const: "ISOC"
+              title: "ISOC - IS Operations cloud Squad"
+            - const: "LOYAL"
+              title: "LOYAL - Loyalty"
+            - const: "LPA"
+              title: "LPA - Loyalty, Payment and Advisory"
+            - const: "MDM"
+              title: "MDM - Master Data Management"
+            - const: "MER"
+              title: "MER - Merch"
+            - const: "MOB"
+              title: "MOB - TWL & NL App"
+            - const: "QA"
+              title: "QA"
+            - const: "SS"
+              title: "SS - Store Services"
+            - const: "WMS"
+              title: "WMS"
+    - title: Provide Component Details
       required:
         - name
-        - owner
+        - description
       properties:
         name:
-          title: Name
+          title: Unique name of the component
           type: string
-          description: Unique name of the component
-          ui:autofocus: true
-          ui:options:
-            rows: 5
-        owner:
-          title: Owner
+        description:
+          title: Description for the component
           type: string
-          description: Owner of the component
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
-
-
-
-
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
@@ -69,25 +101,31 @@ spec:
         url: ./template
         values:
           component_id: '{{ parameters.name }}'
-          owner: '{{ parameters.owner }}'
+          project: '{{ parameters.project }}'
+          description: '{{ parameters.description }}'
           # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
+          prefix: '\{{ cookiecutter.project|lower }}'
+          owner: '\{{ cookiecutter.project|lower }}-team'
           artifact_id: '\{{ cookiecutter.component_id }}'
           java_package_name: '\{{ cookiecutter.component_id|replace("-", "") }}'
-          description: 'We promise to update this description \{{cookiecutter.owner}}'
           http_port: 8080
 
     - id: publish
       name: Publish
-      action: publish:bitbucketcloud
+      action: publish:bitbucket:twgnz-custom
       input:
         allowedHosts: ['bitbucket.org']
         description: 'This is {{ parameters.name }}'
-        repoUrl: '{{ parameters.repoUrl }}'
-        # org: '{{ parameters.org }}'
-        # project: '{{ parameters.project }}'
-        # repo: '{{ parameters.name }}'
-        
-        #project: '{{ parameters.project }}'
+        org: '{{ parameters.org }}'
+        project: '{{ parameters.project }}'
+        repo: '{{ parameters.name }}'
+
+    - id: pipeline
+      name: Pipeline
+      action: publish:jenkins:twgnz-custom
+      input:
+        project: '{{ parameters.project }}'
+        repo: '{{ parameters.name }}'
 
     - id: register
       name: Register
