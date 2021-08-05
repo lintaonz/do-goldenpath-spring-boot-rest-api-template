@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
   # unique name per namespace for the template
-  name: do-goldenpath-spring-boot-rest-api-template 2 - testing
+  name: do-goldenpath-spring-boot-rest-api-template2-testing
   # title of the template
   title: Golden Path Spring Boot REST API Template 2 - testing
   # a description of the template
