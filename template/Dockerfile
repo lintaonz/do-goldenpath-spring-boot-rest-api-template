@@ -1,4 +1,4 @@
-FROM twgorg/twg-base-image-java-11:latest
+FROM twgorg/do-base-image-java-11:latest
 
 ARG artifactId
 ARG artifactVersion
