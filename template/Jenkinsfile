@@ -7,7 +7,7 @@ def serviceName = '{{cookiecutter.artifact_id}}'
 
 // helm chart details
 def chartName = 'do-container-deployment'
-def chartVersion = "0.1.15"
+def chartVersion = "0.1.16"
 
 // namespace details
 def namespaceDev = '{{cookiecutter.prefix}}-dev'
