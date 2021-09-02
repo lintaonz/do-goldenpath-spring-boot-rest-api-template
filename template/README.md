@@ -46,19 +46,6 @@ Notes:
 - The docker application might not be able to use host's NodePort if it is not running as administrator. In that
   case, run your docker application as administrator.
 
-### Sonar scan
-
-You will need to include settings-security.xml file in your `HOME/.m2` directory in order to decrypt token. If you don't have that file you can obtain it from maven-settings-security secret in jenkins namespace.
-
-```shell
-mvn sonar:sonar
-```
-
-To get settings-security.xml:
-```shell
-kubectl -n jenkins get secret maven-settings-security --template='{{ "{{" }} index .data "settings-security.xml" | base64decode {{ "}}" }}' > ~/.m2/settings-security.xml
-```
-
 ### TLDR;
 
 Main problem with running `mvn verify` is that components tests seems to start before API itself is fully loaded resulting in some false postives.
