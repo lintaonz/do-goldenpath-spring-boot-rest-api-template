@@ -10,6 +10,6 @@ COPY target/${artifactId}-${artifactVersion}.jar /app/app.jar
 RUN echo "${artifactId}-${artifactVersion}"
 
 ENV JAVA_OPTS='-XshowSettings:all -XX:NativeMemoryTracking=summary -XX:+PrintFlagsFinal -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80'
-USER twgapplication:twgapplication
+USER application:application
 
 CMD ["java", "-jar", "/app/app.jar"]
