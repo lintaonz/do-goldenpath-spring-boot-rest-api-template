@@ -216,7 +216,7 @@ pipeline {
         expression { BRANCH_NAME == 'master' }
         anyOf {
           expression { return params.DEPLOY_TO_PROD }
-          expression { return isBuildCauseStageRestartFrom('Deploy to Prod', currentBuild)}
+          expression { return isBuildCauseStageRestartFrom('Deploy to Prod & Verify', currentBuild)}
         }
       }
       agent {
