@@ -1,5 +1,5 @@
 {
-    "component_id": "do-temp",
+    "component_id": "do-goldenpath-spring-boot-rest-api",
     "project": "DO",
     "description": "Some description for the component",
     "prefix": "{{ cookiecutter.project|lower }}",

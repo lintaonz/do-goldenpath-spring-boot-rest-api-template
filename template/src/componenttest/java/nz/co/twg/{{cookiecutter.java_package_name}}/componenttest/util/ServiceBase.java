@@ -1,4 +1,4 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}IT;
+package nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import io.restassured.RestAssured;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-public class ServiceBaseIT {
+public class ServiceBase {
   private static DatabaseConfig databaseConfig;
 
   public static DatabaseConfig getDatabaseConfig() {
@@ -77,6 +77,6 @@ public class ServiceBaseIT {
   @AfterAll
   public static void afterAll() throws SQLException
   {
-    ServiceBaseIT.getDatabaseConfig().getConnection().close();
+    ServiceBase.getDatabaseConfig().getConnection().close();
   }
 }

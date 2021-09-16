@@ -1,4 +1,4 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}IT;
+package nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

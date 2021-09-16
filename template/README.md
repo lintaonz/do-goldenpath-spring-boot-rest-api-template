@@ -15,6 +15,8 @@ Now all the hard work is out of the way, you're free to do your thing. Code away
 ## How to test
 
 ### Unit Tests
+
+#### How to run unit tests
 ```shell
 mvn verify
 ```
@@ -23,7 +25,31 @@ This will do the following steps
 - Compile the code
 - Run unit tests
 
-### Integration Tests
+### Component Tests
+
+Component tests are part of the build. To run component tests, you need docker and kubernetes installed on your machine along with java.
+
+The purpose of these tests are to make sure that our end docker image gets tested as a component, and we produce a fully tested component. This is part of our
+`shift left on testing` strategy to build a fast feedback loop. With component tests, we are bringing functional tests in the build stage instead of doing them
+after deployment.
+
+The component tests should test the application using the mocked containerized backends. The application must not connect to live backend systems for
+component testing, only local docker and local kubernetes environment should be used.
+
+The component tests are under `src/componenttest/java` directory. This is to keep them separate from unit tests to maintain separation of concern. the name of test
+files must end with `Test.java` for tests to be picked up for execution.
+
+ The [JKube plugin](https://www.eclipse.org/jkube/docs/kubernetes-maven-plugin) plugin spins up containers in local kubernetes once the application image has been
+ built. The kubernetes manifest files are under `src/componenttest/resources/jkube`. These files specify which containers should run during the component tests e.g.
+if you want to run a wiremock container for mocking http calls or want to run a kafka server container to test against kafka, you need to add them to files in there.
+
+#### How to run component tests
+
+Make sure your local docker and kubernetes are running and have privileges to expose a port - run docker as administrator if possible.
+This is needed for tests to call the application running in your local kubernetes.
+
+`jkube` profile runs the component tests, specify it as `-Pjkube`.
+
 ```shell
 # On windows command prompt
 set KUBECONFIG=%HOME%/.kube/config && mvn verify -Pjkube
@@ -38,8 +64,8 @@ This is will do following steps
 - Run unit tests
 - Build the application jar
 - Build the application docker image using the application jar
-- Deploy the application docker image and other required components to kubernetes e.g. postgres db and wiremock. See `src/java/main/jkube`
-- Run integration tests (These could include component, function, integration and any other tests)
+- Deploy the application docker image and other required components to kubernetes e.g. postgres db and wiremock. See `src/componenttest/resources/jkube`
+- Run component tests
 - Clean up the kubernetes by undeploying the components
 
 Notes:
