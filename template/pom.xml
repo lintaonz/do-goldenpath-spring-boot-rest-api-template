@@ -33,6 +33,7 @@
     <jkube.version>1.1.1</jkube.version>
     <jkube.docker.verbose>true</jkube.docker.verbose>
     <jkube.serviceUrl.waitSeconds>5</jkube.serviceUrl.waitSeconds>
+    <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube</jkube.resourceDir>
   </properties>
 
 <build>
@@ -178,6 +179,31 @@
                                 <source>src/gen/java</source>
                             </sources>
                         </configuration>
+                    </execution>
+                    <execution>
+                      <id>add-test-source</id>
+                      <phase>generate-sources</phase>
+                      <goals>
+                        <goal>add-test-source</goal>
+                      </goals>
+                      <configuration>
+                        <sources>
+                          <source>src/componenttest/java</source>
+                        </sources>
+                      </configuration>
+                    </execution>
+                    <execution>
+                      <id>add-test-resource</id>
+                      <goals>
+                        <goal>add-test-resource</goal>
+                      </goals>
+                      <configuration>
+                        <resources>
+                          <resource>
+                            <directory>src/componenttest/resources</directory>
+                          </resource>
+                        </resources>
+                      </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -498,6 +524,11 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>3.0.0-M5</version>
+            <configuration>
+              <includes>
+                <include>**/componenttest/**/*Test.java</include>
+              </includes>
+            </configuration>
             <executions>
               <execution>
                 <goals>
