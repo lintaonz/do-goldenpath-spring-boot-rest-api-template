@@ -33,10 +33,4 @@ out/
 # Virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-
-# The openapi spec code gets generated in src/gen/java on compile,
-# these files should not be committed to git as they should be generated every time to always
-# maintain consistency with openapi spec and avoid people changing generated code over time manually.
-src/gen/java/
-
 .openapi-generator/
