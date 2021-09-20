@@ -63,6 +63,10 @@ pipeline {
       agent {
         label 'build-agent'
       }
+      environment {
+        NEXUS_CREDS = credentials('do-nexus-credentials')
+        NEXUS_REPO_BASE_URL_ARTIFACTS = "https://nexus-dev-aws.twg.co.nz/repository/jenkins-jobs"
+      }
       steps {
         script {
           withDockerRegistry([credentialsId: docker_registry_cred_id, url: ""]) {
@@ -81,6 +85,7 @@ pipeline {
         always {
           script {
             setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
+            uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
           }
         }
       }
