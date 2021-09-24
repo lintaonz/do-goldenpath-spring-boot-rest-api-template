@@ -144,3 +144,11 @@ mvn test-compile failsafe:integration-test failsafe:verify -P jkube -s ./setting
 # When finished with testing you can remove running pod(s) like this
 mvn k8s:undeploy -P jkube -s ./settings.xml
 ```
+
+## Backstage managed info
+Do not modify this part, it is managed by backstage
+
+```
+Template name: {{cookiecutter.artifact_id}}-template
+Version: 1.0.0
+```
