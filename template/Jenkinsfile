@@ -136,7 +136,7 @@ pipeline {
               sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
               print "Applying helm chart"
-              sh "helm upgrade --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
+              sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
             }
           }
@@ -196,7 +196,7 @@ pipeline {
               sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
               print "Applying helm chart"
-              sh "helm upgrade --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
+              sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
             }
           }
@@ -261,7 +261,7 @@ pipeline {
               sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
               print "Applying helm chart"
-              sh "helm upgrade --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
+              sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
 
             }
           }
