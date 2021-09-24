@@ -239,7 +239,7 @@ pipeline {
             withCredentials([file(credentialsId: 'AKS_prod_cluster_kubeconfig', variable: 'KUBECONFIG')]) {
 
               environment = "prod"
-              namespace = "${namespaceTest}"
+              namespace = "${namespaceProd}"
               chartDownloadDirectory = "./helm-chart-${chartName}-${chartVersion}"
               chartDirectory = "./${chartDownloadDirectory}/${chartName}"
 
