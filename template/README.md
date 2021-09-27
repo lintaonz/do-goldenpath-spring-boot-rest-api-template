@@ -12,6 +12,26 @@ You now have a basic environment that you can build upon
 ## Lets Start
 Now all the hard work is out of the way, you're free to do your thing. Code away!
 
+## Error Prone
+
+The [Error Prone](https://errorprone.info/) tool is employed in order to provide for static analysis of the code.  It will check for a number of common mistakes that developers might make.
+
+Some of the mistakes are classified as errors and in this case the build will fail.  Other mistakes are classified as warnings and in this case, the warnings will be output to the build console.  An abridged example warning might be;
+
+```
+[WARNING] /home/.../src/main/java/nz/.../Application.java:[22,17] [MissingCasesInEnumSwitch] Non-exhaustive switch; either add a default or handle the remaining cases: HAMMER, DRILL
+    (see https://errorprone.info/bugpattern/MissingCasesInEnumSwitch)
+```
+
+Sometimes Error Prone may raise an error or warning incorrectly.  In this case, you can supress it checking a section of code as follows;
+
+```
+@SuppressWarnings("MissingCasesInEnumSwitch")
+public static void main(String[] args) {
+  ...
+}
+```
+
 ## Dependency Convergence
 
 Different [Maven](https://maven.apache.org/) dependencies are employed in a project and these in turn have their own dependencies transitively.  A problem can arise where the same artifact is included via different paths of dependencies more than once.  In this case the versions of those dependencies can be different and so it becomes difficult to tell which version is actually going to be included in the build product.  In addition, small changes in the dependencies of the project at the top level can swap the version of transitive dependencies employed and thus unexpectedly destabilise a build.  We call this a "convergence" problem.

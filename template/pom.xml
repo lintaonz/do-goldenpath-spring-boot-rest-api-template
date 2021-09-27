@@ -37,6 +37,7 @@
 
 <build>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -45,6 +46,7 @@
           <mainClass>nz.co.twg.{{cookiecutter.java_package_name}}.Application</mainClass>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
@@ -53,6 +55,7 @@
           <generateBackupPoms>false</generateBackupPoms>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -80,6 +83,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>
@@ -125,6 +129,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M5</version>
       </plugin>
+
       <plugin>
           <groupId>org.jsonschema2pojo</groupId>
           <artifactId>jsonschema2pojo-maven-plugin</artifactId>
@@ -141,6 +146,7 @@
               </execution>
           </executions>
       </plugin>
+
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -148,13 +154,34 @@
           <configuration>
               <annotationProcessorPaths>
                   <path>
+                      <groupId>com.google.errorprone</groupId>
+                      <artifactId>error_prone_core</artifactId>
+                      <version>2.4.0</version>
+                  </path>
+                  <path>
                       <groupId>org.mapstruct</groupId>
                       <artifactId>mapstruct-processor</artifactId>
                       <version>1.4.2.Final</version>
                   </path>
+                  <path>
+                      <groupId>com.uber.nullaway</groupId>
+                      <artifactId>nullaway</artifactId>
+                      <version>0.1.7</version>
+                  </path>
               </annotationProcessorPaths>
+              <showWarnings>true</showWarnings>
+              <compilerArgs>
+                <!-- this is required for ErrorProne to work -->
+                <arg>-XDcompilePolicy=simple</arg>
+                <arg>
+                  -Xplugin:ErrorProne \
+                  -XepExcludedPaths:.*/(target/generated-sources|src/test|src/componenttest)/.+ \
+                  -XepOpt:NullAway:AnnotatedPackages=nz.co.twg.{{cookiecutter.java_package_name}}
+                </arg>
+              </compilerArgs>
           </configuration>
       </plugin>
+
       <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
