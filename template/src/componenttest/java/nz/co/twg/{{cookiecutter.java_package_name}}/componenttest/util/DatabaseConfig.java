@@ -12,9 +12,9 @@ public class DatabaseConfig {
 	{
 		String dbUser = System.getProperty("SPRING_DATASOURCE_USERNAME", "myuser");
 		//Jenkins pulls from command line args. Reading from env variable
-    String dbUrl = System.getProperty("SPRING_DATASOURCE_URL", "jdbc:postgresql://localhost:"+System.getProperty("db_port","30005")+"/mydb");
-    String dbPassword = System.getProperty("SPRING_DATASOURCE_PASSWORD", "mypassword");
-    connection=DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+		String dbUrl = System.getProperty("SPRING_DATASOURCE_URL", "jdbc:postgresql://localhost:"+System.getProperty("db_port","30005")+"/mydb");
+		String dbPassword = System.getProperty("SPRING_DATASOURCE_PASSWORD", "mypassword");
+		connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 	}
 
 	/*
