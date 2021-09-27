@@ -28,7 +28,7 @@ public class Controller implements PetsApi {
         pets.add(pet1);
         pets.add(pet2);
 
-        return new ResponseEntity<List<Pet>>(pets, HttpStatus.OK);
+        return new ResponseEntity<>(pets, HttpStatus.OK);
     }
 
     @Override
@@ -38,11 +38,11 @@ public class Controller implements PetsApi {
         pet.id(Long.parseLong(petId));
         pet.setName("pet" + petId);
 
-        return new ResponseEntity<Pet>(pet, HttpStatus.OK);
+        return new ResponseEntity<>(pet, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> _createPets() {
-        return null;
+        return ResponseEntity.noContent().build();
     }
 }

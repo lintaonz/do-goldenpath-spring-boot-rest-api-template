@@ -32,6 +32,12 @@ public static void main(String[] args) {
 }
 ```
 
+It is possible to test the analysis using;
+
+```
+mvn clean compile
+```
+
 ## Dependency Convergence
 
 Different [Maven](https://maven.apache.org/) dependencies are employed in a project and these in turn have their own dependencies transitively.  A problem can arise where the same artifact is included via different paths of dependencies more than once.  In this case the versions of those dependencies can be different and so it becomes difficult to tell which version is actually going to be included in the build product.  In addition, small changes in the dependencies of the project at the top level can swap the version of transitive dependencies employed and thus unexpectedly destabilise a build.  We call this a "convergence" problem.
