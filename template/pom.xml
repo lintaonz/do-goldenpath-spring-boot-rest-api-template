@@ -27,7 +27,7 @@
         <sonar.projectKey>twgnz_${project.artifactId}</sonar.projectKey>
         <sonar.login>{61z41Q0x0jkHzEaOpUupFL8ZHF2EWjQ1OqnNYQ4rgjpHGQ5PJ18scalLlZ3UKQ2tx4So5OLhR9Eb6rxLyHLMig==} </sonar.login>
         <revision>1.0.0-SNAPSHOT</revision>
-        <jkube.version>1.1.1</jkube.version>
+        <jkube.version>1.4.0</jkube.version>
         <jkube.docker.verbose>true</jkube.docker.verbose>
         <jkube.serviceUrl.waitSeconds>5</jkube.serviceUrl.waitSeconds>
         <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube</jkube.resourceDir>
