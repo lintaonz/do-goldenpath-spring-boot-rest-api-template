@@ -120,6 +120,13 @@ spec:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
 
+    - id: pipeline
+      name: Pipeline
+      action: publish:jenkins:twgnz-custom
+      input:
+        project: '{{ parameters.project }}'
+        repo: '{{ parameters.name }}'
+
     - id: register
       name: Register
       action: catalog:register
