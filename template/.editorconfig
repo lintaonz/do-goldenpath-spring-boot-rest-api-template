@@ -1,0 +1,35 @@
+# This file provides editor defaults for all popular IDEs & Editors
+# See more at: https://editorconfig.org
+
+# Set to true because this is the top-most config file
+root = true
+
+# Defaults for all file types
+[*]
+# Unix style line endings
+end_of_line = lf
+# Adds a newline to the end of every file
+insert_final_newline = true
+# Removes whitespaces characters from the end of lines
+trim_trailing_whitespace = true
+
+# Four space indentation settings for Java family sources
+[*.{groovy,java,xml}]
+# Sets indent width to four spaces
+indent_size = 4
+# Uses spaces for indentation
+indent_style = space
+
+# Four space indentation settings for the Jenkinsfile
+[Jenkinsfile]
+# Sets indent width to four spaces
+indent_size = 4
+# Uses spaces for indentation
+indent_style = space
+
+# Two space indentation settings
+[*.{json,yaml}]
+# Sets indent width to two spaces
+indent_size = 2
+# Uses spaces for indentation
+indent_style = space

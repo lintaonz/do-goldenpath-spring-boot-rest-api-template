@@ -1,13 +1,12 @@
 package nz.co.twg.{{cookiecutter.java_package_name}}.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import nz.co.twg.{{cookiecutter.java_package_name}}.openapi.api.PetsApi;
 import nz.co.twg.{{cookiecutter.java_package_name}}.openapi.model.Pet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class Controller implements PetsApi {

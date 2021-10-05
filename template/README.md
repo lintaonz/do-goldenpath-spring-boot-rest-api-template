@@ -49,7 +49,7 @@ A simple typical convergence error would appear like this in the Maven output;
 ```
 ...
 [INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-versions) @ {{cookiecutter.artifact_id}} ---
-[WARNING] 
+[WARNING]
 Dependency convergence error for commons-io:commons-io:2.2 paths to dependency are:
 +-nz.co.twg.do:{{cookiecutter.artifact_id}}:1.0.0-SNAPSHOT
   +-org.apache.axis2:axis2-kernel:1.7.9

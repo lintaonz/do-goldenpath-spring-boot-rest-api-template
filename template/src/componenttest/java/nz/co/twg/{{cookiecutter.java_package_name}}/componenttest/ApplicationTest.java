@@ -4,9 +4,6 @@ import org.junit.jupiter.api.Test;
 
 class ApplicationTest {
 
-	@Test
-	void doSomeComponentTest() {
-
-	}
-
+    @Test
+    void doSomeComponentTest() {}
 }
