@@ -11,7 +11,7 @@ metadata:
   tags:
     - java
     - springboot
-    - template-1-0-0
+    - template-2021-10-07
 spec:
   type: service
   lifecycle: experimental
@@ -26,7 +26,7 @@ metadata:
   description: {{cookiecutter.artifact_id}}
   tags:
     - rest
-    - template-1-0-0
+    - template-2021-10-07
 spec:
   type: openapi
   lifecycle: experimental
