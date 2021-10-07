@@ -12,6 +12,13 @@ metadata:
     - java
     - springboot
     - template-2021-10-07
+  links:
+    - url: https://88c056a8dbc147a4b7c8a9ddbd19f1d3.us-east-1.aws.found.io/
+      title: Kibana
+    - url: https://app.signalfx.com/#/home
+      title: SignalFx
+    - url: https://nexus-dev-aws.twg.co.nz/#browse/browse:jenkins-jobs
+      title: Test results
 spec:
   type: service
   lifecycle: experimental
