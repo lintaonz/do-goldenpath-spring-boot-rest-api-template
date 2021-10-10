@@ -29,6 +29,12 @@
         -->
         <module name="RightCurly">
             <property name="id" value="RightCurlySame" />
+            <!-- ########################################################## -->
+            <!-- # Properties that have been moved from `RightCurlyAlone` # -->
+            <property name="tokens" value="ANNOTATION_DEF" />
+            <property name="tokens" value="INTERFACE_DEF" />
+            <property name="tokens" value="METHOD_DEF" />
+            <!-- ########################################################## -->
             <property name="tokens" value="LITERAL_TRY" />
             <property name="tokens" value="LITERAL_CATCH" />
             <property name="tokens" value="LITERAL_FINALLY" />
@@ -39,13 +45,11 @@
         <module name="RightCurly">
             <property name="id" value="RightCurlyAlone" />
             <property name="option" value="alone" />
-            <property name="tokens" value="ANNOTATION_DEF" />
             <property name="tokens" value="CLASS_DEF" />
             <property name="tokens" value="COMPACT_CTOR_DEF" />
             <property name="tokens" value="CTOR_DEF" />
             <property name="tokens" value="ENUM_DEF" />
             <property name="tokens" value="INSTANCE_INIT" />
-            <property name="tokens" value="INTERFACE_DEF" />
             <property name="tokens" value="LITERAL_FOR" />
             <property name="tokens" value="LITERAL_WHILE" />
             <property name="tokens" value="RECORD_DEF" />
