@@ -6,7 +6,7 @@ image:
   repository: 'twgorg/{{cookiecutter.artifact_id}}'
   # tag: use appVersion
 
-replicas: 1
+replicaCount: 1
 
 extraLabels:
   metrics: prometheus
