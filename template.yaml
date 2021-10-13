@@ -12,7 +12,7 @@ metadata:
     - api
     - goldenpath
     - java
-    - restokm
+    - rest
 spec:
   owner: devops
   type: microservice
