@@ -40,6 +40,8 @@ spec:
           oneOf:
             - const: "AI"
               title: "AI - Analytics and Insights"
+            - const: "ARC"
+              title: "ARC - Architecture Team"
             - const: "B2B"
               title: "B2B - Salesforce B2B project"
             - const: "DE"
