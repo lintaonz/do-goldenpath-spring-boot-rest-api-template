@@ -16,6 +16,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: ENV
+              value: local
             - name: EPAY_URL
               value: http://localhost:8090
             - name: SPRING_DATASOURCE_URL

@@ -176,5 +176,5 @@ Do not modify this part, it is managed by backstage
 
 ```
 Template name: {{cookiecutter.artifact_id}}-template
-Version: 2021-10-07
+Version: 2021-10-18
 ```
