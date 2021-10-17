@@ -11,7 +11,7 @@ metadata:
   tags:
     - java
     - springboot
-    - template-2021-10-07
+    - template-2021-10-18
   links:
     - url: "https://88c056a8dbc147a4b7c8a9ddbd19f1d3.us-east-1.aws.found.io/s/{{cookiecutter.prefix}}/app/kibana#/discover?_a=(columns:!(_source),interval:auto,query:(language:kuery,query:'kubernetes.deployment.name: {{cookiecutter.artifact_id}}'),sort:!(!('@timestamp',desc)))"
       title: "Kibana - non-prod"

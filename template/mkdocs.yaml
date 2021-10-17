@@ -1,0 +1,6 @@
+site_name: 'Spring Boot Template'
+nav:
+  - Home: index.md
+  - Feature Toggles: feature-toggles.md
+plugins:
+  - techdocs-core
