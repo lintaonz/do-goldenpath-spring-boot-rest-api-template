@@ -1,8 +1,10 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}.config.actuator;
+package nz.co.twg.{{cookiecutter.java_package_name}}.config.features.actuator;
 
 import java.util.Map;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.FeaturesSupport;
 import nz.co.twg.features.Features;
+import nz.co.twg.features.FeaturesSupport;
+import nz.co.twg.features.NoOpFeaturesSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.*;
 import org.springframework.stereotype.Component;
 
@@ -11,13 +13,14 @@ import org.springframework.stereotype.Component;
 @Endpoint(id = "features")
 public class FeaturesEndpoint {
 
-    private final FeaturesSupport featuresSupport;
-
     private final Features features;
 
-    public FeaturesEndpoint(FeaturesSupport featuresSupport, Features features) {
-        this.featuresSupport = featuresSupport;
+    private final FeaturesSupport featuresSupport;
+
+    public FeaturesEndpoint(
+            Features features, @Autowired(required = false) FeaturesSupport featuresSupport) {
         this.features = features;
+        this.featuresSupport = featuresSupport != null ? featuresSupport : new NoOpFeaturesSupport();
     }
 
     @ReadOperation

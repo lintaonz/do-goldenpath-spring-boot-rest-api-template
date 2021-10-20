@@ -114,14 +114,14 @@ public void test() {
 
 ## Component Testing
 During component testing, feature toggle status  can be controlled via the
-`nz.co.twg.{{cookiecutter.java_package_name}}.util.FeaturesSupport` class.
+`nz.co.twg.features.FeaturesSupport` class.
 
 The `nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util.ActuatorFeaturesSupport` implementation
 will use the actuator endpoint provided by the running service to mutate the feature states.
 
 ```java
 private final FeaturesSupport featuresSupport =
-        new ActuatorFeaturesSupport(String.format("http://%s:%s", getHostname(), getActuatorPort()));
+        new ActuatorFeaturesSupport(getHostname(), getActuatorPort());
 @Test
 public void test() {
     // given

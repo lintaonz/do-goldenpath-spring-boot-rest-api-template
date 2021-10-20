@@ -1,4 +1,4 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}.config.launchdarkly;
+package nz.co.twg.{{cookiecutter.java_package_name}}.config.features.launchdarkly;
 
 import java.lang.annotation.*;
 import org.springframework.context.annotation.Import;
