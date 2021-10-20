@@ -30,7 +30,9 @@
         <jkube.version>1.4.0</jkube.version>
         <jkube.docker.verbose>true</jkube.docker.verbose>
         <jkube.serviceUrl.waitSeconds>5</jkube.serviceUrl.waitSeconds>
-        <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube</jkube.resourceDir>
+        <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube/local</jkube.resourceDir>
+        <jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/local</jkube.targetDir>
+        <jkube.kubernetesManifest>${project.build.outputDirectory}/META-INF/jkube/local/kubernetes.yml</jkube.kubernetesManifest>
     </properties>
 
     <build>
@@ -52,6 +54,12 @@
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.jkube</groupId>
+                <artifactId>kubernetes-maven-plugin</artifactId>
+                <version>${jkube.version}</version>
             </plugin>
 
             <plugin>
@@ -784,6 +792,11 @@
     <profiles>
         <profile>
             <id>jkube</id>
+            <properties>
+                <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube/app</jkube.resourceDir>
+                <jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/app</jkube.targetDir>
+                <jkube.kubernetesManifest>${project.build.outputDirectory}/META-INF/jkube/app/kubernetes.yml</jkube.kubernetesManifest>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -795,8 +808,10 @@
                                 <include>**/componenttest/**/*Test.java</include>
                             </includes>
                             <systemPropertyVariables>
-                                <app_port>30000</app_port>
-                                <actuator_port>30001</actuator_port>
+                                <app_port>31000</app_port>
+                                <actuator_port>31001</actuator_port>
+                                <wiremock_port>31090</wiremock_port>
+                                <db_port>31005</db_port>
                             </systemPropertyVariables>
                         </configuration>
                         <executions>
