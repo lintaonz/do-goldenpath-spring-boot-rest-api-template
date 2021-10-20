@@ -1,6 +1,6 @@
 package nz.co.twg.{{cookiecutter.java_package_name}};
 
-import nz.co.twg.{{cookiecutter.java_package_name}}.config.launchdarkly.EnableLaunchDarkly;
+import nz.co.twg.{{cookiecutter.java_package_name}}.config.features.launchdarkly.EnableLaunchDarkly;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

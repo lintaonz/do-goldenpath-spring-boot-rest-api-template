@@ -1,4 +1,4 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}.util;
+package nz.co.twg.{{cookiecutter.java_package_name}}.config.features.launchdarkly;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import nz.co.twg.features.FeaturesSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -34,6 +34,7 @@
             <property name="tokens" value="ANNOTATION_DEF" />
             <property name="tokens" value="INTERFACE_DEF" />
             <property name="tokens" value="METHOD_DEF" />
+            <property name="tokens" value="CLASS_DEF" />
             <!-- ########################################################## -->
             <property name="tokens" value="LITERAL_TRY" />
             <property name="tokens" value="LITERAL_CATCH" />
@@ -45,7 +46,6 @@
         <module name="RightCurly">
             <property name="id" value="RightCurlyAlone" />
             <property name="option" value="alone" />
-            <property name="tokens" value="CLASS_DEF" />
             <property name="tokens" value="COMPACT_CTOR_DEF" />
             <property name="tokens" value="CTOR_DEF" />
             <property name="tokens" value="ENUM_DEF" />

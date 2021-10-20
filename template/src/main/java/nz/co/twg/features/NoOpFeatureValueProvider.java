@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /** An empty implementation of the {@link FeatureValueProvider} */
-public final class StubFeatureValueProvider implements FeatureValueProvider {
+public final class NoOpFeatureValueProvider implements FeatureValueProvider {
 
     @Override
     public Map<String, Boolean> getAllBoolean(String subject) {

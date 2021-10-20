@@ -13,7 +13,7 @@ import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.FeaturesSupport;
+import nz.co.twg.features.FeaturesSupport;
 import org.awaitility.Awaitility;
 import org.springframework.web.util.UriComponentsBuilder;
 

@@ -8,7 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util.ActuatorFeaturesSupport;
 import nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util.ServiceBase;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.FeaturesSupport;
+import nz.co.twg.features.FeaturesSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

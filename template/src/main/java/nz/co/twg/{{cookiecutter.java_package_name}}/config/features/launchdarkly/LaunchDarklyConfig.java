@@ -1,4 +1,4 @@
-package nz.co.twg.{{cookiecutter.java_package_name}}.config.launchdarkly;
+package nz.co.twg.{{cookiecutter.java_package_name}}.config.features.launchdarkly;
 
 import com.launchdarkly.sdk.server.Components;
 import com.launchdarkly.sdk.server.LDClient;
@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.FeaturesSupport;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.LaunchDarklyFeaturesSupport;
-import nz.co.twg.{{cookiecutter.java_package_name}}.util.StubFeaturesSupport;
-import nz.co.twg.features.Features;
+import nz.co.twg.features.FeatureValueProvider;
+import nz.co.twg.features.FeaturesSupport;
+import nz.co.twg.features.NoOpFeaturesSupport;
 import nz.co.twg.features.StaticSubjectProvider;
+import nz.co.twg.features.SubjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -56,10 +56,13 @@ public class LaunchDarklyConfig {
     }
 
     @Bean
-    public Features features(LaunchDarklyProperties properties, LDClient ldClient) {
-        return new Features(
-                new LaunchDarklyFeatureValueProvider(ldClient),
-                new StaticSubjectProvider(properties.getDefaultUser()));
+    public FeatureValueProvider featureValueProvider(LDClient ldClient) {
+        return new LaunchDarklyFeatureValueProvider(ldClient);
+    }
+
+    @Bean
+    public SubjectProvider subjectProvider(LaunchDarklyProperties properties) {
+        return new StaticSubjectProvider(properties.getDefaultUser());
     }
 
     @Bean
@@ -67,6 +70,6 @@ public class LaunchDarklyConfig {
         if (properties.getDataSource().getType() == LaunchDarklyProperties.DataSource.Type.FILE) {
             return new LaunchDarklyFeaturesSupport(properties.getDataSource().getFile().getLocation());
         }
-        return new StubFeaturesSupport();
+        return new NoOpFeaturesSupport();
     }
 }
