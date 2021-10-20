@@ -33,7 +33,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     }
 
     @Override
-    public void configure(String key, boolean value) {
+    public synchronized void configure(String key, boolean value) {
         logger.info("will set feature [{}] to [{}]", key, value);
         ensureFileExists();
         FlagValues flagValues = read();
@@ -43,7 +43,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     }
 
     @Override
-    public void remove(String key) {
+    public synchronized void remove(String key) {
         logger.info("will remove feature [{}]", key);
         ensureFileExists();
         FlagValues flagValues = read();
@@ -53,7 +53,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         logger.info("will clear all features");
         write(new FlagValues());
         logger.info("did clear all features");
@@ -69,6 +69,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
         try {
             return objectMapper.readValue(Files.readString(this.fileLocation), FlagValues.class);
         } catch (IOException e) {
+            logger.error("unexpected exception - reading from file [{}]", this.fileLocation, e);
             throw new UncheckedIOException(e);
         }
     }
@@ -82,6 +83,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
             Files.writeString(
                     this.fileLocation, objectMapper.writeValueAsString(flagValues), StandardCharsets.UTF_8);
         } catch (IOException e) {
+            logger.error("unexpected exception - writing to file [{}]", this.fileLocation, e);
             throw new UncheckedIOException(e);
         }
     }

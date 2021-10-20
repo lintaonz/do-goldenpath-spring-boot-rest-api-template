@@ -1,0 +1,35 @@
+logging:
+  level:
+    org.springframework.web: INFO
+
+spring:
+  aop:
+    auto = true
+  profiles:
+    active: ${ENV:local}
+
+# Health and prometheus metrics related configurations
+# This makes sure we have, /metrics, /health, /health/liveness and /health/readiness endpoint
+management:
+  server:
+    port: 8050
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+      exposure:
+        include: health,prometheus
+    health:
+      probes:
+        enabled: true
+
+
+# launchdarkly configs
+launchdarkly:
+  offline: false
+  default-user: template-user
+  sdk-key: sdk-key
+  ### stream type data-source for prod, connects to the launchdarkly saas
+  data-source:
+    type: STREAM

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}-local
+spec:
+  template:
+    spec:
+      containers:
+        - name: wiremock
+          image: rodolpheche/wiremock:2.27.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8090
+            - containerPort: 8443
+          args: ["/bin/sh", "-c", "java $JAVA_OPTS -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8090"]
+        - name: postgres
+          image: postgres:12-alpine
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: mypassword
+            - name: POSTGRES_DB
+              value: mydb

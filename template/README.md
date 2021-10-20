@@ -133,7 +133,7 @@ Notes:
 - The docker application might not be able to use host's NodePort if it is not running as administrator. In that
   case, run your docker application as administrator.
 
-### TLDR;
+#### TLDR;
 
 Main problem with running `mvn verify` is that components tests seems to start before API itself is fully loaded resulting in some false postives.
 Until that resolved you can use approach below.
@@ -169,6 +169,28 @@ mvn test-compile failsafe:integration-test failsafe:verify -P jkube -s ./setting
 
 # When finished with testing you can remove running pod(s) like this
 mvn k8s:undeploy -P jkube -s ./settings.xml
+```
+
+#### Running Service and Component Tests in the IDE
+Sometimes it is ideal to run the services and component tests in your IDE, so they can be easily
+controlled and debugged.
+However, other components such as the database, or WireMock still need to be present for the component test
+to function properly.
+
+In the **How to run component tests** section, the `-P jkube` profile automatically
+spins up your application, along with other support services (Postgres, Wiremock, etc) all in one package.
+
+In this scenario, our service is already running in the IDE, and we just need the complementary services.
+
+To run the support services in the kubernetes cluster, run:
+```bash
+mvn k8s:resource k8s:apply
+```
+Unlike `mvn verify -P jkube`, this will load a _local_ config with the just support services.
+
+To clean up these pods after you're done with the testing, run:
+```bash
+mvn k8s:undeploy
 ```
 
 ## Backstage managed info

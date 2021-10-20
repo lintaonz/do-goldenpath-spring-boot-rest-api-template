@@ -9,18 +9,18 @@ spec:
   ports:
     - name: app
       port: 8080
-      nodePort: 30000
+      nodePort: 31000
     - name: actuator
       port: 8050
-      nodePort: 30001
+      nodePort: 31001
     - name: wiremock-http
       port: 8090
-      nodePort: 30090
+      nodePort: 31090
     - name: wiremock-https
       port: 8443
-      nodePort: 30093
+      nodePort: 31093
     - name: db
       port: 5432
-      nodePort: 30005
+      nodePort: 31005
   selector:
     app: ${project.artifactId}

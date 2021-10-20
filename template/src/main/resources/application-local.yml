@@ -1,0 +1,15 @@
+# Include the features endpoint
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,features
+
+# launchdarkly configs
+### file type data-source for testing or local development
+launchdarkly:
+  data-source:
+    type: FILE
+    file:
+      location: ${java.io.tmpdir}/featuretoggles/local-features.json
+      auto-reload: true
