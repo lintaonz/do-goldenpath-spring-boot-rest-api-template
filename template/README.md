@@ -190,7 +190,7 @@ Unlike `mvn verify -P jkube`, this will load a _local_ config with the just supp
 
 To clean up these pods after you're done with the testing, run:
 ```bash
-mvn k8s:undeploy
+mvn k8s:resource k8s:undeploy
 ```
 
 ## Backstage managed info
