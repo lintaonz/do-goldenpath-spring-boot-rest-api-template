@@ -17,7 +17,7 @@ metadata:
       title: "Kibana - non-prod"
     - url: "https://00389bf2dfea48fda4e5e67b0a08248b.us-east-1.aws.found.io/s/{{cookiecutter.prefix}}/app/kibana#/discover?_a=(columns:!(_source),interval:auto,query:(language:kuery,query:'kubernetes.deployment.name: {{cookiecutter.artifact_id}}'),sort:!(!('@timestamp',desc)))"
       title: "Kibana - prod"
-    - url: "https://app.signalfx.com/#/home"
+    - url: "https://app.signalfx.com/#/dashboard/FAlA8v1AYAA?groupId=D445YF2AYAA&configId=FAlA9RfAgAE&startTime=-7d&endTime=Now&variables%5B%5D=kubernetes_namespace%3Dkubernetes_namespace:&sources%5B%5D=deployment:{{cookiecutter.artifact_id}}"
       title: "SignalFx"
     - url: "https://nexus-dev-aws.twg.co.nz/#browse/browse:components:{{cookiecutter.artifact_id}}"
       title: "Test results"
