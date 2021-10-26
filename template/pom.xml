@@ -293,7 +293,7 @@
                     <execution>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <suppressionsLocation>src/main/resources/checkstyle/google_checks_suppressions.xml</suppressionsLocation>
+                            <suppressionsLocation>src/etc/checkstyle/google_checks_suppressions.xml</suppressionsLocation>
                             <sourceDirectories>
                                 <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                                 <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
@@ -308,7 +308,7 @@
                     <!-- Execution of the custom checks -->
                     <execution>
                         <configuration>
-                            <configLocation>${project.basedir}/src/main/resources/checkstyle/twg_checks.xml</configLocation>
+                            <configLocation>${project.basedir}/src/etc/checkstyle/twg_checks.xml</configLocation>
                             <sourceDirectories>
                                 <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                                 <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
