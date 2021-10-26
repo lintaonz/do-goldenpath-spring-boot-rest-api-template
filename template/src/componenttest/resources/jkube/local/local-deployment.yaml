@@ -3,7 +3,13 @@ kind: Deployment
 metadata:
   name: ${project.artifactId}-local
 spec:
+  selector:
+    matchLabels:
+      app: ${project.artifactId}-local
   template:
+    metadata:
+      labels:
+        app: ${project.artifactId}-local
     spec:
       containers:
         - name: wiremock

@@ -5,6 +5,8 @@ metadata:
   labels:
     app: ${project.artifactId}-local
 spec:
+  selector:
+    app: ${project.artifactId}-local
   type: NodePort
   ports:
     - name: wiremock-http
@@ -16,5 +18,3 @@ spec:
     - name: db
       port: 5432
       nodePort: 30005
-  selector:
-    app: ${project.artifactId}

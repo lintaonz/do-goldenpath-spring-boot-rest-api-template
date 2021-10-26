@@ -5,6 +5,8 @@ metadata:
   labels:
     app: ${project.artifactId}
 spec:
+  selector:
+    app: ${project.artifactId}
   type: NodePort
   ports:
     - name: app
@@ -22,5 +24,3 @@ spec:
     - name: db
       port: 5432
       nodePort: 31005
-  selector:
-    app: ${project.artifactId}
