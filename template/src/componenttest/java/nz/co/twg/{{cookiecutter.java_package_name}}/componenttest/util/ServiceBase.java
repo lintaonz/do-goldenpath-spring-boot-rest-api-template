@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import io.restassured.RestAssured;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
@@ -77,6 +79,12 @@ public abstract class ServiceBase {
         RestAssured.baseURI = "http://" + hostname;
         RestAssured.port = Integer.parseInt(appPort);
         RestAssured.basePath = "/";
+        RestAssured.config =
+                RestAssuredConfig.config()
+                        .httpClient(
+                                HttpClientConfig.httpClientConfig()
+                                        .setParam("http.socket.timeout", 1000)
+                                        .setParam("http.connection.timeout", 1000));
         Awaitility.await()
                 .atMost(2, TimeUnit.MINUTES)
                 .pollInterval(5, TimeUnit.SECONDS)

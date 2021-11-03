@@ -101,12 +101,13 @@ spec:
   # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: fetch-base
-      name: Fetch Base
+      name: "Fetch Base"
       action: fetch:cookiecutter
       input:
         url: ./template
         values:
           component_id: '{{ parameters.name }}'
+          organization_id: '{{ parameters.org }}'
           project: '{{ parameters.project }}'
           description: '{{ parameters.description }}'
           # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
@@ -117,7 +118,7 @@ spec:
           http_port: 8080
 
     - id: publish
-      name: Publish
+      name: "Publish"
       action: publish:bitbucket:twgnz-custom
       input:
         allowedHosts: ['bitbucket.org']
@@ -126,15 +127,22 @@ spec:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
 
-    - id: pipeline
-      name: Pipeline
+    - id: sonarcloud
+      name: "SonarCloud Code Analysis"
+      action: publish:sonarcloud:twgnz-custom
+      input:
+        org: '{{ parameters.org }}'
+        repo: '{{ parameters.name }}'
+
+    - id: pipeline-jenkins
+      name: "Pipeline: Jenkins"
       action: publish:jenkins:twgnz-custom
       input:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
 
     - id: register
-      name: Register
+      name: "Register"
       action: catalog:register
       input:
         repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'

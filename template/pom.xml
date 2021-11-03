@@ -23,8 +23,8 @@
         <logback.version>1.2.3</logback.version>
         <image.path>docker.io/twgorg/${project.artifactId}:${project.version}</image.path>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.organization>twgnz</sonar.organization>
-        <sonar.projectKey>twgnz_${project.artifactId}</sonar.projectKey>
+        <sonar.organization>{{cookiecutter.organization_id}}</sonar.organization>
+        <sonar.projectKey>{{cookiecutter.organization_id}}_${project.artifactId}</sonar.projectKey>
         <sonar.login>{61z41Q0x0jkHzEaOpUupFL8ZHF2EWjQ1OqnNYQ4rgjpHGQ5PJ18scalLlZ3UKQ2tx4So5OLhR9Eb6rxLyHLMig==} </sonar.login>
         <revision>1.0.0-SNAPSHOT</revision>
         <jkube.version>1.4.0</jkube.version>
