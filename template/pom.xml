@@ -22,10 +22,12 @@
         <jersey.version>2.25.1</jersey.version>
         <logback.version>1.2.3</logback.version>
         <image.path>docker.io/twgorg/${project.artifactId}:${project.version}</image.path>
+        <sonar.projectName>${project.artifactId}</sonar.projectName>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>{{cookiecutter.organization_id}}</sonar.organization>
         <sonar.projectKey>{{cookiecutter.organization_id}}_${project.artifactId}</sonar.projectKey>
-        <sonar.login>{61z41Q0x0jkHzEaOpUupFL8ZHF2EWjQ1OqnNYQ4rgjpHGQ5PJ18scalLlZ3UKQ2tx4So5OLhR9Eb6rxLyHLMig==} </sonar.login>
+        <!-- <sonar.login> property should be specified through arguments: -Dsonar.login="${TOKEN}"
+             or SONAR_TOKEN environment variable -->
         <revision>1.0.0-SNAPSHOT</revision>
         <jkube.version>1.4.0</jkube.version>
         <jkube.docker.verbose>true</jkube.docker.verbose>
@@ -130,6 +132,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -137,6 +140,44 @@
                 <configuration>
                     <excludes>
                         <exclude>**/componenttest/**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <append>true</append>
+                        </configuration>
+                    </execution>
+                    <!-- attached to Maven test phase -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <!-- Spring configurations -->
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Config.*</exclude>
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Config$*.*</exclude>
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Properties.*</exclude>
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Properties$*.*</exclude>
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/**/actuator/*Endpoint.*</exclude>
+
+                        <!-- generated code -->
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/openapi/**/*</exclude>
+                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/sdem/**/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -862,6 +903,52 @@
                                     </build>
                                 </image>
                             </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>sonar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>3.9.0.2155</version>
+
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>dependencyCheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>6.4.1</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <skipProvidedScope>true</skipProvidedScope>
                         </configuration>
                     </plugin>
                 </plugins>

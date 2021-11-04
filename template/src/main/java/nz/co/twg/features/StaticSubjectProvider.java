@@ -9,7 +9,9 @@ public final class StaticSubjectProvider implements SubjectProvider {
     private final String user;
 
     public StaticSubjectProvider(String user) {
-        assert user != null; // use precondition?
+        if (user == null) {
+            throw new IllegalArgumentException("user cannot be null");
+        }
         this.user = user;
     }
 

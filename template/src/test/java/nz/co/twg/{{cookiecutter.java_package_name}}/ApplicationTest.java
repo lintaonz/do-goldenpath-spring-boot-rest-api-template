@@ -1,9 +1,14 @@
 package nz.co.twg.{{cookiecutter.java_package_name}};
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 class ApplicationTest {
 
     @Test
-    void contextLoads() {}
+    void contextLoads() {
+        // add some asserts
+        assertTrue(true);
+    }
 }

@@ -186,7 +186,7 @@ To run the support services in the kubernetes cluster, run:
 ```bash
 mvn k8s:resource k8s:apply
 ```
-Unlike `mvn verify -P jkube`, this will load a _local_ config with the just support services.
+Unlike `mvn verify -P jkube`, this will load a _local_ config with just the support services.
 
 To clean up these pods after you're done with the testing, run:
 ```bash
@@ -198,5 +198,5 @@ Do not modify this part, it is managed by backstage
 
 ```
 Template name: {{cookiecutter.artifact_id}}-template
-Version: 2021-10-18
+Version: 2021-11-03
 ```
