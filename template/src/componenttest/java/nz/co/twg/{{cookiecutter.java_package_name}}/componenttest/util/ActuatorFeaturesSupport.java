@@ -110,9 +110,8 @@ public final class ActuatorFeaturesSupport implements FeaturesSupport {
                                                         .extract()
                                                         .response()
                                                         .jsonPath()
-                                                        .getMap(".")
-                                                        .get(key))
-                                        .isEqualTo(expectedValue));
+                                                        .getMap("."))
+                                        .containsEntry(key, expectedValue));
     }
 
     /** verify with the /features endpoint to check if the clearing succeeded */
@@ -134,8 +133,7 @@ public final class ActuatorFeaturesSupport implements FeaturesSupport {
                                                         .extract()
                                                         .response()
                                                         .jsonPath()
-                                                        .getMap(".")
-                                                        .size())
-                                        .isEqualTo(0));
+                                                        .getMap("."))
+                                        .isEmpty());
     }
 }

@@ -66,13 +66,32 @@ pipeline {
             environment {
                 NEXUS_CREDS = credentials('do-nexus-credentials')
                 NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
+                SONAR_TOKEN = credentials('do-sonarcloud-token')
             }
             steps {
                 script {
+                    def sonarOpts = ""
+                    def sonarProfile = "sonar"
+                    if (env.CHANGE_ID != null) {
+                        // if the build is triggered by a PR build, use the CHANGE_BRANCH env var
+                        sonarOpts = "-Dsonar.branch.name='${env.CHANGE_BRANCH}'"
+                    } else if (env.BRANCH_NAME != null) {
+                        // if the build is triggered by a regular build
+                        sonarOpts = "-Dsonar.branch.name='${env.BRANCH_NAME}'"
+                    } else {
+                        // disable the sonar profile otherwise
+                        sonarProfile = ""
+                    }
+
                     withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
-                        docker.image('maven:3.8-openjdk-11').inside('-v /var/run/docker.sock:/var/run/docker.sock -v /home/ec2-user/m2cache:/root/.m2 -v /home/ec2-user/.kube:/root/.kube --network host') {
+                        docker.image('maven:3.8-openjdk-11').inside(
+                            '-v /var/run/docker.sock:/var/run/docker.sock ' +
+                            '-v /home/ec2-user/m2cache:/root/.m2 ' +
+                            '-v /home/ec2-user/.kube:/root/.kube ' +
+                            '-v /home/ec2-user/.sonar:/root/.sonar ' +
+                            '--network host') {
                             echo "appversion is ${env.GIT_COMMIT}."
-                            sh "KUBECONFIG=/root/.kube/config mvn -Drevision=${env.GIT_COMMIT} clean verify -Pjkube -s ./settings.xml"
+                            sh "KUBECONFIG=/root/.kube/config mvn ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,dependencyCheck,${sonarProfile} -s ./settings.xml"
                         }
                         if ("${env.BRANCH_NAME}" == 'master') {
                             print 'Pushing docker image for master branch'

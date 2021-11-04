@@ -13,6 +13,6 @@ public final class NoOpFeatureValueProvider implements FeatureValueProvider {
 
     @Override
     public boolean getBoolean(String key, String subject, boolean defaultValue) {
-        return false;
+        return defaultValue;
     }
 }

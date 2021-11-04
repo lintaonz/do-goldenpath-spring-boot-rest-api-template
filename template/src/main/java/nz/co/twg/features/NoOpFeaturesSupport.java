@@ -3,11 +3,17 @@ package nz.co.twg.features;
 public final class NoOpFeaturesSupport implements FeaturesSupport {
 
     @Override
-    public void configure(String key, boolean value) {}
+    public void configure(String key, boolean value) {
+        // do nothing
+    }
 
     @Override
-    public void remove(String key) {}
+    public void remove(String key) {
+        // do nothing
+    }
 
     @Override
-    public void clear() {}
+    public void clear() {
+        // do nothing
+    }
 }

@@ -26,7 +26,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
 
     private final Path fileLocation;
 
-    private final ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     public LaunchDarklyFeaturesSupport(String fileLocation) {
         this.fileLocation = Paths.get(fileLocation);
@@ -37,7 +37,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     public synchronized void configure(String key, boolean value) {
         logger.info("will set feature [{}] to [{}]", key, value);
         ensureFileExists();
-        FlagValues flagValues = read();
+        FlagValuesWrapper flagValues = read();
         flagValues.getFlagValues().put(key, value);
         write(flagValues);
         logger.info("did set feature [{}] to [{}]", key, value);
@@ -47,7 +47,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     public synchronized void remove(String key) {
         logger.info("will remove feature [{}]", key);
         ensureFileExists();
-        FlagValues flagValues = read();
+        FlagValuesWrapper flagValues = read();
         flagValues.getFlagValues().remove(key);
         write(flagValues);
         logger.info("did remove feature [{}]", key);
@@ -56,26 +56,29 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
     @Override
     public synchronized void clear() {
         logger.info("will clear all features");
-        write(new FlagValues());
+        write(new FlagValuesWrapper());
         logger.info("did clear all features");
     }
 
-    private void ensureFileExists() {
+    // exposed for testing
+    void ensureFileExists() {
         if (!this.fileLocation.toFile().exists()) {
-            write(new FlagValues());
+            write(new FlagValuesWrapper());
         }
     }
 
-    private FlagValues read() {
+    // exposed for testing
+    FlagValuesWrapper read() {
         try {
-            return objectMapper.readValue(Files.readString(this.fileLocation), FlagValues.class);
+            return objectMapper.readValue(Files.readString(this.fileLocation), FlagValuesWrapper.class);
         } catch (IOException e) {
-            logger.error("unexpected exception - reading from file [{}]", this.fileLocation, e);
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException(
+                    "unexpected exception - reading from file [" + this.fileLocation + "]", e);
         }
     }
 
-    private void write(FlagValues flagValues) {
+    // exposed for testing
+    void write(FlagValuesWrapper flagValues) {
         try {
             if (this.fileLocation.toFile().exists()) {
                 Path parentDir = this.fileLocation.getParent();
@@ -84,17 +87,22 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
             Files.writeString(
                     this.fileLocation, objectMapper.writeValueAsString(flagValues), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("unexpected exception - writing to file [{}]", this.fileLocation, e);
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException(
+                    "unexpected exception - writing to file [" + this.fileLocation + "]", e);
         }
     }
 
+    // exposed for testing
+    void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     /** The object structure expected by LaunchDarkly file input */
-    private static class FlagValues {
+    static class FlagValuesWrapper {
 
         private Map<String, Boolean> flagValues;
 
-        public FlagValues() {
+        public FlagValuesWrapper() {
             flagValues = new LinkedHashMap<>();
         }
 
