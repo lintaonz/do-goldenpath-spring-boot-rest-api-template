@@ -17,6 +17,23 @@ def namespaceProd = '{{cookiecutter.prefix}}-prod'
 def docker_registry_url = 'https://index.docker.io/v1/'
 def docker_registry_cred_id = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
 
+def kubernetes_prepare_deploy_agent = '''
+spec:
+  containers:
+  - name: curl
+    image: twgorg/ff-build:latest
+    command:
+    - cat
+    tty: true
+  - name: changelog
+    image:  quay.io/git-chglog/git-chglog
+    command:
+    - cat
+    tty: true
+  imagePullSecrets:
+  - name: regsecret
+'''
+
 def kubernetes_deploy_agent = '''
 spec:
   containers:
@@ -50,7 +67,11 @@ pipeline {
         description: 'Commit version of the app to deploy, this is only valid if DEPLOY_TO_PROD is selected. Allows to deploy an older build with the current deployment values. Preffered method is selecting "Restart from Stage" to use same commit for build and deploy'
     )
     }
-
+    environment {
+        NEXUS_CREDS = credentials('do-nexus-credentials')
+        NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
+        CHANGELOG_FILENAME = './CHANGELOG.md'
+    }
     stages {
         stage('Build') {
             when {
@@ -64,8 +85,6 @@ pipeline {
                 label 'build-agent'
             }
             environment {
-                NEXUS_CREDS = credentials('do-nexus-credentials')
-                NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
                 SONAR_TOKEN = credentials('do-sonarcloud-token')
             }
             steps {
@@ -105,6 +124,49 @@ pipeline {
                     script {
                         setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
                         uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
+                    }
+                }
+            }
+        }
+
+        stage('Prepare Deployment') {
+            when {
+                beforeOptions true
+                beforeAgent true
+                expression { BRANCH_NAME == 'master' }
+            }
+            agent {
+                kubernetes {
+                    yaml kubernetes_prepare_deploy_agent
+                    inheritFrom 'k8s-docker-image-build-template'
+                    yamlMergeStrategy merge()
+                }
+            }
+            steps {
+                container('changelog') {
+                    script {
+                        echo "Creating change log"
+                        sh 'git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}'
+
+                        echo "Change log generated..."
+                        sh 'cat ${CHANGELOG_FILENAME}'
+                    }
+                }
+                container('curl') {
+                    script {
+                        sh """
+                            curl --silent --show-error --include --fail \
+                                --user \"\${NEXUS_CREDS}\" \
+                                --upload-file "\${CHANGELOG_FILENAME}" \
+                                "${NEXUS_REPO_BASE_URL_ARTIFACTS}/${JOB_NAME}/${BUILD_NUMBER}/"
+                        """
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
                     }
                 }
             }

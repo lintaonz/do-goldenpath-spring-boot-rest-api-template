@@ -34,3 +34,6 @@ out/
 hs_err_pid*
 
 .openapi-generator/
+
+# Changelog
+CHANGELOG.md
