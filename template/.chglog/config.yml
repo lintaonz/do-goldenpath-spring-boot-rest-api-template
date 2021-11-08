@@ -1,0 +1,50 @@
+style: "bitbucket"
+template: CHANGELOG.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://bitbucket.org/twgnz/{{cookiecutter.artifact_id}}
+
+options:
+  tag_filter_pattern: '^(dev|test|prod)$'
+  sort: "date"
+
+#  commits:
+#    filters:
+#       Type:
+#         - feat
+#    sort_by: Scope
+#
+#  commit_groups:
+#    group_by: Type
+#    sort_by: Title
+#    title_order:
+#      - feat
+#    title_maps:
+#      feat: Features
+#
+#  header:
+#    #pattern: "<regexp>"
+#    pattern_maps:
+#      - PropName
+#
+#  issues:
+#    prefix:
+#      - #
+#  refs:
+#    actions:
+#      - Closes
+#      - Fixes
+#
+#  merges:
+#    pattern: "^Merged in '(\\w+)'$"
+#     pattern_maps:
+#       - Source
+#
+#  reverts:
+#    pattern: "^Revert \"([\\s\\S]*)\"$"
+#    pattern_maps:
+#      - Header
+#
+#  notes:
+#    keywords:
+#      - BREAKING CHANGE
