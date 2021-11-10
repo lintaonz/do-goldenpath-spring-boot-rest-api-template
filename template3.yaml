@@ -63,6 +63,8 @@ spec:
       action: fetch:cookiecutter
       input:
         url: ./template
+        copyWithoutRender:
+          - '*.tpl.md'
         values:
           component_id: '{{ parameters.name }}'
           owner: '{{ parameters.owner }}'
