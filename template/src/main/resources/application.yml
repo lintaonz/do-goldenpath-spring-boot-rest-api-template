@@ -3,6 +3,8 @@ logging:
     org.springframework.web: INFO
 
 spring:
+  main:
+    banner-mode: "off"
   aop:
     auto = true
   profiles:

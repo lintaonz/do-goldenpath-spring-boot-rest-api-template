@@ -1,3 +1,12 @@
+logging:
+  config: classpath:log4j2-local.xml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:30005/mydb
+    username: myuser
+    password: mypassword
+
 # Include the features endpoint
 management:
   endpoints:
