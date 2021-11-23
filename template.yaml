@@ -129,6 +129,13 @@ spec:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
 
+    - id: bitbucket-webhooks
+      name: "BitBucket Webhooks"
+      action: publish:bitbucket-webhooks:twgnz-custom
+      input:
+        org: '{{ parameters.org }}'
+        repo: '{{ parameters.name }}'
+
     - id: sonarcloud
       name: "SonarCloud Code Analysis"
       action: publish:sonarcloud:twgnz-custom
