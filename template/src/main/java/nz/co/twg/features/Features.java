@@ -1,6 +1,7 @@
 package nz.co.twg.features;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
 * An implementation agnostic wrapper around feature flag frameworks to buffer against wide-spread
@@ -37,5 +38,13 @@ public class Features {
 
     public boolean isActive(Enum<?> key, boolean defaultValue) {
         return featureValueProvider.getBoolean(key.name(), subjectProvider.get(), defaultValue);
+    }
+
+    public void registerChangeListener(String key, BiConsumer<Boolean, Boolean> consumer) {
+        featureValueProvider.onChangeBoolean(key, subjectProvider.get(), consumer);
+    }
+
+    public void registerChangeListener(Enum<?> key, BiConsumer<Boolean, Boolean> consumer) {
+        featureValueProvider.onChangeBoolean(key.name(), subjectProvider.get(), consumer);
     }
 }

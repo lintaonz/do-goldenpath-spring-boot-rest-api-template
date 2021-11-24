@@ -2,6 +2,7 @@ package nz.co.twg.features;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /** An empty implementation of the {@link FeatureValueProvider} */
 public final class NoOpFeatureValueProvider implements FeatureValueProvider {
@@ -14,5 +15,10 @@ public final class NoOpFeatureValueProvider implements FeatureValueProvider {
     @Override
     public boolean getBoolean(String key, String subject, boolean defaultValue) {
         return defaultValue;
+    }
+
+    @Override
+    public void onChangeBoolean(String key, String subject, BiConsumer<Boolean, Boolean> consumer) {
+        // do nothing
     }
 }

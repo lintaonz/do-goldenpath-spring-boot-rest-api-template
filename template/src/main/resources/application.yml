@@ -22,6 +22,7 @@ management:
         prometheus: metrics
       exposure:
         include: health,prometheus
+  endpoint:
     health:
       probes:
         enabled: true
@@ -30,7 +31,7 @@ management:
 # launchdarkly configs
 launchdarkly:
   offline: false
-  default-user: template-user
+  default-user: {{cookiecutter.artifact_id}}
   sdk-key: sdk-key
   ### stream type data-source for prod, connects to the launchdarkly saas
   data-source:
