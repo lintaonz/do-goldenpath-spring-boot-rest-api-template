@@ -1,8 +1,11 @@
 package nz.co.twg.features;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.*;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 import org.junit.jupiter.api.Test;
 
 class NoOpFeatureValueProviderTest {
@@ -47,5 +50,19 @@ class NoOpFeatureValueProviderTest {
         // when + then
         result = provider.getAllBoolean(null);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testOnChangeBoolean() {
+        // given
+        NoOpFeatureValueProvider provider = new NoOpFeatureValueProvider();
+        Map<String, Boolean> result;
+        BiConsumer<Boolean, Boolean> consumer = spy(BiConsumer.class);
+
+        // when
+        provider.onChangeBoolean("key", "subject", consumer);
+
+        // then
+        verify(consumer, never()).accept(anyBoolean(), anyBoolean());
     }
 }

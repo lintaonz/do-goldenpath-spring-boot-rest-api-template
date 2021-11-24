@@ -75,6 +75,23 @@ if (features.isActive("feature-key")) {
 }
 ```
 
+If a reactionary/push type of approach is desired, one can register change listeners against a key.
+This is especially helpful if a functionality is to be toggled on and off during runtime without needing
+to rely on a separate thread polling for a state change.
+
+e.g. turning on and off
+a connection to a third party system, such as Kafka, database, or a SFTP connection.
+
+```java
+features.registerChangeListener("feature-key", (oldState, newState) -> {
+    if (newState) {
+        // do this
+    } else {
+        // do that
+    }
+});
+```
+
 ## Actuator
 An actuator endpoint has been created to allow simple management operations on feature toggles.
 They can be found under `https://{host}:{actuatorPort}/features`.

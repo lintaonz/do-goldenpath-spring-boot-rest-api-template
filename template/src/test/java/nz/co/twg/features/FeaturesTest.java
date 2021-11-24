@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -119,5 +120,39 @@ class FeaturesTest {
         verify(subjectProvider).get();
         verify(featureValueProvider).getBoolean(TestFeatureFlags.FEATURE_1.name(), subject, true);
         assertTrue(result);
+    }
+
+    @Test
+    void testRegisterChangeListener_String() {
+
+        // given
+        String featureKey = "key1";
+        String subject = "test";
+        when(subjectProvider.get()).thenReturn(subject);
+        BiConsumer<Boolean, Boolean> consumer = (oldValue, newValue) -> {};
+
+        // when
+        this.features.registerChangeListener(featureKey, consumer);
+
+        // then
+        verify(subjectProvider).get();
+        verify(featureValueProvider).onChangeBoolean(featureKey, subject, consumer);
+    }
+
+    @Test
+    void testRegisterChangeListener_Enum() {
+
+        // given
+        String subject = "test";
+        when(subjectProvider.get()).thenReturn(subject);
+        BiConsumer<Boolean, Boolean> consumer = (oldValue, newValue) -> {};
+
+        // when
+        this.features.registerChangeListener(TestFeatureFlags.FEATURE_1, consumer);
+
+        // then
+        verify(subjectProvider).get();
+        verify(featureValueProvider)
+                .onChangeBoolean(TestFeatureFlags.FEATURE_1.name(), subject, consumer);
     }
 }

@@ -1,6 +1,7 @@
 package nz.co.twg.features;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
 * Provide the value/status of the feature flag. An implementation of this interface should be done
@@ -17,4 +18,11 @@ public interface FeatureValueProvider {
     * @param defaultValue the default value
     */
     boolean getBoolean(String key, String subject, boolean defaultValue);
+
+    /**
+    * @param key the key of the feature flag
+    * @param subject the subject who queried the feature flag
+    * @param consumer a consumer that returns the old and new value of the change event
+    */
+    void onChangeBoolean(String key, String subject, BiConsumer<Boolean, Boolean> consumer);
 }

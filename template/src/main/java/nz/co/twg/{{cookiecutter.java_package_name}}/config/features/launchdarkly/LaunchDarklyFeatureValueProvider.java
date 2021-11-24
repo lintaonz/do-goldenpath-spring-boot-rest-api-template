@@ -1,10 +1,12 @@
 package nz.co.twg.{{cookiecutter.java_package_name}}.config.features.launchdarkly;
 
 import com.launchdarkly.sdk.LDUser;
+import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.server.FeatureFlagsState;
 import com.launchdarkly.sdk.server.LDClient;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import nz.co.twg.features.FeatureValueProvider;
 
 /** {@link FeatureValueProvider} with LaunchDarkly as its backing implementation */
@@ -34,5 +36,19 @@ public final class LaunchDarklyFeatureValueProvider implements FeatureValueProvi
     @Override
     public boolean getBoolean(String key, String subject, boolean defaultValue) {
         return ldClient.boolVariation(key, new LDUser(subject), defaultValue);
+    }
+
+    @Override
+    public void onChangeBoolean(String key, String subject, BiConsumer<Boolean, Boolean> consumer) {
+        ldClient
+                .getFlagTracker()
+                .addFlagValueChangeListener(
+                        key,
+                        new LDUser(subject),
+                        event -> {
+                            LDValue oldValue = event.getOldValue();
+                            LDValue newValue = event.getNewValue();
+                            consumer.accept(oldValue.booleanValue(), newValue.booleanValue());
+                        });
     }
 }
