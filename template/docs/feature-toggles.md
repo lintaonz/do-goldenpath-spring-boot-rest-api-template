@@ -63,7 +63,7 @@ LaunchDarkly will be the backing implementation for handling the management and 
 of all feature flags.
 
 ## Code
-To maintain framework agnostic, a thin wrapper class `nz.co.twg.features.Features` has been introduced
+To maintain framework agnostic, a thin wrapper class `nz.co.twg.common.features.Features` has been introduced
 for allowing simple querying of feature toggles. This class is created as a bean and injected to
 components that require access to feature toggles.
 
@@ -100,7 +100,7 @@ The mutating operations (`POST` and `DELETE`) are supported environments where L
 to load its data source from a file.
 
 ## Testing
-Since the underlying implementation is abstracted away via the `nz.co.twg.features.Features` wrapper
+Since the underlying implementation is abstracted away via the `nz.co.twg.common.features.Features` wrapper
 class, mock objects can be easily plugged in during unit tests.
 
 ```java
@@ -131,9 +131,9 @@ public void test() {
 
 ## Component Testing
 During component testing, feature toggle status  can be controlled via the
-`nz.co.twg.features.FeaturesSupport` class.
+`nz.co.twg.common.features.FeaturesSupport` class.
 
-The `nz.co.twg.{{cookiecutter.java_package_name}}.componenttest.util.ActuatorFeaturesSupport` implementation
+The `nz.co.twg.service.{{cookiecutter.java_package_name}}.componenttest.util.ActuatorFeaturesSupport` implementation
 will use the actuator endpoint provided by the running service to mutate the feature states.
 
 ```java
