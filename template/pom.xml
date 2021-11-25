@@ -45,7 +45,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <excludeDevtools>false</excludeDevtools>
-                    <mainClass>nz.co.twg.{{cookiecutter.java_package_name}}.Application</mainClass>
+                    <mainClass>nz.co.twg.service.{{cookiecutter.java_package_name}}.Application</mainClass>
                 </configuration>
             </plugin>
 
@@ -74,9 +74,9 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi-spec.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <configOptions>
-                                <basePackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi</basePackage>
-                                <apiPackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi.api</apiPackage>
-                                <modelPackage>nz.co.twg.{{cookiecutter.java_package_name}}.openapi.model</modelPackage>
+                                <basePackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi</basePackage>
+                                <apiPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.api</apiPackage>
+                                <modelPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.model</modelPackage>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipDefaultInterface>true</skipDefaultInterface>
@@ -107,7 +107,7 @@
                                 <arg>-XautoNameResolution</arg>
                             </args>
                             <schemaLanguage>WSDL</schemaLanguage>
-                            <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.wsdl</generatePackage>
+                            <generatePackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.wsdl</generatePackage>
                             <schemaDirectory>${project.basedir}/src/main/resources/wsdl</schemaDirectory>
                             <schemaIncludes>
                                 <include>*.wsdl</include>
@@ -123,7 +123,7 @@
                             <args>
                                 <arg>-XautoNameResolution</arg>
                             </args>
-                            <generatePackage>nz.co.twg.{{cookiecutter.java_package_name}}.xsd</generatePackage>
+                            <generatePackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.xsd</generatePackage>
                             <schemaDirectory>${project.basedir}/src/main/resources/xsd</schemaDirectory>
                             <schemaIncludes>
                                 <include>*.xsd</include>
@@ -169,15 +169,15 @@
                 <configuration>
                     <excludes>
                         <!-- Spring configurations -->
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Config.*</exclude>
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Config$*.*</exclude>
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Properties.*</exclude>
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/config/**/*Properties$*.*</exclude>
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/**/actuator/*Endpoint.*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/config/**/*Config.*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/config/**/*Config$*.*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/config/**/*Properties.*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/config/**/*Properties$*.*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/**/actuator/*Endpoint.*</exclude>
 
                         <!-- generated code -->
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/openapi/**/*</exclude>
-                        <exclude>nz/co/twg/{{cookiecutter.java_package_name}}/sdem/**/*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/openapi/**/*</exclude>
+                        <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/sdem/**/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -188,7 +188,7 @@
                 <version>1.1.1</version>
                 <configuration>
                     <sourceDirectory>${project.basedir}/src/main/resources/sdem</sourceDirectory>
-                    <targetPackage>nz.co.twg.{{cookiecutter.java_package_name}}.sdem</targetPackage>
+                    <targetPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.sdem</targetPackage>
                 </configuration>
                 <executions>
                     <execution>
@@ -226,9 +226,9 @@
                         <!-- this is required for ErrorProne to work -->
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>
-                  -Xplugin:ErrorProne \
-                  -XepExcludedPaths:.*/(target/generated-sources|src/test|src/componenttest)/.+ \
-                  -XepOpt:NullAway:AnnotatedPackages=nz.co.twg.{{cookiecutter.java_package_name}}
+                            -Xplugin:ErrorProne \
+                            -XepExcludedPaths:.*/(target/generated-sources|src/test|src/componenttest)/.+ \
+                            -XepOpt:NullAway:AnnotatedPackages=nz.co.twg.service.{{cookiecutter.java_package_name}}
                         </arg>
                     </compilerArgs>
                 </configuration>
