@@ -1,0 +1,95 @@
+#!groovy
+
+@Library('do-jenkins-shared-libraries@master')
+
+// service details
+def serviceName = '{{cookiecutter.artifact_id}}'
+
+pipeline {
+    agent none
+
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        skipStagesAfterUnstable()
+        timeout time: 30, unit: 'MINUTES'
+    }
+
+    parameters {
+        string(
+                name: 'ENV',
+                defaultValue: 'DEFAULT',
+                description: '')
+        string(
+                name: 'COMMIT_ID',
+                defaultValue: 'DEFAULT',
+                description: 'Commit Id to use for tests'
+        )
+    }
+
+    stages {
+        stage('dev') {
+            when {
+                beforeOptions true
+                beforeAgent true
+                expression { params.ENV == 'dev' }
+            }
+            agent {
+                label 'build-agent'
+            }
+            steps {
+                script {
+                    docker.image('maven:3.8-openjdk-11').inside('-v /home/ec2-user/m2cache:/root/.m2 --network host') {
+                        echo "Commit id is ${params.COMMIT_ID}."
+                        sh "git checkout ${params.COMMIT_ID}"
+
+                        // run smoke tests
+                        // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                    }
+                }
+            }
+        }
+        stage('test') {
+            when {
+                beforeOptions true
+                beforeAgent true
+                expression { params.ENV == 'test' }
+            }
+            agent {
+                label 'build-agent'
+            }
+            steps {
+                script {
+                    docker.image('maven:3.8-openjdk-11').inside('-v /home/ec2-user/m2cache:/root/.m2 --network host') {
+                        echo "Commit id is ${params.COMMIT_ID}."
+                        sh "git checkout ${params.COMMIT_ID}"
+
+                         // add smoke tests here
+                         // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                    }
+                }
+            }
+        }
+        stage('prod') {
+            when {
+                beforeOptions true
+                beforeAgent true
+                expression { params.ENV == 'prod' }
+            }
+            agent {
+                label 'build-agent'
+            }
+            steps {
+                script {
+                    docker.image('maven:3.8-openjdk-11').inside('-v /home/ec2-user/m2cache:/root/.m2 --network host') {
+                        echo "Commit id is ${params.COMMIT_ID}."
+                        sh "git checkout ${params.COMMIT_ID}"
+
+                        // add smoke tests here
+                        // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                    }
+                }
+            }
+        }
+    }
+}

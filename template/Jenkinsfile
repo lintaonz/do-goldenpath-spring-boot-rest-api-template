@@ -5,14 +5,25 @@
 // service details
 def serviceName = '{{cookiecutter.artifact_id}}'
 
-// helm chart details
-def chartName = 'do-container-deployment'
-def chartVersion = '0.1.16'
-
-// namespace details
-def namespaceDev = '{{cookiecutter.prefix}}-dev'
-def namespaceTest = '{{cookiecutter.prefix}}-test'
-def namespaceProd = '{{cookiecutter.prefix}}-prod'
+def harnessTriggerPayload = """
+application: "oqjOVQTnRYyCFzCq7V1egQ"
+parameters:
+  service: {{cookiecutter.artifact_id}}
+  service_type: rest
+  chart_version: 0.1.20
+  dev_infra: aks-dev
+  dev_namespace: {{cookiecutter.prefix}}-dev
+  test_infra: aks-test
+  test_namespace: {{cookiecutter.prefix}}-test
+  prod_infra: aks-prod
+  prod_namespace: {{cookiecutter.prefix}}-prod
+  product_name: {{cookiecutter.prefix}}
+  elasticsearch_index: "*__{{cookiecutter.prefix}}*__log_*"
+  build_number: BUILD_VERSION
+  app_commit_id: APP_COMMIT_ID
+  deploy_commit_id: DEPLOY_COMMIT_ID
+  artifact_base_url: ARTIFACT_BASE_URL
+"""
 
 def docker_registry_url = 'https://index.docker.io/v1/'
 def docker_registry_cred_id = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
@@ -34,18 +45,6 @@ spec:
   - name: regsecret
 '''
 
-def kubernetes_deploy_agent = '''
-spec:
-  containers:
-  - name: helm
-    image: twgorg/do-jenkinsk8sagent:helm3.1.1baseimage
-    command:
-    - cat
-    tty: true
-  imagePullSecrets:
-  - name: regsecret
-'''
-
 pipeline {
     agent none
 
@@ -56,20 +55,10 @@ pipeline {
         timeout time: 30, unit: 'MINUTES'
     }
 
-    parameters {
-        booleanParam(
-        name: 'DEPLOY_TO_PROD',
-        defaultValue: false,
-        description: '')
-        string(
-        name: 'APP_COMMIT_VERSION',
-        defaultValue: 'DEFAULT',
-        description: 'Commit version of the app to deploy, this is only valid if DEPLOY_TO_PROD is selected. Allows to deploy an older build with the current deployment values. Preffered method is selecting "Restart from Stage" to use same commit for build and deploy'
-    )
-    }
     environment {
         NEXUS_CREDS = credentials('do-nexus-credentials')
         NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
+        HARNESS_WEBHOOK_URL = 'https://app.harness.io/gateway/api/webhooks/qStpqftzykZP5FOKGEt1pwNhSVjOwQ233JbdBrxU?accountId=hOGfjDXdRbeM1IHvM1to9Q'
         CHANGELOG_FILENAME = './CHANGELOG.md'
     }
     stages {
@@ -122,7 +111,7 @@ pipeline {
             post {
                 always {
                     script {
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
+                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                         uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
                     }
                 }
@@ -166,188 +155,51 @@ pipeline {
             post {
                 always {
                     script {
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
+                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                     }
                 }
             }
         }
-
-        stage('Deploy to Dev & Verify') {
-            options {
-                lock resource: "${env.JOB_NAME}-dev", quantity: 1, variable: 'deployEnv'
-            }
+        stage('Trigger Deployment') {
             when {
                 beforeOptions true
                 beforeAgent true
                 expression { env.BRANCH_NAME == 'master' }
-                not {
-                    expression { return params.DEPLOY_TO_PROD }
-                }
             }
             agent {
                 kubernetes {
-                    yaml kubernetes_deploy_agent
+                    yaml kubernetes_prepare_deploy_agent
+                    inheritFrom 'k8s-docker-image-build-template'
+                    yamlMergeStrategy merge()
                 }
             }
-            environment {
-                NEXUS_CREDS = credentials('do-nexus-credentials')
-                NEXUS_REPO_BASE_URL = 'https://nexus-dev-aws.twg.co.nz/repository/do-helm-charts/'
-            }
             steps {
-                container('helm') {
+                container('curl') {
                     script {
-                        withCredentials([file(credentialsId: 'AKS_dev_cluster_kubeconfig', variable: 'KUBECONFIG')]) {
-                            environment = 'dev'
-                            namespace = "${namespaceDev}"
-                            chartDownloadDirectory = "./helm-chart-${chartName}-${chartVersion}"
-                            chartDirectory = "./${chartDownloadDirectory}/${chartName}"
 
-                            buildVersion = "${env.GIT_COMMIT}"
+                        // deployment info for the harness payload
+                        harnessPayload = readYaml text: harnessTriggerPayload
+                        harnessPayload.parameters.build_number = "${env.BUILD_NUMBER}"
+                        harnessPayload.parameters.app_commit_id = "${env.GIT_COMMIT}"
+                        harnessPayload.parameters.deploy_commit_id = "${env.GIT_COMMIT}"
+                        harnessPayload.parameters.artifact_base_url = "$NEXUS_REPO_BASE_URL_ARTIFACTS/$JOB_NAME/$BUILD_NUMBER"
+                        String harnessPayloadJson = writeJSON file: 'harness-payload.json', json: harnessPayload
 
-                            // Remove non-ascii (unicode) invisible characters, can come in if doing a copy/paste from html pages e.g. Jenkins build description page
-                            buildVersion = buildVersion.replaceAll("[^\\x00-\\x7F]", '')
+                        sh 'echo About to trigger harness...'
+                        sh 'cat harness-payload.json'
+                        sh "curl --silent --show-error --include --fail -X POST -H 'content-type: application/json' --url $HARNESS_WEBHOOK_URL -d '@harness-payload.json'"
 
-                            sh "helm pull ${chartName} --version ${chartVersion} --untar --untardir ${chartDownloadDirectory} --repo ${env.NEXUS_REPO_BASE_URL} --username ${env.NEXUS_CREDS_USR} --password ${env.NEXUS_CREDS_PSW}"
-
-                            print "Deploying ${buildVersion} to namespace ${namespace} for env ${environment}"
-                            sh "helm --namespace ${namespace} ls"
-
-                            print 'Doing dry run'
-                            sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-
-                            print 'Applying helm chart'
-                            sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-                        }
                     }
                 }
             }
             post {
                 always {
                     script {
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
+                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                     }
                 }
             }
-        }
 
-        stage('Deploy to Test & Verify') {
-            options {
-                lock resource: "${JOB_NAME}-test", quantity: 1, variable: 'deployEnv'
-            }
-            when {
-                beforeOptions true
-                beforeAgent true
-                expression { BRANCH_NAME == 'master' }
-                not {
-                    expression { return params.DEPLOY_TO_PROD }
-                }
-            }
-            agent {
-                kubernetes {
-                    yaml kubernetes_deploy_agent
-                }
-            }
-            environment {
-                NEXUS_CREDS = credentials('do-nexus-credentials')
-                NEXUS_REPO_BASE_URL = 'https://nexus-dev-aws.twg.co.nz/repository/do-helm-charts/'
-            }
-            steps {
-                container('helm') {
-                    script {
-                        withCredentials([file(credentialsId: 'AKS_test_cluster_kubeconfig', variable: 'KUBECONFIG')]) {
-                            environment = 'test'
-                            namespace = "${namespaceTest}"
-                            chartDownloadDirectory = "./helm-chart-${chartName}-${chartVersion}"
-                            chartDirectory = "./${chartDownloadDirectory}/${chartName}"
-
-                            buildVersion = "${env.GIT_COMMIT}"
-
-                            // Remove non-ascii (unicode) invisible characters, can come in if doing a copy/paste from html pages e.g. Jenkins build description page
-                            buildVersion = buildVersion.replaceAll("[^\\x00-\\x7F]", '')
-
-                            sh "helm pull ${chartName} --version ${chartVersion} --untar --untardir ${chartDownloadDirectory} --repo ${env.NEXUS_REPO_BASE_URL} --username ${env.NEXUS_CREDS_USR} --password ${env.NEXUS_CREDS_PSW}"
-
-                            print "Deploying ${buildVersion} to namespace ${namespace} for env ${environment}"
-                            sh "helm --namespace ${namespace} ls"
-
-                            print 'Doing dry run'
-                            sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-
-                            print 'Applying helm chart'
-                            sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-                        }
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Prod & Verify') {
-            options {
-                lock resource: "${JOB_NAME}-prod", quantity: 1, variable: 'deployEnv'
-            }
-            when {
-                beforeOptions true
-                beforeAgent true
-                expression { BRANCH_NAME == 'master' }
-                anyOf {
-                    expression { return params.DEPLOY_TO_PROD }
-                    expression { return isBuildCauseStageRestartFrom('Deploy to Prod & Verify', currentBuild) }
-                }
-            }
-            agent {
-                kubernetes {
-                    yaml kubernetes_deploy_agent
-                }
-            }
-            environment {
-                NEXUS_CREDS = credentials('do-nexus-credentials')
-                NEXUS_REPO_BASE_URL = 'https://nexus-dev-aws.twg.co.nz/repository/do-helm-charts/'
-            }
-            steps {
-                container('helm') {
-                    script {
-                        withCredentials([file(credentialsId: 'AKS_prod_cluster_kubeconfig', variable: 'KUBECONFIG')]) {
-                            environment = 'prod'
-                            namespace = "${namespaceProd}"
-                            chartDownloadDirectory = "./helm-chart-${chartName}-${chartVersion}"
-                            chartDirectory = "./${chartDownloadDirectory}/${chartName}"
-
-                            buildVersion = "${env.GIT_COMMIT}"
-                            if ("${params.APP_COMMIT_VERSION}" != 'DEFAULT') {
-                                buildVersion = "${params.APP_COMMIT_VERSION}"
-                            }
-
-                            // Remove non-ascii (unicode) invisible characters, can come in if doing a copy/paste from html pages e.g. Jenkins build description page
-                            buildVersion = buildVersion.replaceAll("[^\\x00-\\x7F]", '')
-
-                            sh "helm pull ${chartName} --version ${chartVersion} --untar --untardir ${chartDownloadDirectory} --repo ${env.NEXUS_REPO_BASE_URL} --username ${env.NEXUS_CREDS_USR} --password ${env.NEXUS_CREDS_PSW}"
-
-                            print "Deploying ${buildVersion} to namespace ${namespace} for env ${environment}"
-                            sh "helm --namespace ${namespace} ls"
-
-                            print 'Doing dry run'
-                            sh "helm upgrade --dry-run --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-
-                            print 'Applying helm chart'
-                            sh "helm upgrade --atomic --wait --debug --install --namespace ${namespace} -f deploy/${environment}/values.yaml --set-string appVersion=${buildVersion} ${serviceName} ${chartDirectory}"
-                        }
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, params.APP_COMMIT_VERSION)
-                    }
-                }
-            }
         }
     }
 }
