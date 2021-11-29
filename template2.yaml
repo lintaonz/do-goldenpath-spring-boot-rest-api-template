@@ -88,6 +88,8 @@ spec:
         name:
           title: Unique name of the component
           type: string
+          ui:field: ComponentDetailsNameExtension
+          ui:autofocus: true
         description:
           title: Description for the component
           type: string
