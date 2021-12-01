@@ -26,6 +26,12 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>{{cookiecutter.organization_id}}</sonar.organization>
         <sonar.projectKey>{{cookiecutter.organization_id}}_${project.artifactId}</sonar.projectKey>
+        <!-- matches the jacoco patterns -->
+        <sonar.coverage.exclusions>
+            **/config/**/*Config.java,
+            **/config/**/*Properties.java,
+            **/actuator/**/*Endpoint.java
+        </sonar.coverage.exclusions>
         <!-- <sonar.login> property should be specified through arguments: -Dsonar.login="${TOKEN}"
              or SONAR_TOKEN environment variable -->
         <revision>1.0.0-SNAPSHOT</revision>

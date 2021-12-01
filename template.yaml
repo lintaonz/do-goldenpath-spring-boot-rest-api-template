@@ -44,6 +44,8 @@ spec:
               title: "ARC - Architecture Team"
             - const: "B2B"
               title: "B2B - Salesforce B2B project"
+            - const: "DATA"
+              title: "DATA - Data Structure and Information"
             - const: "DE"
               title: "DE - Salesforce Commerce Cloud (Demandware)"
             - const: "DO"

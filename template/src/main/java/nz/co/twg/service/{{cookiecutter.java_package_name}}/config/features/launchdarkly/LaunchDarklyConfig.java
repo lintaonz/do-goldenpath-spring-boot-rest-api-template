@@ -8,11 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import nz.co.twg.common.features.FeatureValueProvider;
-import nz.co.twg.common.features.FeaturesSupport;
-import nz.co.twg.common.features.NoOpFeaturesSupport;
-import nz.co.twg.common.features.StaticSubjectProvider;
-import nz.co.twg.common.features.SubjectProvider;
+import nz.co.twg.common.features.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -21,16 +17,8 @@ public class LaunchDarklyConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(LaunchDarklyConfig.class);
 
-    public LaunchDarklyConfig(LaunchDarklyProperties properties) throws IOException {
-        if (properties.getDataSource().getType() == LaunchDarklyProperties.DataSource.Type.FILE) {
-            // ensure the directory with the file exists
-            Path parentDir = Paths.get(properties.getDataSource().getFile().getLocation()).getParent();
-            Files.createDirectories(parentDir);
-        }
-    }
-
     @Bean
-    public LDClient launchDarklyClient(LaunchDarklyProperties properties) {
+    public LDClient launchDarklyClient(LaunchDarklyProperties properties) throws IOException {
         LDConfig.Builder configBuilder = new LDConfig.Builder().offline(properties.isOffline());
 
         LaunchDarklyProperties.DataSource dataSource = properties.getDataSource();
@@ -38,6 +26,7 @@ public class LaunchDarklyConfig {
             logger.info("datasource is file");
             logger.info("location: {}", dataSource.getFile().getLocation());
             logger.info("auto-reload: {}", dataSource.getFile().isAutoReload());
+            ensureParentDirectoryExists(dataSource.getFile().getLocation());
 
             configBuilder.dataSource(
                     FileData.dataSource()
@@ -66,10 +55,18 @@ public class LaunchDarklyConfig {
     }
 
     @Bean
-    public FeaturesSupport featuresSupport(LaunchDarklyProperties properties) {
+    public FeaturesSupport featuresSupport(LaunchDarklyProperties properties) throws IOException {
         if (properties.getDataSource().getType() == LaunchDarklyProperties.DataSource.Type.FILE) {
+            ensureParentDirectoryExists(properties.getDataSource().getFile().getLocation());
             return new LaunchDarklyFeaturesSupport(properties.getDataSource().getFile().getLocation());
         }
         return new NoOpFeaturesSupport();
+    }
+
+    void ensureParentDirectoryExists(String path) throws IOException {
+        Path parentDir = Paths.get(path).getParent();
+        if (Files.notExists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
     }
 }
