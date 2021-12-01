@@ -92,12 +92,50 @@ features.registerChangeListener("feature-key", (oldState, newState) -> {
 });
 ```
 
+## Local Development
+For ease of local development, by default, the local Spring profile will be enabled. This will also configure the LaunchDarkly SDK to source its value from a local file.
+
+This file by default will exist in the temporary directory (varies by OS). Feel free to configure to wherever is desired.
+* For Linux / macOS, this will by default be `/tmp`
+* For Windows, this will be by default be `C:\Users\<user>\AppData\Local\Temp`)
+
+The content of the file follows the following format:
+
+```json
+{
+    "flagValues": {
+        "featureKey1": true,
+        "featureKey2": false,
+        "featureKey3": true,
+        ...
+    }
+}
+```
+
+One can modify this file manually to change the feature key value, but that can be a bit manual and tedious.
+An Actuator endpoint `https://localhost:{actuatorPort}/features` is available for accessing and mutating the feature
+values via HTTP requests.
+
 ## Actuator
-An actuator endpoint has been created to allow simple management operations on feature toggles.
+The following actuator endpoint has been created to allow simple management operations on feature toggles.
 They can be found under `https://{host}:{actuatorPort}/features`.
 
-The mutating operations (`POST` and `DELETE`) are supported environments where LaunchDarkly is configured
-to load its data source from a file.
+> GET - `https://localhost:{actuatorPort}/features`- Returns all features
+
+> GET - `https://localhost:{actuatorPort}/features/{key}` - Returns the value for the given feature key
+
+> POST - `https://localhost:{actuatorPort}/features/{key}` - Modify the value for a given feature key
+> ```json
+> {
+>     "value": true | false
+> }
+> ```
+
+> DELETE - `https://localhost:{actuatorPort}/features/{key}` - Remove the given feature key
+
+> DELETE - `https://localhost:{actuatorPort}/features` - Remove all features
+
+The mutating endpoints (`POST`, `DELETE`) are only available if the LD data-source is a file, and the `auto-reload` config must be true.
 
 ## Testing
 Since the underlying implementation is abstracted away via the `nz.co.twg.common.features.Features` wrapper
