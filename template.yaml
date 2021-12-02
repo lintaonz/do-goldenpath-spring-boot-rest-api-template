@@ -84,6 +84,8 @@ spec:
               title: "MOB - TWL & NL App"
             - const: "QA"
               title: "QA"
+            - const: "SFSC"
+              title: "SFSC - Salesforce Service Cloud"
             - const: "SS"
               title: "SS - Store Services"
             - const: "WMS"
