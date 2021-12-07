@@ -127,9 +127,13 @@ spec:
 
     - id: publish
       name: "Publish"
-      action: publish:file
+      action: publish:bitbucket:twgnz-custom
       input:
-        path: /tmp/backstage/{{ parameters.name }}
+        allowedHosts: ['bitbucket.org']
+        description: 'This is {{ parameters.name }}'
+        org: '{{ parameters.org }}'
+        project: '{{ parameters.project }}'
+        repo: '{{ parameters.name }}'
 
     - id: bitbucket-webhooks
       name: "BitBucket Webhooks"
@@ -151,6 +155,13 @@ spec:
       input:
         project: '{{ parameters.project }}'
         repo: '{{ parameters.name }}'
+
+    - id: harness-service
+      name: "Pipeline: Harness Service"
+      action: harness:service-creation:twgnz-custom
+      input:
+        name: '{{ parameters.name }}'
+        description: '{{ parameters.description }}'
 
     - id: register
       name: "Register"
