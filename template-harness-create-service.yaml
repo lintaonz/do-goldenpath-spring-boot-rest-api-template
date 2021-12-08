@@ -102,10 +102,11 @@ spec:
           title: Description for the component
           type: string
 
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
     - id: harness-service
       name: "Pipeline: Harness Service"
       action: harness:service-creation:twgnz-custom
       input:
         name: '{{ parameters.name }}'
         description: '{{ parameters.description }}'
-
