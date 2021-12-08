@@ -106,6 +106,16 @@ spec:
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
+    # This step will pre-append the project to the project name if it is not specified.
+    # from this point onwards, all places needing to use the component name should be
+    # using '{{ steps.prepend-project.output.repoName }}' instead of '{{ parameters.name }}'
+    - id: prepend-project
+      name: "Prepend Project Key"
+      action: prefix-repo-name:twgnz-custom
+      input:
+        project: '{{ parameters.project }}'
+        repo: '{{ parameters.name }}'
+
     - id: fetch-base
       name: "Fetch Base"
       action: fetch:cookiecutter
@@ -114,7 +124,7 @@ spec:
         copyWithoutRender:
           - '*.tpl.md'
         values:
-          component_id: '{{ parameters.name }}'
+          component_id: '{{ steps.prepend-project.output.repoName }}'
           organization_id: '{{ parameters.org }}'
           project: '{{ parameters.project }}'
           description: '{{ parameters.description }}'
@@ -130,38 +140,49 @@ spec:
       action: publish:bitbucket:twgnz-custom
       input:
         allowedHosts: ['bitbucket.org']
-        description: 'This is {{ parameters.name }}'
+        description: 'This is {{ steps.prepend-project.output.repoName }}'
         org: '{{ parameters.org }}'
         project: '{{ parameters.project }}'
-        repo: '{{ parameters.name }}'
+        repo: '{{ steps.prepend-project.output.repoName }}'
 
+    # This step set up the webhook required for jenkins to be triggered on
+    # code push in bitbucket
     - id: bitbucket-webhooks
       name: "BitBucket Webhooks"
       action: publish:bitbucket-webhooks:twgnz-custom
       input:
         org: '{{ parameters.org }}'
-        repo: '{{ parameters.name }}'
+        repo: '{{ steps.prepend-project.output.repoName }}'
 
     - id: sonarcloud
       name: "SonarCloud Code Analysis"
       action: publish:sonarcloud:twgnz-custom
       input:
         org: '{{ parameters.org }}'
-        repo: '{{ parameters.name }}'
+        repo: '{{ steps.prepend-project.output.repoName }}'
 
     - id: pipeline-jenkins
       name: "Pipeline: Jenkins"
       action: publish:jenkins:twgnz-custom
       input:
         project: '{{ parameters.project }}'
-        repo: '{{ parameters.name }}'
+        repo: '{{ steps.prepend-project.output.repoName }}'
 
     - id: harness-service
-      name: "Pipeline: Harness Service"
+      name: "Pipeline: Harness - Service Creation"
       action: harness:service-creation:twgnz-custom
       input:
-        name: '{{ parameters.name }}'
+        name: '{{ steps.prepend-project.output.repoName }}'
         description: '{{ parameters.description }}'
+
+    # This step sets up the user group permissions to point to the newly
+    # created service. The group is derived from the project selected.
+    - id: harness-service-permissions
+      name: "Pipeline: Harness - Service Permissions"
+      action: harness:service-permissions:twgnz-custom
+      input:
+        name: '{{ steps.prepend-project.output.repoName }}'
+        project: '{{ parameters.project }}'
 
     - id: register
       name: "Register"
