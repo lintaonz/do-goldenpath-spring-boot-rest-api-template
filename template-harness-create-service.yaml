@@ -1,0 +1,111 @@
+apiVersion: backstage.io/v1beta2
+kind: Template
+metadata:
+  # unique name per namespace for the template
+  name: test-harness-create-service
+  # title of the template
+  title: Test Harness Service Creation
+  # a description of the template
+  description: Just for testing purposes
+  # some tags to display in the frontend
+  tags:
+    - harness
+    - test
+spec:
+  owner: devops
+  type: microservice
+  # if the template is not in the current directory where this definition is kept then specify
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Choose Bitbucket Project
+      required:
+        - org
+        - project
+      properties:
+        org:
+          title: Organization
+          type: string
+          description: Bitbucket organization workspace
+          oneOf:
+            - const: "twgnz"
+              title: "TWGNZ - The Warehouse Group"
+        project:
+          title: Project
+          type: string
+          description: Bitbucket project name
+          ui:autofocus: true
+          oneOf:
+            - const: "AI"
+              title: "AI - Analytics and Insights"
+            - const: "ARC"
+              title: "ARC - Architecture Team"
+            - const: "B2B"
+              title: "B2B - Salesforce B2B project"
+            - const: "DATA"
+              title: "DATA - Data Structure and Information"
+            - const: "DE"
+              title: "DE - Salesforce Commerce Cloud (Demandware)"
+            - const: "DO"
+              title: "DO - Devops"
+            - const: "ERPFI"
+              title: "ERPFI - Enterprise Resource Planning Financials"
+            - const: "ESB"
+              title: "ESB - Enterprise Service Bus"
+            - const: "FF"
+              title: "FF - Fulfillment"
+            - const: "FIN"
+              title: "FIN - Oracle Financials"
+            - const: "GBS"
+              title: "GBS - Group Booking System"
+            - const: "GEP"
+              title: "GEP - Salesforce Group eCommerce Platform"
+            - const: "IHUB"
+              title: "IHUB - Integration Hub"
+            - const: "IN"
+              title: "IN - In-house apps"
+            - const: "INTEG"
+              title: "INTEG - Integration"
+            - const: "IS"
+              title: "IS - Infrastructure"
+            - const: "ISOC"
+              title: "ISOC - IS Operations cloud Squad"
+            - const: "LOYAL"
+              title: "LOYAL - Loyalty"
+            - const: "LPA"
+              title: "LPA - Loyalty, Payment and Advisory"
+            - const: "MDM"
+              title: "MDM - Master Data Management"
+            - const: "MER"
+              title: "MER - Merch"
+            - const: "MOB"
+              title: "MOB - TWL & NL App"
+            - const: "QA"
+              title: "QA"
+            - const: "SFSC"
+              title: "SFSC - Salesforce Service Cloud"
+            - const: "SS"
+              title: "SS - Store Services"
+            - const: "WMS"
+              title: "WMS"
+    - title: Provide Component Details
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Unique name of the component
+          type: string
+          ui:field: ComponentDetailsNameExtension
+          ui:autofocus: true
+        description:
+          title: Description for the component
+          type: string
+
+    - id: harness-service
+      name: "Pipeline: Harness Service"
+      action: harness:service-creation:twgnz-custom
+      input:
+        name: '{{ parameters.name }}'
+        description: '{{ parameters.description }}'
+
