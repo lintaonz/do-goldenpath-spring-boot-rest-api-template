@@ -5,11 +5,14 @@ This is the Golden Path template for building Java Spring Boot REST APIs.
 ## What is included
 
 - A Spring Boot REST API
+- OpenAPI spec
 - ECS Logging
 - Jenkins pipeline
+- SonarCloud code analysis
+- OWASP dependency vulnerability check
+- Harness deployment
+- Feature toggle
 - Kubernetes deployment
-- OpenAPI spec
-- Open Telemetry (coming soon)
 - Prometheus stats
 
 ## How do I use it?
