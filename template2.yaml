@@ -161,9 +161,16 @@ spec:
         org: '{{ parameters.org }}'
         repo: '{{ steps.prepend-project.output.repoName }}'
 
-    - id: pipeline-jenkins
+    - id: jenkins
       name: "Pipeline: Jenkins"
       action: publish:jenkins:twgnz-custom
+      input:
+        project: '{{ parameters.project }}'
+        repo: '{{ steps.prepend-project.output.repoName }}'
+
+    - id: jenkins-smoketest
+      name: "Pipeline: Jenkins Smoke Test"
+      action: publish:jenkins-smoketest:twgnz-custom
       input:
         project: '{{ parameters.project }}'
         repo: '{{ steps.prepend-project.output.repoName }}'
