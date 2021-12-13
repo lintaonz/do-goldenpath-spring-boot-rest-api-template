@@ -90,6 +90,8 @@ spec:
               title: "SS - Store Services"
             - const: "WMS"
               title: "WMS"
+            - const: "PRISM"
+              title: "PRISM - Noel Leeming Prism Team"
     - title: Provide Component Details
       required:
         - name
