@@ -415,6 +415,7 @@
                         </format>
                     </formats>
                     <java>
+                        <toggleOffOn />
                         <includes>
                             <include>src/componenttest/java/**/*.java</include>
                             <include>src/main/java/**/*.java</include>
