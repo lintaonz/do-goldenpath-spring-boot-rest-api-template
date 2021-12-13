@@ -82,6 +82,8 @@ spec:
               title: "MER - Merch"
             - const: "MOB"
               title: "MOB - TWL & NL App"
+            - const: "PRISM"
+              title: "PRISM - Noel Leeming Prism Team"
             - const: "QA"
               title: "QA"
             - const: "SFSC"
