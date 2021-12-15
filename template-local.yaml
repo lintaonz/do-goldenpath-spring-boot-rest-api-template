@@ -2,11 +2,11 @@ apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
   # unique name per namespace for the template
-  name: do-goldenpath-spring-boot-rest-api-template
+  name: do-goldenpath-spring-boot-rest-api-template-local
   # title of the template
-  title: Golden Path Spring Boot REST API Template
+  title: Golden Path Spring Boot REST API Template - Local
   # a description of the template
-  description: Build a Golden Path RESTful API with Spring Boot
+  description: Local template that publishes to the local filesystem
   # some tags to display in the frontend
   tags:
     - api
@@ -141,66 +141,62 @@ spec:
 
     - id: publish
       name: "Publish"
-      action: publish:bitbucket:twgnz-custom
+      action: publish:file
       input:
-        allowedHosts: ['bitbucket.org']
-        description: 'This is {{ steps.prepend-project.output.repoName }}'
-        org: '{{ parameters.org }}'
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        path: '/tmp/backstage/{{ steps.prepend-project.output.repoName }}'
 
-    # This step set up the webhook required for jenkins to be triggered on
-    # code push in bitbucket
-    - id: bitbucket-webhooks
-      name: "BitBucket Webhooks"
-      action: publish:bitbucket-webhooks:twgnz-custom
-      input:
-        org: '{{ parameters.org }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
-
-    - id: sonarcloud
-      name: "SonarCloud Code Analysis"
-      action: publish:sonarcloud:twgnz-custom
-      input:
-        org: '{{ parameters.org }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
-
-    - id: jenkins
-      name: "Pipeline: Jenkins"
-      action: publish:jenkins:twgnz-custom
-      input:
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
-
-    - id: jenkins-smoketest
-      name: "Pipeline: Jenkins Smoke Test"
-      action: publish:jenkins-smoketest:twgnz-custom
-      input:
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
-
-    - id: harness-service
-      name: "Pipeline: Harness - Service Creation"
-      action: harness:service-creation:twgnz-custom
-      input:
-        name: '{{ steps.prepend-project.output.repoName }}'
-        description: '{{ parameters.description }}'
-
-    # This step sets up the user group permissions to point to the newly
-    # created service. The group is derived from the project selected.
-    - id: harness-service-permissions
-      name: "Pipeline: Harness - Service Permissions"
-      action: harness:service-permissions:twgnz-custom
-      input:
-        name: '{{ steps.prepend-project.output.repoName }}'
-        project: '{{ parameters.project }}'
-
-    - id: register
-      name: "Register"
-      action: catalog:register
-      input:
-        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
-        catalogInfoPath: '/catalog-info.yaml'
+#    # This step set up the webhook required for jenkins to be triggered on
+#    # code push in bitbucket
+#    - id: bitbucket-webhooks
+#      name: "BitBucket Webhooks"
+#      action: publish:bitbucket-webhooks:twgnz-custom
+#      input:
+#        org: '{{ parameters.org }}'
+#        repo: '{{ steps.prepend-project.output.repoName }}'
+#
+#    - id: sonarcloud
+#      name: "SonarCloud Code Analysis"
+#      action: publish:sonarcloud:twgnz-custom
+#      input:
+#        org: '{{ parameters.org }}'
+#        repo: '{{ steps.prepend-project.output.repoName }}'
+#
+#    - id: jenkins
+#      name: "Pipeline: Jenkins"
+#      action: publish:jenkins:twgnz-custom
+#      input:
+#        project: '{{ parameters.project }}'
+#        repo: '{{ steps.prepend-project.output.repoName }}'
+#
+#    - id: jenkins-smoketest
+#      name: "Pipeline: Jenkins Smoke Test"
+#      action: publish:jenkins-smoketest:twgnz-custom
+#      input:
+#        project: '{{ parameters.project }}'
+#        repo: '{{ steps.prepend-project.output.repoName }}'
+#
+#    - id: harness-service
+#      name: "Pipeline: Harness - Service Creation"
+#      action: harness:service-creation:twgnz-custom
+#      input:
+#        name: '{{ steps.prepend-project.output.repoName }}'
+#        description: '{{ parameters.description }}'
+#
+#    # This step sets up the user group permissions to point to the newly
+#    # created service. The group is derived from the project selected.
+#    - id: harness-service-permissions
+#      name: "Pipeline: Harness - Service Permissions"
+#      action: harness:service-permissions:twgnz-custom
+#      input:
+#        name: '{{ steps.prepend-project.output.repoName }}'
+#        project: '{{ parameters.project }}'
+#
+#    - id: register
+#      name: "Register"
+#      action: catalog:register
+#      input:
+#        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
+#        catalogInfoPath: '/catalog-info.yaml'
 
   output:
     remoteUrl: '{{ steps.publish.output.remoteUrl }}'
