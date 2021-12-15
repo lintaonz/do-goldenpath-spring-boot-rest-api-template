@@ -91,6 +91,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <generateSupportingFiles>false</generateSupportingFiles>
+                            <typeMappings>
+                                <typeMapping>integer=Long</typeMapping>
+                                <typeMapping>int=Long</typeMapping>
+                            </typeMappings>
                         </configuration>
                         <goals>
                             <goal>generate</goal>
@@ -196,6 +200,11 @@
                 <configuration>
                     <sourceDirectory>${project.basedir}/src/main/resources/sdem</sourceDirectory>
                     <targetPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.sdem</targetPackage>
+                    <!-- matches openapi generator -->
+                    <useBigDecimals>true</useBigDecimals>
+                    <useLongIntegers>true</useLongIntegers>
+                    <dateTimeType>java.time.OffsetDateTime</dateTimeType>
+                    <dateType>java.time.LocalDate</dateType>
                 </configuration>
                 <executions>
                     <execution>
