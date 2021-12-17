@@ -308,7 +308,7 @@
             </plugin>
 
             <!--
-                Checkstyle for enforcing style convenstions using the Google
+                Checkstyle for enforcing style conventions using the Google
                 checkstyle config. Output is streamed to the console, and will
                 fail builds when violations are detected.
 
@@ -459,9 +459,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins></plugins>
-        </pluginManagement>
     </build>
 
     <dependencies>
