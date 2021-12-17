@@ -1,6 +1,11 @@
-site_name: 'Spring Boot Template'
+site_name: 'Spring Boot REST API'
 nav:
   - Home: index.md
+  - Build Tools: build-tools.md
+  - Local Development: local-development.md
+  - Testing: testing.md
+  - Deployment: deployment.md
   - Feature Toggles: feature-toggles.md
+
 plugins:
   - techdocs-core
