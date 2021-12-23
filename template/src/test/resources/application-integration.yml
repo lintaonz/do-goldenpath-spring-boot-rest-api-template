@@ -1,5 +1,8 @@
-logging:
-  config: classpath:log4j2-local.xml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:30005/mydb
+    username: myuser
+    password: mypassword
 
 # Include the features endpoint
 management:
@@ -16,8 +19,3 @@ launchdarkly:
     file:
       location: ${java.io.tmpdir}/featuretoggles/local-features.json
       auto-reload: true
-
-# OpenFeign client config
-pets:
-  name: pets-remote
-  url: http://localhost:30090

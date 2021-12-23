@@ -20,7 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 * A base database test that initializes a containerized db instance and a spring context. All
 * database related tests should extend off this class to share the same db instance.
 */
-@ActiveProfiles("local")
+@ActiveProfiles("integration")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = AbstractDatabaseTest.DockerPostgreDataSourceInitializer.class)
