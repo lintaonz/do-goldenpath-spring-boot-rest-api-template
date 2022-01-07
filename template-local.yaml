@@ -98,6 +98,7 @@ spec:
       required:
         - name
         - description
+        - created_by
       properties:
         name:
           title: Unique name of the component
@@ -107,6 +108,10 @@ spec:
         description:
           title: Description for the component
           type: string
+        created_by:
+          title: Created by
+          type: string
+          ui:field: LoggedInUserIdExtension
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
@@ -132,6 +137,7 @@ spec:
           organization_id: '{{ parameters.org }}'
           project: '{{ parameters.project }}'
           description: '{{ parameters.description }}'
+          created_by: '{{ parameters.created_by }}'
           # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
           prefix: '\{{ cookiecutter.project|lower }}'
           owner: '\{{ cookiecutter.project|lower }}-team'
