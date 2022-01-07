@@ -8,6 +8,7 @@ metadata:
     jenkins.io/job-full-name: "{{cookiecutter.artifact_id}}"
     twg.co.nz/template-name: "do-goldenpath-spring-boot-rest-api-template"
     twg.co.nz/created-datetime: "{% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %}"
+    twg.co.nz/created-by: "{{cookiecutter.created_by}}"
   tags:
     - java
     - springboot
