@@ -9,6 +9,9 @@ spring:
     auto = true
   profiles:
     active: ${ENV:local}
+  cloud:
+    features:
+      enabled: false
 
 # Health and prometheus metrics related configurations
 # This makes sure we have, /metrics, /health, /health/liveness and /health/readiness endpoint

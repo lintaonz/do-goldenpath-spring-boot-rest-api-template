@@ -32,6 +32,8 @@ spec:
               value: myuser
             - name: SPRING_DATASOURCE_PASSWORD
               value: mypassword
+            - name: PETS_URL
+              value: http://localhost:8090
           image: twgorg/${project.artifactId}:${project.version}
           ports:
             - containerPort: 8080

@@ -7,7 +7,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://petstore.swagger.io/v1
+  - url: http://localhost:8080
 paths:
   /pets:
     get:
@@ -34,7 +34,7 @@ paths:
             application/json:
               schema:
                 $ref: "../sdem/pets-v1.json"
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -48,7 +48,7 @@ paths:
       responses:
         '201':
           description: Null response
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -74,7 +74,13 @@ paths:
             application/json:
               schema:
                 $ref: "../sdem/pet-v1.json"
-        default:
+        '404':
+          description: not found error
+          content:
+            application/json:
+              schema:
+                $ref: "../sdem/error-v1.json"
+        '500':
           description: unexpected error
           content:
             application/json:
