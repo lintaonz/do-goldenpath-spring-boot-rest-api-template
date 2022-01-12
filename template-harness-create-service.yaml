@@ -1,4 +1,4 @@
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   # unique name per namespace for the template
@@ -112,5 +112,5 @@ spec:
       name: "Pipeline: Harness Service"
       action: harness:service-creation:twgnz-custom
       input:
-        name: '{{ parameters.name }}'
-        description: '{{ parameters.description }}'
+        name: ${{ parameters.name }}
+        description: ${{ parameters.description }}
