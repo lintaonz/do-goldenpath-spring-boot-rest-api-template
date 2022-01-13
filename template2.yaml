@@ -1,4 +1,4 @@
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   # unique name per namespace for the template
@@ -98,6 +98,7 @@ spec:
       required:
         - name
         - description
+        - created_by
       properties:
         name:
           title: Unique name of the component
@@ -107,18 +108,22 @@ spec:
         description:
           title: Description for the component
           type: string
+        created_by:
+          title: Created by
+          type: string
+          ui:field: LoggedInUserIdExtension
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
     # This step will pre-append the project to the project name if it is not specified.
     # from this point onwards, all places needing to use the component name should be
-    # using '{{ steps.prepend-project.output.repoName }}' instead of '{{ parameters.name }}'
+    # using ${{ steps["prepend-project"].output.repoName }} instead of ${{ parameters.name }}
     - id: prepend-project
       name: "Prepend Project Key"
       action: prefix-repo-name:twgnz-custom
       input:
-        project: '{{ parameters.project }}'
-        repo: '{{ parameters.name }}'
+        project: ${{ parameters.project }}
+        repo: ${{ parameters.name }}
 
     - id: fetch-base
       name: "Fetch Base"
@@ -128,26 +133,25 @@ spec:
         copyWithoutRender:
           - '*.tpl.md'
         values:
-          component_id: '{{ steps.prepend-project.output.repoName }}'
-          organization_id: '{{ parameters.org }}'
-          project: '{{ parameters.project }}'
-          description: '{{ parameters.description }}'
-          # use the \ to escape the cookiecutter expressions as the conflict with handlebar expressions
-          prefix: '\{{ cookiecutter.project|lower }}'
-          owner: '\{{ cookiecutter.project|lower }}-team'
-          artifact_id: '\{{ cookiecutter.component_id }}'
-          java_package_name: '\{{ cookiecutter.component_id|replace("-", "") }}'
-          http_port: 8080
+          component_id: ${{ steps["prepend-project"].output.repoName }}
+          organization_id: ${{ parameters.org }}
+          project: ${{ parameters.project }}
+          description: ${{ parameters.description }}
+          created_by: ${{ parameters.created_by }}
+          prefix: '{{ cookiecutter.project|lower }}'
+          owner: '{{ cookiecutter.project|lower }}-team'
+          artifact_id: '{{ cookiecutter.component_id }}'
+          java_package_name: '{{ cookiecutter.component_id|replace("-", "") }}'
 
     - id: publish
       name: "Publish"
       action: publish:bitbucket:twgnz-custom
       input:
         allowedHosts: ['bitbucket.org']
-        description: 'This is {{ steps.prepend-project.output.repoName }}'
-        org: '{{ parameters.org }}'
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        description: This is ${{ steps["prepend-project"].output.repoName }}
+        org: ${{ parameters.org }}
+        project: ${{ parameters.project }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
 
     # This step set up the webhook required for jenkins to be triggered on
     # code push in bitbucket
@@ -155,36 +159,36 @@ spec:
       name: "BitBucket Webhooks"
       action: publish:bitbucket-webhooks:twgnz-custom
       input:
-        org: '{{ parameters.org }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        org: ${{ parameters.org }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
 
     - id: sonarcloud
       name: "SonarCloud Code Analysis"
       action: publish:sonarcloud:twgnz-custom
       input:
-        org: '{{ parameters.org }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        org: ${{ parameters.org }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
 
     - id: jenkins
       name: "Pipeline: Jenkins"
       action: publish:jenkins:twgnz-custom
       input:
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        project: ${{ parameters.project }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
 
     - id: jenkins-smoketest
       name: "Pipeline: Jenkins Smoke Test"
       action: publish:jenkins-smoketest:twgnz-custom
       input:
-        project: '{{ parameters.project }}'
-        repo: '{{ steps.prepend-project.output.repoName }}'
+        project: ${{ parameters.project }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
 
     - id: harness-service
       name: "Pipeline: Harness - Service Creation"
       action: harness:service-creation:twgnz-custom
       input:
-        name: '{{ steps.prepend-project.output.repoName }}'
-        description: '{{ parameters.description }}'
+        name: ${{ steps["prepend-project"].output.repoName }}
+        description: ${{ parameters.description }}
 
     # This step sets up the user group permissions to point to the newly
     # created service. The group is derived from the project selected.
@@ -192,16 +196,16 @@ spec:
       name: "Pipeline: Harness - Service Permissions"
       action: harness:service-permissions:twgnz-custom
       input:
-        name: '{{ steps.prepend-project.output.repoName }}'
-        project: '{{ parameters.project }}'
+        name: ${{ steps["prepend-project"].output.repoName }}
+        project: ${{ parameters.project }}
 
     - id: register
       name: "Register"
       action: catalog:register
       input:
-        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
+        repoContentsUrl: ${{ steps["publish"].output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
   output:
-    remoteUrl: '{{ steps.publish.output.remoteUrl }}'
-    entityRef: '{{ steps.register.output.entityRef }}'
+    remoteUrl: ${{ steps["publish"].output.remoteUrl }}
+    entityRef: ${{ steps["register"].output.entityRef }}
