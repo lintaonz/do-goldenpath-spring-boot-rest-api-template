@@ -199,6 +199,14 @@ spec:
         name: ${{ steps["prepend-project"].output.repoName }}
         project: ${{ parameters.project }}
 
+    - id: servicenow
+      name: "ServiceNow Service creation"
+      action: servicenow:twgnz-custom
+      input:
+        project: ${{ parameters.project }}
+        name: ${{ steps["prepend-project"].output.repoName }}
+        description: ${{ parameters.description }}
+
     - id: register
       name: "Register"
       action: catalog:register
