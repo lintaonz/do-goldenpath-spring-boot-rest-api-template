@@ -33,13 +33,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../sdem/pets-v1.json"
+                $ref: "#/components/schemas/pets-v1"
         '500':
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "../sdem/error-v1.json"
+                $ref: "#/components/schemas/error-v1"
     post:
       summary: Create a pet
       operationId: createPets
@@ -53,7 +53,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../sdem/error-v1.json"
+                $ref: "#/components/schemas/error-v1"
   /pets/{petId}:
     get:
       summary: Info for a specific pet
@@ -73,16 +73,59 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../sdem/pet-v1.json"
+                $ref: "#/components/schemas/pet-v1"
         '404':
           description: not found error
           content:
             application/json:
               schema:
-                $ref: "../sdem/error-v1.json"
+                $ref: "#/components/schemas/error-v1"
         '500':
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "../sdem/error-v1.json"
+                $ref: "#/components/schemas/error-v1"
+
+components:
+  schemas:
+    error-v1:
+      title: ErrorV1
+      type: object
+      required:
+        - 'code'
+        - 'message'
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    pet-v1:
+      title: PetV1
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "The Id"
+        name:
+          type: string
+          description: "The name of the pet"
+        tag:
+          type: string
+          description: "The tag of the pet"
+        dateOfBirth:
+          type: string
+          format: date-time
+          description: "The birth date of the pet"
+        microchipDate:
+          type: string
+          format: date
+          description: "The microchip date of the pet"
+        costPerDay:
+          type: number
+          description: "The cost per day for the pet"
+    pets-v1:
+      title: PetsV1
+      type: array
+      items:
+        $ref: "#/components/schemas/pet-v1"

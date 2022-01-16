@@ -106,6 +106,7 @@ class DelegatedApiCallExampleTest extends ServiceBase {
         assertEquals("not found", error.getMessage());
     }
 
+    // spotless:off
     private nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1
             createClientPet(long id, String name, String tag, BigDecimal costPerDay) {
         var pet = new nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1();
@@ -124,4 +125,5 @@ class DelegatedApiCallExampleTest extends ServiceBase {
                 .code(code)
                 .message(message);
     }
+    // spotless:on
 }
