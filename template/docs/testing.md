@@ -121,3 +121,18 @@ To clean up these pods after you're done with the testing, run:
 ```bash
 mvn k8s:resource k8s:undeploy
 ```
+
+### Smoke Tests
+
+Smoke tests are using the same tooling that is used for unit tests and component tests, these tests
+are in `src/smoketest/java` directory. `Jenkinsfile.smoketest` is configured to run these tests. The
+pipeline for smoke tests will be triggered for each environment during deployment.
+
+All you need to do is add tests in `src/smoketest/java` directory. As smoke tests run against a deployed
+instance, a base url is needed for tests. Base url for application and actuator endpoints are passed to
+tests
+
+To manually run these tests against the local environment
+```bash
+mvn clean -Dtest='**.smoketest.**' -Dapplication_base_url='http://localhost:8080' -Dactuator_base_url='http://localhost:8050' test
+```
