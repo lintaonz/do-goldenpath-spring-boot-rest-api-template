@@ -6,7 +6,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,prometheus,features
+        include: health,prometheus,verifier,features
 
 # launchdarkly configs
 ### file type data-source for testing or local development

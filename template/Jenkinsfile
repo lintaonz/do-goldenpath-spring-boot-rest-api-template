@@ -10,7 +10,7 @@ application: "oqjOVQTnRYyCFzCq7V1egQ"
 parameters:
   service: {{cookiecutter.artifact_id}}
   service_type: rest
-  chart_version: 0.1.20
+  chart_version: 0.1.22
   dev_infra: aks-dev
   dev_namespace: {{cookiecutter.prefix}}-dev
   test_infra: aks-test

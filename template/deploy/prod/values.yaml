@@ -95,3 +95,9 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+chartTest:
+  enabled: false
+
+actuator:
+  enabled: true

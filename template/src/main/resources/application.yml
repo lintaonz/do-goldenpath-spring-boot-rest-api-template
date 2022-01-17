@@ -24,7 +24,7 @@ management:
       path-mapping:
         prometheus: metrics
       exposure:
-        include: health,prometheus
+        include: health,prometheus,verifier
   endpoint:
     health:
       probes:

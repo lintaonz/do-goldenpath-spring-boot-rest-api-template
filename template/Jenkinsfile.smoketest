@@ -5,6 +5,15 @@
 // service details
 def serviceName = '{{cookiecutter.artifact_id}}'
 
+def devApplicationBaseUrl = "https://{{cookiecutter.prefix}}-dev-aks.twg.co.nz/$serviceName";
+def devActuatorBaseUrl = "https://{{cookiecutter.prefix}}-dev-aks.twg.co.nz/$serviceName/actuator";
+
+def testApplicationBaseUrl = "https://{{cookiecutter.prefix}}-test-aks.twg.co.nz/$serviceName";
+def testActuatorBaseUrl = "https://{{cookiecutter.prefix}}-test-aks.twg.co.nz/$serviceName/actuator";
+
+def prodApplicationBaseUrl = "https://{{cookiecutter.prefix}}-prod-aks.twg.co.nz/$serviceName";
+def prodActuatorBaseUrl = "https://{{cookiecutter.prefix}}-prod-aks.twg.co.nz/$serviceName/actuator";
+
 pipeline {
     agent none
 
@@ -43,8 +52,10 @@ pipeline {
                         echo "Commit id is ${params.COMMIT_ID}."
                         sh "git checkout ${params.COMMIT_ID}"
 
+                        def applicationBaseUrl = "$devApplicationBaseUrl";
+                        def actuatorBaseUrl = "$devActuatorBaseUrl";
                         // run smoke tests
-                        // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                        sh "mvn clean -Dtest='**.smoketest.**' -Dapplication_base_url='$applicationBaseUrl' -Dactuator_base_url='$actuatorBaseUrl' test -s ./settings.xml"
                     }
                 }
             }
@@ -64,8 +75,10 @@ pipeline {
                         echo "Commit id is ${params.COMMIT_ID}."
                         sh "git checkout ${params.COMMIT_ID}"
 
-                         // add smoke tests here
-                         // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                        def applicationBaseUrl = "$testApplicationBaseUrl";
+                        def actuatorBaseUrl = "$testActuatorBaseUrl";
+                        // run smoke tests
+                        sh "mvn clean -Dtest='**.smoketest.**' -Dapplication_base_url='$applicationBaseUrl' -Dactuator_base_url='$actuatorBaseUrl' test -s ./settings.xml"
                     }
                 }
             }
@@ -85,8 +98,10 @@ pipeline {
                         echo "Commit id is ${params.COMMIT_ID}."
                         sh "git checkout ${params.COMMIT_ID}"
 
-                        // add smoke tests here
-                        // sh "mvn clean test -Psmoketest -s ./settings.xml"
+                        def applicationBaseUrl = "$prodApplicationBaseUrl";
+                        def actuatorBaseUrl = "$prodActuatorBaseUrl";
+                        // run smoke tests
+                        sh "mvn clean -Dtest='**.smoketest.**' -Dapplication_base_url='$applicationBaseUrl' -Dactuator_base_url='$actuatorBaseUrl' test -s ./settings.xml"
                     }
                 }
             }
