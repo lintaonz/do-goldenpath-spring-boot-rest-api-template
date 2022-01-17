@@ -112,8 +112,9 @@ class PetRemoteControllerTest {
         }
     }
 
-    private nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1
-            createClientPet(long id, String name, String tag, BigDecimal costPerDay) {
+    // spotless:off
+    private nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1 createClientPet(
+        long id, String name, String tag, BigDecimal costPerDay) {
         var pet = new nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1();
         pet.setId(id);
         pet.setName(name);
@@ -123,4 +124,5 @@ class PetRemoteControllerTest {
         pet.setCostPerDay(costPerDay);
         return pet;
     }
+    // spotless:on
 }

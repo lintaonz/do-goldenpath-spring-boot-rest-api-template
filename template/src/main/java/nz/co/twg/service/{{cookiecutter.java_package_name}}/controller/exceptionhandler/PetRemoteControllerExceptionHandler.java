@@ -35,11 +35,10 @@ public class PetRemoteControllerExceptionHandler {
             ByteBuffer responseBody = responseBodyOptional.get();
             try {
                 String body = StandardCharsets.UTF_8.decode(responseBody).toString();
-                var clientError =
-                        objectMapper.readValue(
-                                body,
-                                nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.ErrorV1.class);
-
+                // spotless:off
+                var clientError = objectMapper.readValue(
+                    body, nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.ErrorV1.class);
+                // spotless:on
                 ErrorV1 error = new ErrorV1().code(clientError.getCode()).message(clientError.getMessage());
                 return ResponseEntity.status(HttpStatus.valueOf(clientError.getCode().intValue()))
                         .contentType(MediaType.APPLICATION_JSON)
