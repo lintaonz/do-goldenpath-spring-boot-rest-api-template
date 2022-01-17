@@ -23,6 +23,7 @@ parameters:
   app_commit_id: APP_COMMIT_ID
   deploy_commit_id: DEPLOY_COMMIT_ID
   artifact_base_url: ARTIFACT_BASE_URL
+  user_group: ".TWG Okta Harness Admin,.TWG Product {{cookiecutter.prefix}} team"
 """
 
 def docker_registry_url = 'https://index.docker.io/v1/'
