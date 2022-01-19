@@ -51,10 +51,12 @@ public class PetRemoteController implements PetsApi {
         throw new NotImplementedException("not implemented.");
     }
 
+    // spotless:off
     private PetV1 mapRemotePet(
             nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.PetV1 client) {
         PetV1 server = new PetV1();
         BeanUtils.copyProperties(client, server);
         return server;
     }
+    // spotless:on
 }

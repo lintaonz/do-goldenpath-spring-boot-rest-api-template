@@ -31,7 +31,9 @@ class PetLocalControllerTest {
     @Test
     void testListPets() {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         when(features.isActive(flag)).thenReturn(false);
 
         // when
@@ -49,7 +51,9 @@ class PetLocalControllerTest {
     @Test
     void testListPets_uppercase() {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         when(features.isActive(flag)).thenReturn(true);
 
         // when
@@ -67,7 +71,9 @@ class PetLocalControllerTest {
     @Test
     void testShowPetById() {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         when(features.isActive(flag)).thenReturn(false);
 
         // when
@@ -84,7 +90,9 @@ class PetLocalControllerTest {
     @Test
     void testShowPetById_uppercase() {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         when(features.isActive(flag)).thenReturn(true);
 
         // when

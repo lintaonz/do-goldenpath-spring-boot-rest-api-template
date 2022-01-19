@@ -36,7 +36,9 @@ class FeatureToggleExampleTest extends ServiceBase {
     @Test
     void testUppercaseNameFeature_on() throws Exception {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         featuresSupport.configure(flag.toString(), true);
 
         // when
@@ -57,7 +59,9 @@ class FeatureToggleExampleTest extends ServiceBase {
     @Test
     void testUppercaseNameFeature_off() throws Exception {
         // given
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         featuresSupport.configure(flag.toString(), false);
 
         // when

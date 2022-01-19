@@ -57,7 +57,9 @@ public class PetLocalController implements PetsApi {
         pet.setMicrochipDate(LocalDate.now());
         pet.setCostPerDay(costPerDay);
 
+        // spotless:off
         FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        // spotless:on
         String petName = features.isActive(flag) ? name.toUpperCase(Locale.ROOT) : name;
         pet.setName(petName);
 
