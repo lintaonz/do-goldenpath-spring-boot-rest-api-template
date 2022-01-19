@@ -59,7 +59,7 @@ pipeline {
     environment {
         NEXUS_CREDS = credentials('do-nexus-credentials')
         NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
-        HARNESS_WEBHOOK_URL = 'https://app.harness.io/gateway/api/webhooks/qStpqftzykZP5FOKGEt1pwNhSVjOwQ233JbdBrxU?accountId=hOGfjDXdRbeM1IHvM1to9Q'
+        HARNESS_WEBHOOK_URL = 'https://app.harness.io/gateway/api/webhooks/R14UbxxDF7RKuPBF5b3NHVh5MhK2wWVf0PV4rZfL?accountId=hOGfjDXdRbeM1IHvM1to9Q'
         CHANGELOG_FILENAME = './CHANGELOG.md'
     }
     stages {
