@@ -4,7 +4,7 @@ Once the changes are merged into the `master` branch, the deployment process (ha
 into a dev, test, and prod environment. The helm chart for each of these environments can be found under
 the `<project.root>/deploy` directory.
 
-Spring Boolt allows overriding application properties via environment variable, and therefore the helm charts
+Spring Boot allows overriding application properties via environment variable, and therefore the helm charts
 are also the place to export the environment dependent properties used by your application
 to the appropriate values as environment variables in the `extraEnvs` section.
 
@@ -23,7 +23,7 @@ extraEnvs:
 
 For example, to set up LaunchDarkly SDK key as a secret:
 1. Create the role, project, and project environments in LaunchDarkly.
-2. Add the environment's SDK key to the secret manager for each environments.
+2. Add the environment's SDK key to the secret manager for each environment.
 3. Add the following snippet to each helm chart variables `values.yaml`.
    ```yaml
    - name: LAUNCHDARKLY_SDKKEY
