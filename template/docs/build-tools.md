@@ -7,7 +7,7 @@ of the project.
 
 The [Error Prone](https://errorprone.info/) tool is employed in order to provide for static analysis of the code.  It will check for a number of common mistakes that developers might make.
 
-Some of the mistakes are classified as errors and in this case the build will fail.  Other mistakes are classified as warnings and in this case, the warnings will be output to the build console.  An abridged example warning might be;
+Some mistakes are classified as errors and in this case the build will fail.  Other mistakes are classified as warnings and in this case, the warnings will be output to the build console.  An abridged example warning might be;
 
 ```
 [WARNING] /home/.../src/main/java/nz/.../Application.java:[22,17] [MissingCasesInEnumSwitch] Non-exhaustive switch; either add a default or handle the remaining cases: HAMMER, DRILL
