@@ -64,6 +64,8 @@ spec:
               title: "GEP - Salesforce Group eCommerce Platform"
             - const: "GOMS"
               title: "GOMS - Group Order Management System"
+            - const: "HACK"
+              title: "HACK - Hackathon"
             - const: "IHUB"
               title: "IHUB - Integration Hub"
             - const: "IN"
