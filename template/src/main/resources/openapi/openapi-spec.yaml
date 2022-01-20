@@ -7,7 +7,9 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api
+  - url: https://{{cookiecutter.prefix}}-dev-aks.twg.co.nz/{{cookiecutter.artifact_id}}/api
+  - url: https://{{cookiecutter.prefix}}-test-aks.twg.co.nz/{{cookiecutter.artifact_id}}/api
 paths:
   /pets:
     get:
