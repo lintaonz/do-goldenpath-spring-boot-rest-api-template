@@ -1,6 +1,11 @@
 ## Local Development Instructions
 
-The project is configured to spin up PostgresDB and Wiremock in a local kube cluster with the
+### Expected Environment Variables
+
+Please note that for development purposes some environment variables
+will need to be set as a prerequisite.  See [here](development-env-vars.md)
+for details.
+Assuming the presence of a local Kubernetes environment, this project is configured to spin up PostgresDB and Wiremock in a local kube cluster with the
 following command:
 
 ```
