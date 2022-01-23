@@ -83,7 +83,7 @@ class ApplicationTest extends ServiceBase {
     void testApplicationApi() throws Exception {
         // given
 
-        String endpoint = String.format("%s/api/local/pets", getApplicationBaseUrl());
+        String endpoint = String.format("%s/api/pets", getApplicationBaseUrl());
         // when
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(String.format(endpoint))).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

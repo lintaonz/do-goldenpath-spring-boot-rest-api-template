@@ -1,5 +1,10 @@
 ## Testing
 
+### Expected Environment Variables
+
+Please note that for development purposes some environment variables
+will need to be set as a prerequisite.  See [here](development-env-vars.md)
+for details.
 ### Unit Tests
 
 #### How to run unit tests
