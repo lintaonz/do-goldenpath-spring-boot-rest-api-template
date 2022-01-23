@@ -3,10 +3,16 @@ package nz.co.twg.service.{{cookiecutter.java_package_name}}.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Locale;
 import nz.co.twg.common.features.Features;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.FeatureFlag;
+import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.api.AnimalsApiClient;
+import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model.AnimalV1;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.server.model.PetV1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,17 +21,19 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-class PetLocalControllerTest {
+class PetControllerTest {
 
     @Mock private Features features;
 
+    @Mock private AnimalsApiClient animalsApiClient;
+
     // object under test
-    private PetLocalController controller;
+    private PetController controller;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        this.controller = new PetLocalController(features);
+        this.controller = new PetController(features, animalsApiClient);
     }
 
     @Test
@@ -66,6 +74,45 @@ class PetLocalControllerTest {
         assertEquals(2, pets.size());
         assertTrue(isUpperCase(pets.get(0).getName()));
         assertTrue(isUpperCase(pets.get(1).getName()));
+    }
+
+    @Test
+    void testListPets_doNotIncludeDogsFromThirdParty() {
+        // given
+        // spotless:off
+        FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_INCLUDE_DOGS_FROM_THIRD_PARTY;
+        // spotless:on
+        when(features.isActive(flag)).thenReturn(false);
+
+        // when
+        ResponseEntity<List<PetV1>> response = controller.listPets(null);
+        List<PetV1> pets = response.getBody();
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(pets);
+        assertEquals(2, pets.size());
+    }
+
+    @Test
+    void testListPets_includeDogsFromThirdParty() {
+        // given
+        // spotless:off
+        FeatureFlag flag = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_INCLUDE_DOGS_FROM_THIRD_PARTY;
+        // spotless:on
+        when(features.isActive(flag)).thenReturn(true);
+        when(animalsApiClient.getAnimalsByType("dog"))
+                .thenReturn(
+                        ResponseEntity.ok(List.of(createAnimal(10, "Dexter", "dog", new BigDecimal("15.97")))));
+
+        // when
+        ResponseEntity<List<PetV1>> response = controller.listPets(null);
+        List<PetV1> pets = response.getBody();
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(pets);
+        assertEquals(3, pets.size());
     }
 
     @Test
@@ -118,5 +165,17 @@ class PetLocalControllerTest {
 
     private boolean isUpperCase(String s) {
         return s.equals(s.toUpperCase(Locale.ROOT));
+    }
+
+    private AnimalV1 createAnimal(long id, String name, String tag, BigDecimal costPerDay) {
+        AnimalV1 animal = new AnimalV1();
+        animal.id(id);
+        animal.setTag(tag);
+        animal.setDateOfBirth(OffsetDateTime.now(ZoneOffset.UTC));
+        animal.setMicrochipDate(LocalDate.now());
+        animal.setCostPerDay(costPerDay);
+        animal.setName(name);
+
+        return animal;
     }
 }

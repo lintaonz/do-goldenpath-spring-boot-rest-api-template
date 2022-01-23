@@ -24,15 +24,13 @@ spec:
                   fieldPath: metadata.name
             - name: ENV
               value: local
-            - name: EPAY_URL
-              value: http://localhost:8090
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://localhost:5432/mydb
             - name: SPRING_DATASOURCE_USERNAME
               value: myuser
             - name: SPRING_DATASOURCE_PASSWORD
               value: mypassword
-            - name: PETS_URL
+            - name: ANIMALS_URL
               value: http://localhost:8090
           image: twgorg/${project.artifactId}:${project.version}
           ports:

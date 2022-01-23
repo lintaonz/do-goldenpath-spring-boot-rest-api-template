@@ -14,16 +14,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
-class PetRemoteControllerExceptionHandlerTest {
+class PetControllerExceptionHandlerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // object under test
-    private PetRemoteControllerExceptionHandler handler;
+    private PetControllerExceptionHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new PetRemoteControllerExceptionHandler(objectMapper);
+        handler = new PetControllerExceptionHandler(objectMapper);
     }
 
     @Test
