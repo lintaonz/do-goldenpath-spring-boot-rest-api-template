@@ -11,7 +11,7 @@ servers:
   - url: https://{{cookiecutter.prefix}}-dev-aks.twg.co.nz/{{cookiecutter.artifact_id}}/api
   - url: https://{{cookiecutter.prefix}}-test-aks.twg.co.nz/{{cookiecutter.artifact_id}}/api
 paths:
-  /local/pets:
+  /pets:
     get:
       summary: List all pets
       operationId: listPets
@@ -56,7 +56,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/error-v1"
-  /local/pets/{petId}:
+  /pets/{petId}:
     get:
       summary: Info for a specific pet
       operationId: showPetById

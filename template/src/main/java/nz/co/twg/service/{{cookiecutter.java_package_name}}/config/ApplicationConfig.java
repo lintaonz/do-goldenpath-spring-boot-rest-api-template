@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ApplicationConfig {
     /**
     * This CORS policy allows teams to call the API using the OpenAPI UI in backstage - from both dev
-    * and prod instances. Do not remove this as we want all teams to to be able to explore APIs in
+    * and prod instances. Do not remove this as we want all teams to be able to explore APIs in
     * backstage for dev and test environments.
     *
     * @return -

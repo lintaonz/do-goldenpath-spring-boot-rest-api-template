@@ -5,7 +5,7 @@ import feign.FeignException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import nz.co.twg.service.{{cookiecutter.java_package_name}}.controller.PetRemoteController;
+import nz.co.twg.service.{{cookiecutter.java_package_name}}.controller.PetController;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.server.model.ErrorV1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice(assignableTypes = PetRemoteController.class)
-public class PetRemoteControllerExceptionHandler {
+@ControllerAdvice(assignableTypes = PetController.class)
+public class PetControllerExceptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(PetRemoteControllerExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(PetControllerExceptionHandler.class);
 
     private final ObjectMapper objectMapper;
 
-    public PetRemoteControllerExceptionHandler(ObjectMapper objectMapper) {
+    public PetControllerExceptionHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -37,7 +37,7 @@ public class PetRemoteControllerExceptionHandler {
                 String body = StandardCharsets.UTF_8.decode(responseBody).toString();
                 // spotless:off
                 var clientError = objectMapper.readValue(
-                    body, nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model.ErrorV1.class);
+                    body, nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model.ErrorV1.class);
                 // spotless:on
                 ErrorV1 error = new ErrorV1().code(clientError.getCode()).message(clientError.getMessage());
                 return ResponseEntity.status(HttpStatus.valueOf(clientError.getCode().intValue()))

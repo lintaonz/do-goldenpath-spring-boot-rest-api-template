@@ -111,11 +111,11 @@
                         <id>client-api</id>
                         <configuration>
                             <configOptions>
-                                <basePackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client</basePackage>
-                                <apiPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.api</apiPackage>
-                                <modelPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.client.model</modelPackage>
+                                <basePackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi</basePackage>
+                                <apiPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.api</apiPackage>
+                                <modelPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model</modelPackage>
                             </configOptions>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/openapi-spec.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/clients/third-party-api/openapi-spec.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-cloud</library>
                         </configuration>

@@ -18,6 +18,6 @@ launchdarkly:
       auto-reload: true
 
 # OpenFeign client config
-pets:
-  name: pets-remote
+animals:
+  name: animals
   url: http://localhost:30090

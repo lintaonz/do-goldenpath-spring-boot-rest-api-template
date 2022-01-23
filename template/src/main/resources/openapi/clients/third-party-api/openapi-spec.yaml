@@ -1,0 +1,88 @@
+# This example was copied from https://github.com/OAI/OpenAPI-Specification/blob/master/examples/v3.0/petstore.yaml
+# altered to reference sdem schemas
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Zoo Api
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/api
+  - url: https://dev-zoo-api.somewhere.in.cloud/api
+  - url: https://test-zoo-api.somewhere.in.cloud/api
+paths:
+  /animals/{type}:
+    get:
+      summary: Get a list of animals of specific type
+      operationId: getAnimalsByType
+      tags:
+        - animals
+      parameters:
+        - name: type
+          in: path
+          required: true
+          description: type of animal
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/animals-v1"
+        '404':
+          description: not found error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-v1"
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-v1"
+
+components:
+  schemas:
+    error-v1:
+      title: ErrorV1
+      type: object
+      required:
+        - 'code'
+        - 'message'
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    animal-v1:
+      title: AnimalV1
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "The Id"
+        name:
+          type: string
+          description: "The name of the animal"
+        tag:
+          type: string
+          description: "The tag of the animal"
+        dateOfBirth:
+          type: string
+          format: date-time
+          description: "The birth date of the animal"
+        microchipDate:
+          type: string
+          format: date
+          description: "The microchip date of the animal"
+        costPerDay:
+          type: number
+          description: "The cost per day for the animal"
+    animals-v1:
+      title: AnimalsV1
+      type: array
+      items:
+        $ref: "#/components/schemas/animal-v1"
