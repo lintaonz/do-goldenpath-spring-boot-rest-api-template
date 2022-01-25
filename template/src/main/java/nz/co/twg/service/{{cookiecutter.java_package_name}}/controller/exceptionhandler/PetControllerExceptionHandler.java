@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/** Exception handler for {@link FeignException}s. */
 @ControllerAdvice(assignableTypes = PetController.class)
 public class PetControllerExceptionHandler {
 
@@ -26,6 +27,13 @@ public class PetControllerExceptionHandler {
         this.objectMapper = objectMapper;
     }
 
+    /**
+    * Handler for the {@link FeignException}. This will unpack the client error payload and wrap it
+    * in the service's own error payload.
+    *
+    * @param ex the {@link FeignException}
+    * @return a {@link ResponseEntity} of {@link ErrorV1} type
+    */
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ErrorV1> handleFeignException(FeignException ex) {
 
@@ -37,7 +45,9 @@ public class PetControllerExceptionHandler {
                 String body = StandardCharsets.UTF_8.decode(responseBody).toString();
                 // spotless:off
                 var clientError = objectMapper.readValue(
-                    body, nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model.ErrorV1.class);
+                    body,
+                    nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model.ErrorV1.class
+                );
                 // spotless:on
                 ErrorV1 error = new ErrorV1().code(clientError.getCode()).message(clientError.getMessage());
                 return ResponseEntity.status(HttpStatus.valueOf(clientError.getCode().intValue()))

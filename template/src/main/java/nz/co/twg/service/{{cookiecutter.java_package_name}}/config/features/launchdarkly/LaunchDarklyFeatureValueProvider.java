@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import nz.co.twg.common.features.FeatureValueProvider;
 
-/** {@link FeatureValueProvider} with LaunchDarkly as its backing implementation */
+/** {@link FeatureValueProvider} with LaunchDarkly as its backing implementation. */
 public final class LaunchDarklyFeatureValueProvider implements FeatureValueProvider {
 
     private final LDClient ldClient;

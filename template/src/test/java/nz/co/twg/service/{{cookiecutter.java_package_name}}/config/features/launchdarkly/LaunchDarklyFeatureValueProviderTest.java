@@ -2,7 +2,10 @@ package nz.co.twg.service.{{cookiecutter.java_package_name}}.config.features.lau
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.launchdarkly.sdk.LDUser;
@@ -27,7 +30,7 @@ import org.mockito.MockitoAnnotations;
 
 class LaunchDarklyFeatureValueProviderTest {
 
-    private final String TEST_FEATURE_FLAGS_FILE = "./test-feature-flags.json";
+    private static final String TEST_FEATURE_FLAGS_FILE = "./test-feature-flags.json";
 
     @Mock private LDClient ldClient;
 
@@ -216,7 +219,7 @@ class LaunchDarklyFeatureValueProviderTest {
         verify(consumer2).accept(false, true);
     }
 
-    /** LD client that reads from file */
+    /** LD client that reads from file. */
     private LDClient ldClient() {
         LDConfig.Builder configBuilder =
                 new LDConfig.Builder()

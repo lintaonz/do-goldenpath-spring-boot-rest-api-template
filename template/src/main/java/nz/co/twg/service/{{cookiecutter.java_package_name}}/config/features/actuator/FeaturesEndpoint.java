@@ -5,10 +5,14 @@ import nz.co.twg.common.features.Features;
 import nz.co.twg.common.features.FeaturesSupport;
 import nz.co.twg.common.features.NoOpFeaturesSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.annotation.*;
+import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.stereotype.Component;
 
-/** A feature centric actuator endpoint for management of feature toggles */
+/** A feature centric actuator endpoint for management of feature toggles. */
 @Component
 @Endpoint(id = "features")
 public class FeaturesEndpoint {
