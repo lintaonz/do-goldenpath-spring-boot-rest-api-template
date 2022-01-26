@@ -191,6 +191,7 @@ spec:
       input:
         name: ${{ steps["prepend-project"].output.repoName }}
         description: ${{ parameters.description }}
+        productName: ${{ parameters.project }}
 
     # This step sets up the user group permissions to point to the newly
     # created service. The group is derived from the project selected.

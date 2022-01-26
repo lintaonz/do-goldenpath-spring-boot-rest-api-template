@@ -114,3 +114,4 @@ spec:
       input:
         name: ${{ parameters.name }}
         description: ${{ parameters.description }}
+        productName: ${{ parameters.project }}
