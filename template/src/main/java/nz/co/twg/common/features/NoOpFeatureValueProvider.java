@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-/** An empty implementation of the {@link FeatureValueProvider} */
+/** An empty implementation of the {@link FeatureValueProvider}. */
 public final class NoOpFeatureValueProvider implements FeatureValueProvider {
 
     @Override

@@ -97,7 +97,7 @@ public class LaunchDarklyFeaturesSupport implements FeaturesSupport {
         this.objectMapper = objectMapper;
     }
 
-    /** The object structure expected by LaunchDarkly file input */
+    /** The object structure expected by LaunchDarkly file input. */
     static class FlagValuesWrapper {
 
         private Map<String, Boolean> flagValues;

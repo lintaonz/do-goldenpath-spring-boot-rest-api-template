@@ -5,14 +5,14 @@ import java.util.function.BiConsumer;
 
 /**
 * An implementation agnostic wrapper around feature flag frameworks to buffer against wide-spread
-* usage of vendor specific API/SPI
+* usage of vendor specific API/SPI.
 */
 public class Features {
 
-    /** provide the value/status of the feature flag */
+    /** provide the value/status of the feature flag. */
     private final FeatureValueProvider featureValueProvider;
 
-    /** provides the subject who queried the feature flag */
+    /** provides the subject who queried the feature flag. */
     private final SubjectProvider subjectProvider;
 
     public Features(FeatureValueProvider featureValueProvider, SubjectProvider subjectProvider) {

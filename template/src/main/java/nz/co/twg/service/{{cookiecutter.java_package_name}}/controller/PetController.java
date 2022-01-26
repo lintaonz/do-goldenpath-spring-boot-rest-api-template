@@ -7,7 +7,9 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import nz.co.twg.common.features.Features;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.FeatureFlag;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.api.AnimalsApiClient;
@@ -43,7 +45,8 @@ public class PetController implements PetsApi {
                                 createLocalPet(2L, "Pluto", "dog", new BigDecimal("10.12"))));
 
         // spotless:off
-        boolean thirdPartyAnimalsFeature = features.isActive(FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_INCLUDE_DOGS_FROM_THIRD_PARTY);
+        FeatureFlag thirdPartyDogs = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_INCLUDE_DOGS_FROM_THIRD_PARTY;
+        boolean thirdPartyAnimalsFeature = features.isActive(thirdPartyDogs);
         // spotless:on
 
         // If the third party feature is enabled, call the third party api to get all the dogs
@@ -59,7 +62,8 @@ public class PetController implements PetsApi {
         }
 
         // spotless:off
-        boolean upperCaseNameFeature = features.isActive(FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME);
+        FeatureFlag uppercaseName = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        boolean upperCaseNameFeature = features.isActive(uppercaseName);
         // spotless:on
 
         // if the feature for upper case name is enabled, change the name of all the pets to uppercase.
@@ -77,7 +81,8 @@ public class PetController implements PetsApi {
                 createLocalPet(Long.parseLong(petId), "Dumbo", "elephant", new BigDecimal("50.001"));
 
         // spotless:off
-        boolean upperCaseNameFeature = features.isActive(FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME);
+        FeatureFlag uppercaseName = FeatureFlag.{{cookiecutter.artifact_id|upper|replace("-", "_")}}_UPPERCASE_NAME;
+        boolean upperCaseNameFeature = features.isActive(uppercaseName);
         // spotless:on
         if (upperCaseNameFeature) {
             pet.setName(pet.getName().toUpperCase());
@@ -96,7 +101,7 @@ public class PetController implements PetsApi {
         pet.id(id);
         pet.setTag(tag);
         pet.setDateOfBirth(OffsetDateTime.now(ZoneOffset.UTC));
-        pet.setMicrochipDate(LocalDate.now());
+        pet.setMicrochipDate(LocalDate.now(ZoneOffset.UTC));
         pet.setCostPerDay(costPerDay);
         pet.setName(name);
 

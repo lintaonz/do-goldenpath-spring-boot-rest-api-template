@@ -1,5 +1,6 @@
 package nz.co.twg.common.features;
 
+/** A {@link FeaturesSupport} implementation that does nothing. */
 public final class NoOpFeaturesSupport implements FeaturesSupport {
 
     @Override

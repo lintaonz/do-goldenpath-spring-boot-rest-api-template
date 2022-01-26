@@ -8,15 +8,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import nz.co.twg.common.features.*;
+import nz.co.twg.common.features.FeatureValueProvider;
+import nz.co.twg.common.features.FeaturesSupport;
+import nz.co.twg.common.features.NoOpFeaturesSupport;
+import nz.co.twg.common.features.StaticSubjectProvider;
+import nz.co.twg.common.features.SubjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
+/** LaunchDarkly configuration. */
 public class LaunchDarklyConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(LaunchDarklyConfig.class);
 
+    /** Create the LaunchDarkly client based on the provided {@link LaunchDarklyProperties}. */
     @Bean
     public LDClient launchDarklyClient(LaunchDarklyProperties properties) throws IOException {
         LDConfig.Builder configBuilder = new LDConfig.Builder().offline(properties.isOffline());
@@ -54,6 +60,11 @@ public class LaunchDarklyConfig {
         return new StaticSubjectProvider(properties.getDefaultUser());
     }
 
+    /**
+    * {@link FeaturesSupport} is only meant to be valid in a testing environment, therefore only
+    * initialise a {@link LaunchDarklyFeaturesSupport} if the data source is configured to be read
+    * from a file.
+    */
     @Bean
     public FeaturesSupport featuresSupport(LaunchDarklyProperties properties) throws IOException {
         if (properties.getDataSource().getType() == LaunchDarklyProperties.DataSource.Type.FILE) {

@@ -3,17 +3,20 @@ package nz.co.twg.service.{{cookiecutter.java_package_name}}.config.features.lau
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-/** LaunchDarkly properties */
+/** LaunchDarkly properties. */
 @Configuration
 @ConfigurationProperties(prefix = "launchdarkly")
 public class LaunchDarklyProperties {
 
+    @SuppressWarnings("NullAway.Init")
     private String sdkKey;
 
+    @SuppressWarnings("NullAway.Init")
     private String defaultUser;
 
     private boolean offline;
 
+    @SuppressWarnings("NullAway.Init")
     private DataSource dataSource;
 
     public String getSdkKey() {
@@ -48,16 +51,20 @@ public class LaunchDarklyProperties {
         this.dataSource = dataSource;
     }
 
-    /** Configuration for datasource related attributes */
+    /** Configuration for datasource related attributes. */
     public static class DataSource {
 
+        /** The type of data source. */
         public enum Type {
+            /** LaunchDarkly Saas offering. */
             STREAM,
+            /** Local file. */
             FILE
         }
 
         private Type type = Type.STREAM;
 
+        @SuppressWarnings("NullAway.Init")
         private FileConfig file;
 
         public Type getType() {
@@ -76,9 +83,10 @@ public class LaunchDarklyProperties {
             this.file = file;
         }
 
-        /** Configuration for file based data source */
+        /** Configuration for file based data source. */
         public static class FileConfig {
 
+            @SuppressWarnings("NullAway.Init")
             private String location;
 
             private boolean autoReload;
