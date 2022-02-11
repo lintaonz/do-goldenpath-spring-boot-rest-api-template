@@ -7,7 +7,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.server.Components;
@@ -22,6 +21,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -191,8 +191,7 @@ class LaunchDarklyFeatureValueProviderTest {
         // when
         provider.onChangeBoolean("key1", "test", consumer);
         Files.writeString(Paths.get(TEST_FEATURE_FLAGS_FILE), "{\"flagValues\":{\"key1\":true}}");
-        // delay for 1-second to allow launchdarkly time to re-evaluate latest state from file
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        awaitFeatureFlag(ldClient, "key1", true);
 
         // then
         verify(consumer).accept(false, true);
@@ -211,8 +210,7 @@ class LaunchDarklyFeatureValueProviderTest {
         provider.onChangeBoolean("key1", "test", consumer1);
         provider.onChangeBoolean("key1", "test", consumer2);
         Files.writeString(Paths.get(TEST_FEATURE_FLAGS_FILE), "{\"flagValues\":{\"key1\":true}}");
-        // delay for 1-second to allow launchdarkly time to re-evaluate latest state from file
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        awaitFeatureFlag(ldClient, "key1", true);
 
         // then
         verify(consumer1).accept(false, true);
@@ -227,5 +225,14 @@ class LaunchDarklyFeatureValueProviderTest {
                         .events(Components.noEvents())
                         .diagnosticOptOut(true);
         return new LDClient("test", configBuilder.build());
+    }
+
+    private void awaitFeatureFlag(LDClient client, String flag, boolean condition) {
+        Awaitility.given()
+                .await()
+                .atMost(20, TimeUnit.SECONDS)
+                .pollDelay(1, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .until(() -> client.boolVariation(flag, new LDUser("blah"), false) == condition);
     }
 }
