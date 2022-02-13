@@ -11,14 +11,21 @@ spec:
       labels:
         app: ${project.artifactId}-local
     spec:
+      volumes:
+        - name: wiremock-mappings
+          configMap:
+            name: ${project.artifactId}-wiremock-local
       containers:
         - name: wiremock
-          image: rodolpheche/wiremock:2.27.2
+          image: wiremock/wiremock:2.32.0
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 8090
             - containerPort: 8443
           args: ["/bin/sh", "-c", "java $JAVA_OPTS -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8090"]
+          volumeMounts:
+            - name: wiremock-mappings
+              mountPath: /home/wiremock/mappings
         - name: postgres
           image: postgres:12-alpine
           imagePullPolicy: "IfNotPresent"

@@ -1,0 +1,26 @@
+# this is a config map containing default mappings for wiremock container
+#
+# If you changed this file, you must undeploy and redeploy the pod.
+# This is because wiremock only sources the mapping from the directory on startup, so
+# any subsequent changes will not be applied.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${project.artifactId}-wiremock-local
+  labels:
+    app: ${project.artifactId}-wiremock-local
+data:
+  get-animals-dog.json: |
+    {
+      "request": {
+        "method": "GET",
+        "url": "/animals/dog"
+      },
+      "response": {
+        "status": 200,
+        "body": "[{\"id\":1,\"name\":\"Danny\",\"tag\":\"dog\",\"dateOfBirth\":\"2022-01-01T00:00:00Z\",\"microchipDate\":\"2022-02-01\",\"costPerDay\":9.13}]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
