@@ -79,6 +79,9 @@ pipeline {
             }
             steps {
                 script {
+                    // pre build kubernetes cleanup
+                    sh "kubectl delete --all deployments,services,configmaps"
+
                     def sonarOpts = ""
                     def sonarProfile = "sonar"
                     if (env.CHANGE_ID != null) {
@@ -112,6 +115,9 @@ pipeline {
             post {
                 always {
                     script {
+                        // post build kubernetes cleanup
+                        sh "kubectl delete --all deployments,services,configmaps"
+
                         setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                         uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
                     }
