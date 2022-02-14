@@ -36,12 +36,17 @@
         <!-- <sonar.login> property should be specified through arguments: -Dsonar.login="${TOKEN}"
              or SONAR_TOKEN environment variable -->
         <revision>1.0.0-SNAPSHOT</revision>
-        <jkube.version>1.4.0</jkube.version>
+        <jkube.version>1.6.0</jkube.version>
         <jkube.docker.verbose>true</jkube.docker.verbose>
         <jkube.serviceUrl.waitSeconds>5</jkube.serviceUrl.waitSeconds>
+
+        <!-- if jkube is run without a mvn profile, default to the "local" configs -->
         <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube/local</jkube.resourceDir>
         <jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/local</jkube.targetDir>
         <jkube.kubernetesManifest>${project.build.outputDirectory}/META-INF/jkube/local/kubernetes.yml</jkube.kubernetesManifest>
+        <!-- jkube tries to be smart and automatically add spring boot health checks based on some heuristics. However
+             in "local" mode we do not want this to happen. -->
+        <jkube.skipHealthCheck>true</jkube.skipHealthCheck>
     </properties>
 
     <build>
@@ -896,6 +901,7 @@
                 <jkube.resourceDir>${basedir}/src/componenttest/resources/jkube/app</jkube.resourceDir>
                 <jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/app</jkube.targetDir>
                 <jkube.kubernetesManifest>${project.build.outputDirectory}/META-INF/jkube/app/kubernetes.yml</jkube.kubernetesManifest>
+                <jkube.skipHealthCheck>false</jkube.skipHealthCheck>
             </properties>
             <build>
                 <plugins>
