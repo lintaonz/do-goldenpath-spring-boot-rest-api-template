@@ -13,6 +13,7 @@
     <packaging>jar</packaging>
     <name>{{cookiecutter.artifact_id}}</name>
     <description>{{cookiecutter.artifact_id}}</description>
+    <url>https://bitbucket.org/{{cookiecutter.organization_id}}/${project.artifactId}</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -193,9 +194,6 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <append>true</append>
-                        </configuration>
                     </execution>
                     <!-- attached to Maven test phase -->
                     <execution>
@@ -218,8 +216,49 @@
                         <!-- generated code -->
                         <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/openapi/**/*</exclude>
                         <exclude>nz/co/twg/service/{{cookiecutter.java_package_name}}/sdem/**/*</exclude>
+                        <exclude>org/openapitools/configuration/*.*</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.10.0</version>
+                <executions>
+                    <execution>
+                        <id>site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <configuration>
+                            <!-- do not allow the site plugin to generate reports since reports generation will be
+                                 handled by the maven-surefire-report-plugin. -->
+                            <generateReports>false</generateReports>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
+                    <alwaysGenerateFailsafeReport>true</alwaysGenerateFailsafeReport>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                            <goal>failsafe-report-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
