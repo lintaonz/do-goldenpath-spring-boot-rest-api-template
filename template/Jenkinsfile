@@ -64,13 +64,6 @@ pipeline {
     }
     stages {
         stage('Build') {
-            when {
-                beforeOptions true
-                beforeAgent true
-                not {
-                    expression { return params.DEPLOY_TO_PROD }
-                }
-            }
             agent {
                 label 'build-agent'
             }
