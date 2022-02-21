@@ -29,25 +29,10 @@ parameters:
 def docker_registry_url = 'https://index.docker.io/v1/'
 def docker_registry_cred_id = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
 
-def kubernetes_prepare_deploy_agent = '''
-spec:
-  containers:
-  - name: curl
-    image: twgorg/ff-build:latest
-    command:
-    - cat
-    tty: true
-  - name: changelog
-    image:  quay.io/git-chglog/git-chglog
-    command:
-    - cat
-    tty: true
-  imagePullSecrets:
-  - name: regsecret
-'''
-
 pipeline {
-    agent none
+    agent {
+        label 'build-agent'
+    }
 
     options {
         timestamps()
@@ -64,9 +49,6 @@ pipeline {
     }
     stages {
         stage('Build') {
-            agent {
-                label 'build-agent'
-            }
             environment {
                 SONAR_TOKEN = credentials('do-sonarcloud-token')
             }
@@ -124,31 +106,29 @@ pipeline {
                 beforeAgent true
                 expression { BRANCH_NAME == 'master' }
             }
-            agent {
-                kubernetes {
-                    yaml kubernetes_prepare_deploy_agent
-                    inheritFrom 'k8s-docker-image-build-template'
-                    yamlMergeStrategy merge()
-                }
-            }
             steps {
-                container('changelog') {
-                    script {
-                        echo "Creating change log"
-                        sh 'git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}'
+                script {
+                    withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+                        docker.image('quay.io/git-chglog/git-chglog:0.15.1').inside("--entrypoint ''") {
+                            script {
+                                echo "Creating change log"
+                                sh 'git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}'
 
-                        echo "Change log generated..."
-                        sh 'cat ${CHANGELOG_FILENAME}'
-                    }
-                }
-                container('curl') {
-                    script {
-                        sh """
-                            curl --silent --show-error --include --fail \
-                                --user \"\${NEXUS_CREDS}\" \
-                                --upload-file "\${CHANGELOG_FILENAME}" \
-                                "${NEXUS_REPO_BASE_URL_ARTIFACTS}/${JOB_NAME}/${BUILD_NUMBER}/"
-                        """
+                                echo "Change log generated..."
+                                sh 'cat ${CHANGELOG_FILENAME}'
+                            }
+                        }
+
+                        docker.image('curlimages/curl:7.81.0').inside {
+                            script {
+                                sh """
+                                    curl --silent --show-error --include --fail \
+                                        --user \"\${NEXUS_CREDS}\" \
+                                        --upload-file "\${CHANGELOG_FILENAME}" \
+                                        "${NEXUS_REPO_BASE_URL_ARTIFACTS}/${JOB_NAME}/${BUILD_NUMBER}/"
+                                """
+                            }
+                        }
                     }
                 }
             }
@@ -166,29 +146,24 @@ pipeline {
                 beforeAgent true
                 expression { env.BRANCH_NAME == 'master' }
             }
-            agent {
-                kubernetes {
-                    yaml kubernetes_prepare_deploy_agent
-                    inheritFrom 'k8s-docker-image-build-template'
-                    yamlMergeStrategy merge()
-                }
-            }
             steps {
-                container('curl') {
-                    script {
+                script {
+                    withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+                        docker.image('curlimages/curl:7.81.0').inside {
+                            script {
+                                // deployment info for the harness payload
+                                harnessPayload = readYaml text: harnessTriggerPayload
+                                harnessPayload.parameters.build_number = "${env.BUILD_NUMBER}"
+                                harnessPayload.parameters.app_commit_id = "${env.GIT_COMMIT}"
+                                harnessPayload.parameters.deploy_commit_id = "${env.GIT_COMMIT}"
+                                harnessPayload.parameters.artifact_base_url = "$NEXUS_REPO_BASE_URL_ARTIFACTS/$JOB_NAME/$BUILD_NUMBER"
+                                String harnessPayloadJson = writeJSON file: 'harness-payload.json', json: harnessPayload
 
-                        // deployment info for the harness payload
-                        harnessPayload = readYaml text: harnessTriggerPayload
-                        harnessPayload.parameters.build_number = "${env.BUILD_NUMBER}"
-                        harnessPayload.parameters.app_commit_id = "${env.GIT_COMMIT}"
-                        harnessPayload.parameters.deploy_commit_id = "${env.GIT_COMMIT}"
-                        harnessPayload.parameters.artifact_base_url = "$NEXUS_REPO_BASE_URL_ARTIFACTS/$JOB_NAME/$BUILD_NUMBER"
-                        String harnessPayloadJson = writeJSON file: 'harness-payload.json', json: harnessPayload
-
-                        sh 'echo About to trigger harness...'
-                        sh 'cat harness-payload.json'
-                        sh "curl --silent --show-error --include --fail -X POST -H 'content-type: application/json' --url $HARNESS_WEBHOOK_URL -d '@harness-payload.json'"
-
+                                sh 'echo About to trigger harness...'
+                                sh 'cat harness-payload.json'
+                                sh "curl --silent --show-error --include --fail -X POST -H 'content-type: application/json' --url $HARNESS_WEBHOOK_URL -d '@harness-payload.json'"
+                            }
+                        }
                     }
                 }
             }
@@ -199,7 +174,6 @@ pipeline {
                     }
                 }
             }
-
         }
     }
 }
