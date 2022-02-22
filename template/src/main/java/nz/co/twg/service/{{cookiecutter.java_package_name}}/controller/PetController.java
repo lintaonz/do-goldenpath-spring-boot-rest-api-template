@@ -16,6 +16,8 @@ import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thir
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model.AnimalV1;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.server.api.PetsApi;
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.server.model.PetV1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class PetController implements PetsApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(PetController.class);
 
     private final Features features;
 
@@ -37,7 +41,7 @@ public class PetController implements PetsApi {
 
     @Override
     public ResponseEntity<List<PetV1>> listPets(Long limit) {
-
+        logger.info("will list pets");
         List<PetV1> pets =
                 new ArrayList<>(
                         List.of(
@@ -52,6 +56,7 @@ public class PetController implements PetsApi {
         // If the third party feature is enabled, call the third party api to get all the dogs
         // and add them to the list of pets
         if (thirdPartyAnimalsFeature) {
+            logger.info("will load third party dogs");
             List<AnimalV1> animals = animalsClient.getAnimalsByType("dog").getBody();
             List<PetV1> thirdPartyPets =
                     animals != null
@@ -72,6 +77,7 @@ public class PetController implements PetsApi {
                 pet.setName(pet.getName().toUpperCase());
             }
         }
+        logger.info("did list pets");
         return new ResponseEntity<>(pets, HttpStatus.OK);
     }
 
