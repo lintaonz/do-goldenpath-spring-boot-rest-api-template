@@ -182,6 +182,10 @@
                         <exclude>**/componenttest/**/*Test.java</exclude>
                         <exclude>**/smoketest/**/*Test.java</exclude>
                     </excludes>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.apache.logging.log4j:log4j-slf4j-impl</classpathDependencyExclude>
+                        <classpathDependencyExclude>ch.qos.logback:logback-classic</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                 </configuration>
             </plugin>
 
@@ -872,6 +876,13 @@
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-matchers</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.simplify4u</groupId>
+            <artifactId>slf4j-mock</artifactId>
+            <version>2.1.1</version>
             <scope>test</scope>
         </dependency>
 

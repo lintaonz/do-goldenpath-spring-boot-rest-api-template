@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -20,24 +22,27 @@ import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thir
 import nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.server.model.PetV1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 class PetControllerTest {
+
+    @Mock private Logger logger;
 
     @Mock private Features features;
 
     @Mock private AnimalsApiClient animalsApiClient;
 
     // object under test
-    private PetController controller;
+    @InjectMocks private PetController controller;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        this.controller = new PetController(features, animalsApiClient);
     }
 
     @Test
@@ -96,6 +101,7 @@ class PetControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(pets);
         assertEquals(2, pets.size());
+        verify(logger, never()).info("will load third party dogs");
     }
 
     @Test
@@ -117,6 +123,7 @@ class PetControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(pets);
         assertEquals(3, pets.size());
+        verify(logger).info("will load third party dogs");
     }
 
     @Test
