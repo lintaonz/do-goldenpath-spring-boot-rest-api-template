@@ -135,6 +135,7 @@ pipeline {
             post {
                 always {
                     script {
+                        sh "rm -f ${CHANGELOG_FILENAME}"
                         setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                     }
                 }
@@ -170,6 +171,7 @@ pipeline {
             post {
                 always {
                     script {
+                        sh "rm -f harness-payload.json"
                         setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                     }
                 }

@@ -19,12 +19,12 @@ when the upstream template gets updated in the future.
 However, if they do need to be modified to match the project's requirement, please do update them and
 shift them into the [Project Specific Docs](#project-specific-docs) section.
 
-- [Build Tools](docs/build-tools.md)
 - [Development Environment Variables](docs/development-env-vars.md)
 - [Local Development](docs/local-development.md)
 - [Testing](docs/testing.md)
 - [Deployment](docs/deployment.md)
 - [Feature Toggles](docs/feature-toggles.md)
+- [Tools and Libs](docs/tools-and-libs.md)
 
 ### Project Specific Docs
 Feel free to add more project specific tech docs here.

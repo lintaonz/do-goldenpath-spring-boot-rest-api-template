@@ -479,6 +479,9 @@
                                 <include>*.properties</include>
                                 <include>*.xml</include>
                             </includes>
+                            <excludes>
+                                <exclude>CHANGELOG.md</exclude>
+                            </excludes>
                             <endWithNewline />
                             <indent>
                                 <spaces>true</spaces>
@@ -491,6 +494,9 @@
                                 <include>*.json</include>
                                 <include>*.yaml</include>
                             </includes>
+                            <excludes>
+                                <exclude>harness-payload.json</exclude>
+                            </excludes>
                             <endWithNewline />
                             <indent>
                                 <spaces>true</spaces>
