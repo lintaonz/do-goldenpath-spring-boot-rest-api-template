@@ -1,4 +1,4 @@
-# Build Tools
+# Tools and Libs
 
 Below are the tools that has been set up to ensure consistency, quality of life, and healthiness
 of the project.

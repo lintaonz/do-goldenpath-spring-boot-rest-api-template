@@ -1,12 +1,12 @@
 site_name: 'Spring Boot REST API'
 nav:
   - Home: index.md
-  - Build Tools: build-tools.md
   - Development Environment Variables: development-env-vars.md
   - Local Development: local-development.md
   - Testing: testing.md
   - Deployment: deployment.md
   - Feature Toggles: feature-toggles.md
+  - Tools and Libs: tools-and-libs.md
 
 plugins:
   - techdocs-core
