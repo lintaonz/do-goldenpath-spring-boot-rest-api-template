@@ -494,6 +494,9 @@
                                 <include>*.json</include>
                                 <include>*.yaml</include>
                             </includes>
+                            <excludes>
+                                <exclude>harness-payload.json</exclude>
+                            </excludes>
                             <endWithNewline />
                             <indent>
                                 <spaces>true</spaces>
