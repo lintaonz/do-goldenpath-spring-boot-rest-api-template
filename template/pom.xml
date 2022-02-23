@@ -479,6 +479,9 @@
                                 <include>*.properties</include>
                                 <include>*.xml</include>
                             </includes>
+                            <excludes>
+                                <exclude>CHANGELOG.md</exclude>
+                            </excludes>
                             <endWithNewline />
                             <indent>
                                 <spaces>true</spaces>
