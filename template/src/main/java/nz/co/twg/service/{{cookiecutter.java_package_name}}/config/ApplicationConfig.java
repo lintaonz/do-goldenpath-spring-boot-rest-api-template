@@ -1,5 +1,8 @@
 package nz.co.twg.service.{{cookiecutter.java_package_name}}.config;
 
+import io.micrometer.core.aop.CountedAspect;
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -25,5 +28,17 @@ public class ApplicationConfig {
                         .allowedOrigins("https://backstage-dev.twg.co.nz", "https://backstage.twg.co.nz");
             }
         };
+    }
+
+    /** Enables the use of @Counted annotation for custom metrics */
+    @Bean
+    public CountedAspect countedAspect(MeterRegistry registry) {
+        return new CountedAspect(registry);
+    }
+
+    /** Enables the use of @Timed annotation for custom metrics */
+    @Bean
+    public TimedAspect timedAspect(MeterRegistry registry) {
+        return new TimedAspect(registry);
     }
 }

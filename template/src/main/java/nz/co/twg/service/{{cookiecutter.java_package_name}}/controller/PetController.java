@@ -2,6 +2,8 @@ package nz.co.twg.service.{{cookiecutter.java_package_name}}.controller;
 
 import static java.util.stream.Collectors.toList;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
@@ -39,8 +41,14 @@ public class PetController implements PetsApi {
         this.animalsClient = animalsClient;
     }
 
+    /**
+    * The @Timed annotated method will automatically capture the time taken for the method to execute
+    * and report them in the /metrics endpoint.
+    */
     @Override
+    @Timed(value = "twg.endpoints.listpets.time", description = "TWG endpoints - listPets time taken")
     public ResponseEntity<List<PetV1>> listPets(Long limit) {
+
         logger.info("will list pets");
         List<PetV1> pets =
                 new ArrayList<>(
@@ -82,6 +90,9 @@ public class PetController implements PetsApi {
     }
 
     @Override
+    @Counted(
+            value = "twg.endpoints.showPetById.counts",
+            description = "TWG endpoints - showPetById counts called")
     public ResponseEntity<PetV1> showPetById(String petId) {
         PetV1 pet =
                 createLocalPet(Long.parseLong(petId), "Dumbo", "elephant", new BigDecimal("50.001"));
