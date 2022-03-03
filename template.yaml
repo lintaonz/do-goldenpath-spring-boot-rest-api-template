@@ -155,6 +155,14 @@ spec:
         project: ${{ parameters.project }}
         repo: ${{ steps["prepend-project"].output.repoName }}
 
+    # This step set up the branch restrictions and merge rules for master branch
+    - id: bitbucket-branch-restrictions
+      name: "BitBucket Branch Restrictions"
+      action: publish:bitbucket-branch-restrictions:twgnz-custom
+      input:
+        org: ${{ parameters.org }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
+
     # This step set up the webhook required for jenkins to be triggered on
     # code push in bitbucket
     - id: bitbucket-webhooks
