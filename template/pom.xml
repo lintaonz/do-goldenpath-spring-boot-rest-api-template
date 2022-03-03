@@ -277,6 +277,7 @@
                     <useLongIntegers>true</useLongIntegers>
                     <dateTimeType>java.time.OffsetDateTime</dateTimeType>
                     <dateType>java.time.LocalDate</dateType>
+                    <useTitleAsClassname>true</useTitleAsClassname>
                 </configuration>
                 <executions>
                     <execution>
