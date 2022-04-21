@@ -41,7 +41,7 @@ metadata:
   description: {{cookiecutter.artifact_id}}
   tags:
     - rest
-    - template-2022-02-01
+    - template-2022-04-01
 spec:
   type: openapi
   lifecycle: experimental
