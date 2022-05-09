@@ -13,7 +13,7 @@ metadata:
     - goldenpath
     - java
     - rest
-    - template-2022-04-01
+    - template-2022-05-09
 spec:
   owner: devops
   type: microservice

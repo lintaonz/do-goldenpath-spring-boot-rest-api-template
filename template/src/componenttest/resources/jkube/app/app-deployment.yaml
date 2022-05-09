@@ -57,15 +57,15 @@ spec:
           securityContext:
             privileged: false
         - name: wiremock
-          image: rodolpheche/wiremock:2.27.2
-          imagePullPolicy: "IfNotPresent"
+          image: wiremock/wiremock:2.33.2
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 8090
             - containerPort: 8443
           args: ["/bin/sh", "-c", "java $JAVA_OPTS -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8090"]
         - name: postgres
-          image: postgres:12-alpine
-          imagePullPolicy: "IfNotPresent"
+          image: postgres:12.10-alpine3.15
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 5432
           env:
