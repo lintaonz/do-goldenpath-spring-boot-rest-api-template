@@ -77,6 +77,8 @@ spec:
               title: "IS - Infrastructure"
             - const: "ISOC"
               title: "ISOC - IS Operations cloud Squad"
+            - const: "LOGS"
+              title: "LOGS - Logistics"
             - const: "LOYAL"
               title: "LOYAL - Loyalty"
             - const: "LPA"
