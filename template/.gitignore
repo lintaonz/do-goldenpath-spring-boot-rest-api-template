@@ -11,6 +11,7 @@
 target/
 dist/
 dependency-reduced-pom.xml
+!.mvn/wrapper/maven-wrapper.jar
 
 ## Eclipse
 .settings/
@@ -27,6 +28,7 @@ out/
 
 ## Visual Studio Code
 .vscode/
+.dccache
 .code-workspace
 .factorypath
 
