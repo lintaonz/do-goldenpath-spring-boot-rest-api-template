@@ -17,8 +17,8 @@ spec:
             name: ${project.artifactId}-wiremock-local
       containers:
         - name: wiremock
-          image: wiremock/wiremock:2.32.0
-          imagePullPolicy: "IfNotPresent"
+          image: wiremock/wiremock:2.33.2
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 8090
             - containerPort: 8443
@@ -27,8 +27,8 @@ spec:
             - name: wiremock-mappings
               mountPath: /home/wiremock/mappings
         - name: postgres
-          image: postgres:12-alpine
-          imagePullPolicy: "IfNotPresent"
+          image: postgres:12.10-alpine3.15
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 5432
           env:
