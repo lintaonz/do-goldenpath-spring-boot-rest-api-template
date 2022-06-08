@@ -97,6 +97,8 @@ spec:
               title: "SFSC - Salesforce Service Cloud"
             - const: "SS"
               title: "SS - Store Services"
+            - const: "THEM"
+              title: "The Market"
             - const: "WMS"
               title: "WMS"
     - title: Provide Component Details
