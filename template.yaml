@@ -230,6 +230,9 @@ spec:
         repoContentsUrl: ${{ steps["publish"].output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
-  output:
-    remoteUrl: ${{ steps["publish"].output.remoteUrl }}
-    entityRef: ${{ steps["register"].output.entityRef }}
+  links:
+      - title: Repository
+        url: ${{ steps["publish"].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps["register"].output.entityRef }}
