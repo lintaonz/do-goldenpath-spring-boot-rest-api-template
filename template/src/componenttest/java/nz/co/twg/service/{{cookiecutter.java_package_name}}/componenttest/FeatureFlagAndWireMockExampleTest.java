@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 class FeatureFlagAndWireMockExampleTest extends ServiceBase {
 
     private final FeaturesSupport featuresSupport =
-            new ActuatorFeaturesSupport(getHostname(), getActuatorPort());
+            new ActuatorFeaturesSupport(getHostName(), getActuatorPort());
 
     private final HttpClient client = HttpClient.newHttpClient();
 
@@ -60,7 +60,7 @@ class FeatureFlagAndWireMockExampleTest extends ServiceBase {
         // when
         HttpRequest request =
                 HttpRequest.newBuilder()
-                        .uri(URI.create(String.format("http://%s:%s/api/pets/1", getHostname(), getAppPort())))
+                        .uri(URI.create(String.format("http://%s:%s/api/pets/1", getHostName(), getAppPort())))
                         .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String result = response.body();
@@ -81,7 +81,7 @@ class FeatureFlagAndWireMockExampleTest extends ServiceBase {
         // when
         HttpRequest request =
                 HttpRequest.newBuilder()
-                        .uri(URI.create(String.format("http://%s:%s/api/pets/1", getHostname(), getAppPort())))
+                        .uri(URI.create(String.format("http://%s:%s/api/pets/1", getHostName(), getAppPort())))
                         .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String result = response.body();
@@ -112,7 +112,7 @@ class FeatureFlagAndWireMockExampleTest extends ServiceBase {
         // when
         HttpRequest request =
                 HttpRequest.newBuilder()
-                        .uri(URI.create(String.format("http://%s:%s/api/pets", getHostname(), getAppPort())))
+                        .uri(URI.create(String.format("http://%s:%s/api/pets", getHostName(), getAppPort())))
                         .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String result = response.body();
