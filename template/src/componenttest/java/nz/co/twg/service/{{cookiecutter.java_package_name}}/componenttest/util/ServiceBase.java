@@ -20,14 +20,14 @@ public abstract class ServiceBase {
     private static final Logger logger = LoggerFactory.getLogger(ServiceBase.class);
 
     private static DatabaseConfig databaseConfig;
-    private static final String hostname = "localhost";
+    private static String hostName;
     private static String appPort;
     private static String actuatorPort;
     private static String wiremockPort;
     private static String dbPort;
 
-    protected String getHostname() {
-        return hostname;
+    protected String getHostName() {
+        return hostName;
     }
 
     protected String getAppPort() {
@@ -66,17 +66,19 @@ public abstract class ServiceBase {
         //     http://localhost:30090   - when running on local dev machine
 
         // Use the defaults one that will be available on local dev
+        hostName = System.getProperty("host_name", "localhost");
         appPort = System.getProperty("app_port", "8080");
         actuatorPort = System.getProperty("actuator_port", "8050");
         wiremockPort = System.getProperty("wiremock_port", "30090");
         dbPort = System.getProperty("db_port", "30005");
 
+        logger.info("host_name=" + hostName);
         logger.info("app_port=" + appPort);
         logger.info("actuator_port=" + actuatorPort);
         logger.info("wiremock_port=" + wiremockPort);
         logger.info("db_port=" + dbPort);
 
-        RestAssured.baseURI = "http://" + hostname;
+        RestAssured.baseURI = "http://" + hostName;
         RestAssured.port = Integer.parseInt(appPort);
         RestAssured.basePath = "/";
         RestAssured.config =
@@ -106,12 +108,12 @@ public abstract class ServiceBase {
 
         // Create DB connection
         try {
-            databaseConfig = new DatabaseConfig(hostname, dbPort);
+            databaseConfig = new DatabaseConfig(hostName, dbPort);
         } catch (Exception e) {
             logger.error("Exception encountered setting up database resources for tests", e);
         }
 
-        WireMock.configureFor(hostname, Integer.parseInt(wiremockPort));
+        WireMock.configureFor(hostName, Integer.parseInt(wiremockPort));
     }
 
     @AfterAll
