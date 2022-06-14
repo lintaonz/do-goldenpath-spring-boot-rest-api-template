@@ -1,4 +1,5 @@
 nameOverride: {{cookiecutter.artifact_id}}
+fullnameOverride: {{cookiecutter.artifact_id}}
 # use command line parameter in pipeline to keep it dynamic per build
 #appVersion: someVersionForApplication
 
