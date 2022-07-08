@@ -67,6 +67,8 @@ spec:
               title: "GOMS - Group Order Management System"
             - const: "HACK"
               title: "HACK - Hackathon"
+            - const: "HCM"
+              title: "HCM - Human Capital Management"  
             - const: "IHUB"
               title: "IHUB - Integration Hub"
             - const: "IN"
