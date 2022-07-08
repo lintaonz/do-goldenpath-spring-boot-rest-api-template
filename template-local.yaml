@@ -145,11 +145,41 @@ spec:
           artifact_id: '{{ cookiecutter.component_id }}'
           java_package_name: '{{ cookiecutter.component_id|replace("-", "") }}'
 
+    - id: backstage_event_started
+      name: Log backstage event
+      action: http:backstage:request
+      input:
+        method: 'POST'
+        path: '/api/timeline/scaffolder-events'
+        headers:
+          content-type: 'application/json'
+        body:
+          type: 'SCAFFOLDER'
+          subType: 'STARTED'
+          productName: ${{ parameters.project }}
+          componentName: ${{ parameters.name }}
+          userName: ${{ parameters.created_by }}
+
     - id: publish
       name: "Publish"
       action: publish:file
       input:
         path: /tmp/backstage/${{ steps["prepend-project"].output.repoName }}
+
+    - id: backstage_event_created
+      name: Log backstage event
+      action: http:backstage:request
+      input:
+        method: 'POST'
+        path: '/api/timeline/scaffolder-events'
+        headers:
+          content-type: 'application/json'
+        body:
+          type: 'SCAFFOLDER'
+          subType: 'REPO_CREATED'
+          productName: ${{ parameters.project }}
+          componentName: ${{ parameters.name }}
+          userName: ${{ parameters.created_by }}
 
 #    # This step set up the branch restrictions and merge rules for master branch
 #    - id: bitbucket-branch-restrictions
