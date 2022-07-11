@@ -175,6 +175,21 @@ spec:
         project: ${{ parameters.project }}
         repo: ${{ steps["prepend-project"].output.repoName }}
 
+    - id: backstage_event_created
+      name: Log backstage event
+      action: http:backstage:request
+      input:
+        method: 'POST'
+        path: '/api/timeline/scaffolder-events'
+        headers:
+          content-type: 'application/json'
+        body:
+          type: 'SCAFFOLDER'
+          subType: 'REPO_CREATED'
+          productName: ${{ parameters.project }}
+          componentName: ${{ parameters.name }}
+          userName: ${{ parameters.created_by }}
+
     # This step set up the branch restrictions and merge rules for master branch
     - id: bitbucket-branch-restrictions
       name: "BitBucket Branch Restrictions"
@@ -237,8 +252,15 @@ spec:
         project: ${{ parameters.project }}
         name: ${{ steps["prepend-project"].output.repoName }}
         description: ${{ parameters.description }}
-    
-    - id: backstage_event_created
+
+    - id: register
+      name: "Register"
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps["publish"].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+    - id: backstage_event_registered
       name: Log backstage event
       action: http:backstage:request
       input:
@@ -248,17 +270,10 @@ spec:
           content-type: 'application/json'
         body:
           type: 'SCAFFOLDER'
-          subType: 'REPO_CREATED'
+          subType: 'COMPONENT_REGISTRED'
           productName: ${{ parameters.project }}
           componentName: ${{ parameters.name }}
           userName: ${{ parameters.created_by }}
-
-    - id: register
-      name: "Register"
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps["publish"].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
 
   output:
     links:
