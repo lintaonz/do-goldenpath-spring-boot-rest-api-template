@@ -270,7 +270,7 @@ spec:
           content-type: 'application/json'
         body:
           type: 'SCAFFOLDER'
-          subType: 'COMPONENT_REGISTRED'
+          subType: 'COMPONENT_REGISTERED'
           productName: ${{ parameters.project }}
           componentName: ${{ parameters.name }}
           userName: ${{ parameters.created_by }}
