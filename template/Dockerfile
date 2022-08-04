@@ -1,4 +1,4 @@
-FROM twgorg/do-base-image-java-11:latest
+FROM twgorg/do-base-image-java-11:75f94dae9958cf830c47a8012e5b17d1fc77754e
 
 ARG artifactId
 ARG artifactVersion
