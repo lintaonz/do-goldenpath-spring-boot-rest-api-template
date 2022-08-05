@@ -13,7 +13,6 @@ metadata:
     twg.co.nz/created-datetime: "{% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %}"
     twg.co.nz/created-by: "{{cookiecutter.created_by}}"
     twg.co.nz/harness-application-name: "do-container-deployment"
-    twg.co.nz/harness-pipeline-name: "do-container-deployment-rolling-v3"
     backstage.io/kubernetes-label-selector: "app.kubernetes.io/name={{cookiecutter.artifact_id}}"
   tags:
     - java
