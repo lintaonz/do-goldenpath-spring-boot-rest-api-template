@@ -17,6 +17,7 @@ podAnnotations:
 podLabels:
   metrics: prometheus
   prometheus.io/scrape: "true"
+  prometheus.io/port: "8050"
 
 extraEnvs:
   - name: ENV
