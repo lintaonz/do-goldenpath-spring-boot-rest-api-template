@@ -13,10 +13,11 @@ podAnnotations:
   co.elastic.logs/enabled: 'true'
   # product group in elasticsearch to provide same lifecycle policies and patterns
   twg.elastic.logs/product: "{{cookiecutter.prefix}}"
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8050"
 
 podLabels:
   metrics: prometheus
-  prometheus.io/scrape: "true"
 
 extraEnvs:
   - name: ENV
