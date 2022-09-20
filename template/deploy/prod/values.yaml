@@ -22,6 +22,15 @@ podLabels:
 extraEnvs:
   - name: ENV
     value: prod
+  - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_BASEURL
+    value: 'https://integ-prod-aks.twg.co.nz/integ-encryption-api'
+  - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_AUTH_TOKENURL
+    value: 'https://login.microsoftonline.com/07e47c7e-9339-473b-8138-adb77559c551/oauth2/v2.0/token'
+  - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_AUTH_CLIENTID
+    value: 'this-should-come-from-enablement-squad'
+  - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_AUTH_CLIENTSECRET
+  - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_AUTH_SCOPE
+    value: 'api://encryption-api-external/.default'
 
 ingress:
   host: '{{cookiecutter.prefix}}-prod-aks.twg.co.nz'

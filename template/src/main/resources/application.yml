@@ -2,6 +2,25 @@ logging:
   level:
     org.springframework.web: INFO
 
+twg:
+  sdem:
+    validate-http-responses: true
+    encryption:
+      allowed-encryption-key-ids:
+        - "getting-started"
+      error-on-decryption-failure: true
+      service-api-config:
+        # URLs must not have trailing /
+        base-url: "http://localhost:8090/vault-proxy"
+        # the amount of time to deduct from the actual token expiry time to avoid
+        # the situation where the token expires immediately after the validation deemed it still valid.
+        cached-access-token-preemptive-expiry-seconds: 300
+        auth:
+          token-url: "http://localhost:8090/auth/oauth2/token"
+          client-id: "test-client-id"
+          client-secret: "test-client-secret"
+          scope: "test-scope"
+
 spring:
   main:
     banner-mode: "off"

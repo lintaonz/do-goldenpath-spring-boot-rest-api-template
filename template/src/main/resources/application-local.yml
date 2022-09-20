@@ -1,6 +1,15 @@
 logging:
   config: classpath:log4j2-local.xml
 
+twg:
+  sdem:
+    encryption:
+      service-api-config:
+        # URLs must not have trailing /
+        base-url: "http://localhost:30090/vault-proxy"
+        auth:
+          token-url: "http://localhost:30090/auth/oauth2/token"
+
 # Include the features endpoint
 management:
   endpoints:
