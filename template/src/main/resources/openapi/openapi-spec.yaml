@@ -47,7 +47,21 @@ paths:
       operationId: createPets
       tags:
         - pets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/pet-v1"
       responses:
+        '200':
+          description: >
+            The response mirrors the input payload with some
+            adjustments to the data enroute.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pet-v1"
         '201':
           description: Null response
         '500':
@@ -112,9 +126,15 @@ components:
         name:
           type: string
           description: "The name of the pet"
-        tag:
+        tagEncrypted:
           type: string
           description: "The tag of the pet"
+          pattern: "^[A-Za-z0-9+/=:]+$"
+          x-twg-encryption-key: "getting-started"
+          x-twg-clear:
+            type: string
+            pattern: "^[A-Z0-9-]+$"
+            minLength: 6
         dateOfBirth:
           type: string
           format: date-time
@@ -123,9 +143,16 @@ components:
           type: string
           format: date
           description: "The microchip date of the pet"
-        costPerDay:
-          type: number
+        costPerDayEncrypted:
+          type: string
+          pattern: "^[A-Za-z0-9+/=:]+$"
           description: "The cost per day for the pet"
+          x-twg-encryption-key: "getting-started"
+          x-twg-clear:
+            type: number
+            minimum: 1
+            maximum: 100
+            exclusiveMinimum: true
     pets-v1:
       title: PetsV1
       type: array

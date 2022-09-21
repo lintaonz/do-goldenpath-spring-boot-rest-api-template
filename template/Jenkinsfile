@@ -78,7 +78,7 @@ pipeline {
                             '-v /home/ec2-user/.sonar:/root/.sonar ' +
                             '--network host') {
                             echo "appversion is ${env.GIT_COMMIT}."
-                            sh "KUBECONFIG=/root/.kube/config mvn ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,dependencyCheck,${sonarProfile} -s ./settings.xml"
+                            sh "KUBECONFIG=/root/.kube/config mvn -U ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,dependencyCheck,${sonarProfile} -s ./settings.xml"
                         }
                         if ("${env.BRANCH_NAME}" == 'master') {
                             print 'Pushing docker image for master branch'

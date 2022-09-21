@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
+        <version>2.7.3</version>
     </parent>
 
     <groupId>nz.co.twg.{{cookiecutter.prefix}}</groupId>
@@ -80,7 +80,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.2.0</version>
+                <version>6.0.1</version>
                 <configuration>
                     <configOptions>
                         <skipDefaultInterface>true</skipDefaultInterface>
@@ -92,6 +92,13 @@
                         <typeMapping>int=Long</typeMapping>
                     </typeMappings>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>nz.co.twg.{{cookiecutter.prefix}}</groupId>
+                        <artifactId>do-lib-twg-openapigenerator</artifactId>
+                        <version>1.0.1</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <!-- Generates OpenAPI interface for current service -->
@@ -105,7 +112,8 @@
                             </configOptions>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi-spec.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
+                            <generatorName>twg-spring</generatorName>
+                            <templateResourcePath>twg-spring-templates</templateResourcePath>
                             <library>spring-boot</library>
                         </configuration>
                         <goals>
@@ -122,7 +130,8 @@
                                 <modelPackage>nz.co.twg.service.{{cookiecutter.java_package_name}}.openapi.clients.thirdpartyapi.model</modelPackage>
                             </configOptions>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/clients/third-party-api/openapi-spec.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
+                            <generatorName>twg-spring</generatorName>
+                            <templateResourcePath>twg-spring-templates</templateResourcePath>
                             <library>spring-cloud</library>
                         </configuration>
                         <goals>
@@ -515,7 +524,7 @@
                             <include>src/test/java/**/*.java</include>
                         </includes>
                         <googleJavaFormat>
-                            <version>1.11.0</version>
+                            <version>1.12.0</version>
                         </googleJavaFormat>
                         <!--
                             The indent steps allow us to override the Google
@@ -590,18 +599,18 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.2</version>
+            <version>0.2.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1-jre</version>
+            <version>31.1-jre</version>
         </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
+            <version>2.10.5</version>
             <!--
                 Cannot use version 3.0.0 because of https://github.com/springfox/springfox/issues/3658
                  <version>3.0.0</version>
@@ -614,6 +623,10 @@
                 <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.github.classgraph</groupId>
+                    <artifactId>classgraph</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -628,7 +641,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-spring-web</artifactId>
-            <version>2.9.2</version>
+            <version>2.10.5</version>
             <!--
                 Cannot use version 3.0.0 because of https://github.com/springfox/springfox/issues/3658
                  <version>3.0.0</version>
@@ -638,7 +651,17 @@
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>io.github.classgraph</groupId>
+                    <artifactId>classgraph</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.149</version>
         </dependency>
 
         <dependency>
@@ -665,13 +688,23 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.5</version>
+            <version>1.6.11</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.3.1</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.woodstox</groupId>
+                    <artifactId>woodstox-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -702,7 +735,7 @@
         <dependency>
             <groupId>co.elastic.logging</groupId>
             <artifactId>log4j2-ecs-layout</artifactId>
-            <version>1.3.2</version>
+            <version>1.5.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
@@ -730,7 +763,7 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.3.3</version>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>
@@ -794,14 +827,20 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>42.5.0</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-            <version>2.1.210</version>
         </dependency>
 
         <dependency>
@@ -813,6 +852,12 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>nz.co.twg.{{cookiecutter.prefix}}</groupId>
+            <artifactId>do-lib-twg-common</artifactId>
+            <version>1.0.4</version>
         </dependency>
 
         <dependency>
@@ -838,7 +883,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.7.2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -851,7 +895,7 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-jre8</artifactId>
-            <version>2.32.0</version>
+            <version>2.33.2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -915,33 +959,57 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.9</version>
+            <version>3.5.10</version>
         </dependency>
 
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.4.2.Final</version>
+            <version>1.5.2.Final</version>
         </dependency>
 
         <dependency>
             <groupId>com.launchdarkly</groupId>
             <artifactId>launchdarkly-java-server-sdk</artifactId>
-            <version>5.7.0</version>
+            <version>5.10.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.16.3</version>
+            <version>1.17.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.16.3</version>
+            <version>1.17.3</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
         </dependency>
 
         <!-- OpenFeign dependencies -->

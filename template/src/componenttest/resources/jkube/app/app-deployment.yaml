@@ -32,6 +32,10 @@ spec:
               value: mypassword
             - name: ANIMALS_URL
               value: http://localhost:8090
+            - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_BASEURL
+              value: http://localhost:8090/vault-proxy
+            - name: TWG_SDEM_ENCRYPTION_SERVICEAPICONFIG_AUTH_TOKENURL
+              value: http://localhost:8090/auth/oauth2/token
           image: twgorg/${project.artifactId}:${project.version}
           ports:
             - containerPort: 8080
