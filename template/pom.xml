@@ -48,6 +48,8 @@
         <!-- jkube tries to be smart and automatically add spring boot health checks based on some heuristics. However
              in "local" mode we do not want this to happen. -->
         <jkube.skipHealthCheck>true</jkube.skipHealthCheck>
+        <!-- this is to ensure template generator script does not override groupId for common libs -->
+        <twg.do.groupId>nz.co.twg.do</twg.do.groupId>
     </properties>
 
     <build>
@@ -94,7 +96,7 @@
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>nz.co.twg.{{cookiecutter.prefix}}</groupId>
+                        <groupId>${twg.do.groupId}</groupId>
                         <artifactId>do-lib-twg-openapigenerator</artifactId>
                         <version>1.0.1</version>
                     </dependency>
@@ -855,7 +857,7 @@
         </dependency>
 
         <dependency>
-            <groupId>nz.co.twg.{{cookiecutter.prefix}}</groupId>
+            <groupId>${twg.do.groupId}</groupId>
             <artifactId>do-lib-twg-common</artifactId>
             <version>1.0.4</version>
         </dependency>
