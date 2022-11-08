@@ -64,6 +64,8 @@ spec:
               title: "GEP - Salesforce Group eCommerce Platform"
             - const: "GOMS"
               title: "GOMS - Group Order Management System"
+            - const: "HACK"
+              title: "HACK - Hackathon"
             - const: "HCM"
               title: "HCM - Human Capital Management"  
             - const: "IHUB"
@@ -76,6 +78,8 @@ spec:
               title: "IS - Infrastructure"
             - const: "ISOC"
               title: "ISOC - IS Operations cloud Squad"
+            - const: "LOGS"
+              title: "LOGS - Logistics"
             - const: "LOYAL"
               title: "LOYAL - Loyalty"
             - const: "LPA"
@@ -94,6 +98,8 @@ spec:
               title: "SFSC - Salesforce Service Cloud"
             - const: "SS"
               title: "SS - Store Services"
+            - const: "THEM"
+              title: "The Market"
             - const: "WMS"
               title: "WMS"
     - title: Provide Component Details
@@ -127,6 +133,12 @@ spec:
         project: ${{ parameters.project }}
         repo: ${{ parameters.name }}
 
+    - id: snyk-get-or-create-org
+      name: "Snyk Security: Get or Create Organisation"
+      action: snyk:snyk-get-or-create-org:twgnz-custom
+      input:
+        snykOrganisationName: ${{ parameters.project }}
+
     - id: fetch-base
       name: "Fetch Base"
       action: fetch:cookiecutter
@@ -144,6 +156,7 @@ spec:
           owner: '{{ cookiecutter.project|lower }}-team'
           artifact_id: '{{ cookiecutter.component_id }}'
           java_package_name: '{{ cookiecutter.component_id|replace("-", "") }}'
+          snyk_org_id: ${{ steps["snyk-get-or-create-org"].output.snykOrganisationSlug }}
 
     - id: publish
       name: "Publish"

@@ -8,6 +8,7 @@ nav:
   - Feature Toggles: feature-toggles.md
   - Tools and Libs: tools-and-libs.md
   - SDEM Encryption & Decryption: sdem-encryption-decryption.md
+  - Snyk Security: snyk-security.md
 
 plugins:
   - techdocs-core

@@ -2,6 +2,8 @@
 
 @Library('do-jenkins-shared-libraries@master')
 
+import nz.co.twg.jenkins.snyk.SnykConstants
+
 // service details
 def serviceName = '{{cookiecutter.artifact_id}}'
 
@@ -26,10 +28,20 @@ parameters:
   user_group: ".TWG Okta Harness Admin,.TWG Product {{cookiecutter.prefix}} team"
 """
 
-def docker_registry_url = 'https://index.docker.io/v1/'
-def docker_registry_cred_id = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
+def dockerRegistryCredId = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
+
+def snykEnabled = true
+def snykTokenId = 'snyk_token'
+def snykGroupId = 'e5cbe235-3135-4861-aa56-a9836b51511a'
+def snykOrgName = '{{cookiecutter.prefix}}'
+def snykFailOnActionNeeded = false
 
 pipeline {
+
+    tools {
+        snyk "snyk"
+    }
+
     agent {
         label 'build-agent'
     }
@@ -46,8 +58,43 @@ pipeline {
         NEXUS_REPO_BASE_URL_ARTIFACTS = 'https://nexus-dev-aws.twg.co.nz/repository/components'
         HARNESS_WEBHOOK_URL = 'https://app.harness.io/gateway/api/webhooks/bjEExMNWyWrOD36SKRqhDcqMcKuH5pTvoc84ho3T?accountId=hOGfjDXdRbeM1IHvM1to9Q'
         CHANGELOG_FILENAME = './CHANGELOG.md'
+        SNYK_HOME = tool name: 'snyk'
     }
     stages {
+        stage('snyk dependency and static analyis tests') {
+            when {
+                expression { snykEnabled == true }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: snykTokenId, variable: 'SNYK_TOKEN')]) {
+                        String snykOrgSlug = snykGetOrgSlugByName(snykGroupId, snykOrgName)
+
+                        // This Snyk CLI invocation will perform dependency checks on
+                        // the project's definition that contains all of the dependencies.
+
+                        snykTool(
+                            'test',
+                            "--org=${snykOrgSlug}",
+                            null, // context specific options
+                            SnykConstants.OUTPUT_FILE,
+                            snykFailOnActionNeeded)
+
+                        // This Snyk CLI invocation will upload the source code for the
+                        // application to Snyk and cause a static analysis scan of the
+                        // material.
+
+                        snykTool(
+                            'code test',
+                            "--org=${snykOrgSlug}",
+                            null, // context specific options
+                            SnykConstants.OUTPUT_FILE,
+                            snykFailOnActionNeeded)
+                    }
+                }
+            }
+        }
+
         stage('Build') {
             environment {
                 SONAR_TOKEN = credentials('do-sonarcloud-token')
@@ -70,7 +117,7 @@ pipeline {
                         sonarProfile = ""
                     }
 
-                    withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+                    withDockerRegistry([credentialsId: dockerRegistryCredId, url: '']) {
                         docker.image('maven:3.8-openjdk-11').inside(
                             '-v /var/run/docker.sock:/var/run/docker.sock ' +
                             '-v /home/ec2-user/m2cache:/root/.m2 ' +
@@ -78,11 +125,51 @@ pipeline {
                             '-v /home/ec2-user/.sonar:/root/.sonar ' +
                             '--network host') {
                             echo "appversion is ${env.GIT_COMMIT}."
-                            sh "KUBECONFIG=/root/.kube/config mvn -U ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,dependencyCheck,${sonarProfile} -s ./settings.xml"
+                            sh "KUBECONFIG=/root/.kube/config mvn -U ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,${sonarProfile} -s ./settings.xml"
                         }
+
+                        String imageTag = "twgorg/${serviceName}:${env.GIT_COMMIT}"
+
+                        if (snykEnabled) {
+                            withCredentials([string(credentialsId: snykTokenId, variable: 'SNYK_TOKEN')]) {
+                                String snykOrgSlug = snykGetOrgSlugByName(snykGroupId, snykOrgName)
+
+                                // This Snyk CLI invocation is scanning the newly created Docker
+                                // image locally.
+
+                                snykTool(
+                                    "container test",
+                                    "--org=${snykOrgSlug}",
+                                    imageTag,
+                                    SnykConstants.OUTPUT_FILE,
+                                    snykFailOnActionNeeded)
+                            }
+                        }
+
                         if ("${env.BRANCH_NAME}" == 'master') {
                             print 'Pushing docker image for master branch'
-                            sh "docker push twgorg/${serviceName}:${env.GIT_COMMIT}"
+                            sh "docker push ${imageTag}"
+
+                            if (snykEnabled) {
+                                withCredentials([string(credentialsId: snykTokenId, variable: 'SNYK_TOKEN')]) {
+                                    String snykOrgSlug = snykGetOrgSlugByName(snykGroupId, snykOrgName)
+
+                                    // this Snyk CLI command will setup the Docker image for
+                                    // on-going scanning (eg: 1x per day) in the Snyk system.
+                                    // The output from this is not captured.
+
+                                    snykTool(
+                                        "container monitor",
+                                        "--org=${snykOrgSlug} --project-tags=source=docker,team=${snykOrgName}",
+                                        imageTag,
+                                        null, // output file
+                                        false // fail on action needed; has no actions so not required
+                                    )
+
+                                }
+                            } else {
+                                print 'snyk disabled --> skipping snyk docker image analysis'
+                            }
                         }
                     }
                 }
@@ -93,9 +180,16 @@ pipeline {
                         // post build kubernetes cleanup
                         sh "kubectl delete --all deployments,services,configmaps"
 
+                        if (fileExists(SnykConstants.OUTPUT_FILE)) {
+                            plainTextFileToHtml(SnykConstants.OUTPUT_FILE, SnykConstants.OUTPUT_FILE_HTML)
+                        }
+
                         setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
                         uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
                         renderTestResultsLinks(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER)
+
+                        sh "rm -f '${SnykConstants.OUTPUT_FILE}'"
+                        sh "rm -f '${SnykConstants.OUTPUT_FILE_HTML}'"
                     }
                 }
             }
@@ -109,7 +203,7 @@ pipeline {
             }
             steps {
                 script {
-                    withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+                    withDockerRegistry([credentialsId: dockerRegistryCredId, url: '']) {
                         docker.image('quay.io/git-chglog/git-chglog:0.15.1').inside("--entrypoint ''") {
                             script {
                                 echo "Creating change log"
@@ -150,7 +244,7 @@ pipeline {
             }
             steps {
                 script {
-                    withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+                    withDockerRegistry([credentialsId: dockerRegistryCredId, url: '']) {
                         docker.image('curlimages/curl:7.81.0').inside {
                             script {
                                 // deployment info for the harness payload

@@ -26,6 +26,7 @@ shift them into the [Project Specific Docs](#project-specific-docs) section.
 - [Feature Toggles](docs/feature-toggles.md)
 - [Tools and Libs](docs/tools-and-libs.md)
 - [SDEM Encryption & Decryption](docs/sdem-encryption-decryption.md)
+- [Snyk Security](docs/snyk-security.md)
 
 ### Project Specific Docs
 Feel free to add more project specific tech docs here.
