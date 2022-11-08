@@ -127,6 +127,12 @@ spec:
         project: ${{ parameters.project }}
         repo: ${{ parameters.name }}
 
+    # - id: snyk-get-or-create-org
+    #   name: "Snyk Security: Get or Create Organisation"
+    #   action: snyk:snyk-get-or-create-org:twgnz-custom
+    #   input:
+    #     snykOrganisationName: ${{ parameters.project }}
+
     - id: fetch-base
       name: "Fetch Base"
       action: fetch:cookiecutter
@@ -144,6 +150,8 @@ spec:
           owner: '{{ cookiecutter.project|lower }}-team'
           artifact_id: '{{ cookiecutter.component_id }}'
           java_package_name: '{{ cookiecutter.component_id|replace("-", "") }}'
+          snyk_org_id: ${{ steps["snyk-get-org"].output.orgSlug }}
+          # snyk_org_id: ${{ steps["snyk-get-or-create-org"].output.snykOrganisationSlug }}
 
     - id: backstage_event_started
       name: Log backstage event
@@ -197,6 +205,14 @@ spec:
 #      input:
 #        org: ${{ parameters.org }}
 #        repo: ${{ steps["prepend-project"].output.repoName }}
+#
+#    - id: snyk-import
+#      name: "Snyk Security: Import"
+#      action: snky:snyk-import:twgnz-custom
+#      input:
+#        snykOrganisation: ${{ parameters.project }}
+#        bitbucketWorkspace: ${{ parameters.org }}
+#        bitbucketRepoName: ${{ steps["prepend-project"].output.repoName }}
 #
 #    - id: sonarcloud
 #      name: "SonarCloud Code Analysis"
