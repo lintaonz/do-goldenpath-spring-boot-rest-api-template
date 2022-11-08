@@ -218,7 +218,7 @@ spec:
 
     - id: snyk-import
       name: "Snyk Security: Import"
-      action: snky:snyk-import:twgnz-custom
+      action: snyk:snyk-import:twgnz-custom
       input:
         snykOrganisation: ${{ parameters.project }}
         bitbucketWorkspace: ${{ parameters.org }}
