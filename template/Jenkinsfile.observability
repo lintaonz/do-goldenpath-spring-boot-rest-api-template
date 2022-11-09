@@ -1,0 +1,116 @@
+library('do-jenkins-shared-libraries@master')
+
+// service details
+def docker_registry_cred_id  = 'f0df4430-f37f-4133-9746-8eb07fcf2165'
+
+pipeline {
+  agent {
+    label 'build-agent'
+  }
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    disableConcurrentBuilds()
+    skipStagesAfterUnstable()
+    timeout time: 15, unit: 'MINUTES'
+  }
+
+  environment {
+    NEW_RELIC_API_KEY = credentials('NEW_RELIC_API_KEY')
+    NEW_RELIC_TOOLING_DOCKER_IMAGE = 'twgorg/do-newrelic-utils:a8580cadc4245dd5477971a5ba0d71a1e491b8cd'
+  }
+
+  stages {
+    stage('Dev') {
+      when {
+        beforeOptions true
+        beforeAgent true
+        expression { env.BRANCH_NAME == 'master' }
+      }
+      environment {
+        ENV = 'dev'
+      }
+      steps {
+        script {
+          withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+            docker.image("${NEW_RELIC_TOOLING_DOCKER_IMAGE}").inside {
+              script {
+                sh "ls -l observability-config/${ENV}/dashboards"
+                echo 'Create / Update Dashboards'
+                sh "/scripts/dashboard.sh ${ENV}"
+              }
+            }
+          }
+        }
+      }
+      post {
+        always {
+          script {
+            setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
+          }
+        }
+      }
+    }
+    stage('Test') {
+      when {
+        beforeOptions true
+        beforeAgent true
+        expression { env.BRANCH_NAME == 'master' }
+      }
+      environment {
+        ENV = 'test'
+      }
+      steps {
+        script {
+          withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+            docker.image("${NEW_RELIC_TOOLING_DOCKER_IMAGE}").inside {
+              script {
+                sh "ls -l observability-config/${ENV}/dashboards"
+                echo 'Create / Update Dashboards'
+                sh "/scripts/dashboard.sh ${ENV}"
+              }
+            }
+          }
+        }
+      }
+      post {
+        always {
+          script {
+            setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
+          }
+        }
+      }
+    }
+    stage('Prod') {
+      when {
+        beforeOptions true
+        beforeAgent true
+        expression { env.BRANCH_NAME == 'master' }
+      }
+      environment {
+        ENV = 'prod'
+      }
+      steps {
+        script {
+          withDockerRegistry([credentialsId: docker_registry_cred_id, url: '']) {
+            docker.image("${NEW_RELIC_TOOLING_DOCKER_IMAGE}").inside {
+              script {
+                sh "ls -l observability-config/${ENV}/dashboards"
+                echo 'Create / Update Dashboards'
+                sh "/scripts/dashboard.sh ${ENV}"
+              }
+            }
+          }
+        }
+      }
+      post {
+        always {
+          script {
+            setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
+          }
+        }
+      }
+    }
+  }
+}

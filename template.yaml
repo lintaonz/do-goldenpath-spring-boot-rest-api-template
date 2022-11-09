@@ -13,7 +13,7 @@ metadata:
     - goldenpath
     - java
     - rest
-    - template-2022-11-08
+    - template-2022-11-09
 spec:
   owner: devops
   type: microservice
@@ -243,6 +243,14 @@ spec:
       action: publish:jenkins-smoketest:twgnz-custom
       input:
         project: ${{ parameters.project }}
+        repo: ${{ steps["prepend-project"].output.repoName }}
+
+    - id: jenkins-observability
+      name: "Pipeline: Observability"
+      action: publish:jenkins-job:twgnz-custom
+      input:
+        pipelineName: ${{ steps["prepend-project"].output.repoName }}-observability
+        jenkinsFileName: Jenkinsfile.observability
         repo: ${{ steps["prepend-project"].output.repoName }}
 
     - id: harness-service
