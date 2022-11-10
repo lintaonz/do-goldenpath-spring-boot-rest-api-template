@@ -9,6 +9,7 @@ nav:
   - Tools and Libs: tools-and-libs.md
   - SDEM Encryption & Decryption: sdem-encryption-decryption.md
   - Snyk Security: snyk-security.md
+  - Observability: observability.md
 
 plugins:
   - techdocs-core
