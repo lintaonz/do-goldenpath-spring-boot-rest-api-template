@@ -4,7 +4,7 @@
   "permissions": "PUBLIC_READ_ONLY",
   "pages": [
     {
-      "name": "PROD",
+      "name": "golden-metrics",
       "description": null,
       "widgets": [
         {
