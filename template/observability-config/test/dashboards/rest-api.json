@@ -1,0 +1,12 @@
+{
+    "name": "{{cookiecutter.prefix|upper}} | REST API - {{cookiecutter.artifact_id}} | TEST",
+    "description": null,
+    "permissions": "PUBLIC_READ_ONLY",
+    "pages": [
+      {
+        "name": "TEST",
+        "description": null,
+        "widgets": []
+      }
+    ]
+  }
