@@ -61,7 +61,7 @@ pipeline {
         SNYK_HOME = tool name: 'snyk'
     }
     stages {
-        stage('snyk dependency and static analyis tests') {
+        stage('Snyk Dependency and Static Analysis Tests') {
             when {
                 expression { snykEnabled == true }
             }
@@ -144,6 +144,8 @@ pipeline {
                                     SnykConstants.OUTPUT_FILE,
                                     snykFailOnActionNeeded)
                             }
+                        } else {
+                            print 'snyk disabled --> skipping snyk docker image analysis'
                         }
 
                         if ("${env.BRANCH_NAME}" == 'master') {
@@ -168,7 +170,17 @@ pipeline {
 
                                 }
                             } else {
-                                print 'snyk disabled --> skipping snyk docker image analysis'
+                                print 'snyk disabled --> skipping snyk docker image monitoring'
+                            }
+
+                            docker.image('quay.io/git-chglog/git-chglog:0.15.1').inside("--entrypoint ''") {
+                                script {
+                                    echo "Creating change log"
+                                    sh "git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}"
+
+                                    echo "Change log generated..."
+                                    sh "cat ${CHANGELOG_FILENAME}"
+                                }
                             }
                         }
                     }
@@ -188,6 +200,7 @@ pipeline {
                         uploadArtifactsToNexus(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER) // NEXUS_CRED env variable is expected too
                         renderTestResultsLinks(env.NEXUS_REPO_BASE_URL_ARTIFACTS, env.JOB_NAME, env.BUILD_NUMBER)
 
+                        sh "rm -f '${CHANGELOG_FILENAME}'"
                         sh "rm -f '${SnykConstants.OUTPUT_FILE}'"
                         sh "rm -f '${SnykConstants.OUTPUT_FILE_HTML}'"
                     }
@@ -195,47 +208,6 @@ pipeline {
             }
         }
 
-        stage('Prepare Deployment') {
-            when {
-                beforeOptions true
-                beforeAgent true
-                expression { BRANCH_NAME == 'master' }
-            }
-            steps {
-                script {
-                    withDockerRegistry([credentialsId: dockerRegistryCredId, url: '']) {
-                        docker.image('quay.io/git-chglog/git-chglog:0.15.1').inside("--entrypoint ''") {
-                            script {
-                                echo "Creating change log"
-                                sh 'git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}'
-
-                                echo "Change log generated..."
-                                sh 'cat ${CHANGELOG_FILENAME}'
-                            }
-                        }
-
-                        docker.image('curlimages/curl:7.81.0').inside {
-                            script {
-                                sh """
-                                    curl --silent --show-error --include --fail \
-                                        --user \"\${NEXUS_CREDS}\" \
-                                        --upload-file "\${CHANGELOG_FILENAME}" \
-                                        "${NEXUS_REPO_BASE_URL_ARTIFACTS}/${JOB_NAME}/${BUILD_NUMBER}/"
-                                """
-                            }
-                        }
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        sh "rm -f ${CHANGELOG_FILENAME}"
-                        setBuildDetails(env.BUILD_NUMBER, env.GIT_COMMIT, 'DEFAULT')
-                    }
-                }
-            }
-        }
         stage('Trigger Deployment') {
             when {
                 beforeOptions true
@@ -253,7 +225,7 @@ pipeline {
                                 harnessPayload.parameters.app_commit_id = "${env.GIT_COMMIT}"
                                 harnessPayload.parameters.deploy_commit_id = "${env.GIT_COMMIT}"
                                 harnessPayload.parameters.artifact_base_url = "$NEXUS_REPO_BASE_URL_ARTIFACTS/$JOB_NAME/$BUILD_NUMBER"
-                                String harnessPayloadJson = writeJSON file: 'harness-payload.json', json: harnessPayload
+                                writeJSON file: 'harness-payload.json', json: harnessPayload
 
                                 sh 'echo About to trigger harness...'
                                 sh 'cat harness-payload.json'
