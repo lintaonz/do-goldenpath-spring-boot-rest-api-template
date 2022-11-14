@@ -176,7 +176,7 @@ pipeline {
                             docker.image('quay.io/git-chglog/git-chglog:0.15.1').inside("--entrypoint ''") {
                                 script {
                                     echo "Creating change log"
-                                    sh "git-chglog --next-tag "Unreleased" --output ${CHANGELOG_FILENAME}"
+                                    sh "git-chglog --next-tag \"Unreleased\" --output ${CHANGELOG_FILENAME}"
 
                                     echo "Change log generated..."
                                     sh "cat ${CHANGELOG_FILENAME}"
