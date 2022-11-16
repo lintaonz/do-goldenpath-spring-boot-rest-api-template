@@ -3,7 +3,7 @@
   name: "High CPU Utilization"
   description: "This alert is triggered when the CPU utilization is above 80% for at least 3 minutes."
   nrql: {
-    query: "FROM Metric SELECT latest(k8s.container.cpuUsedCores)/latest(k8s.container.cpuLimitCores) * 100 as '% CPU' WHERE `label.app.kubernetes.io/name` = 'do-bitbucket-scm-event-api' AND namespaceName = '{{cookiecutter.prefix}}-dev' FACET k8s.podName, k8s.containerName"
+    query: "FROM Metric SELECT latest(k8s.container.cpuUsedCores)/latest(k8s.container.cpuLimitCores) * 100 as '% CPU' WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-dev' FACET k8s.podName, k8s.containerName"
   }
   expiration: null
   runbookUrl: null

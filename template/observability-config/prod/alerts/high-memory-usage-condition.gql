@@ -3,7 +3,7 @@
   name: "High Memory Usage"
   description: "This alert is triggered when the Memory Usage is above 55%."
   nrql: {
-    query: "FROM Metric SELECT latest(k8s.container.memoryWorkingSetUtilization) AS Memory WHERE `label.app.kubernetes.io/name` = 'do-bitbucket-scm-event-api' AND namespaceName = '{{cookiecutter.prefix}}-prod' FACET k8s.podName, k8s.containerName"
+    query: "FROM Metric SELECT latest(k8s.container.memoryWorkingSetUtilization) AS Memory WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-prod' FACET k8s.podName, k8s.containerName"
   }
   expiration: null
   runbookUrl: null
