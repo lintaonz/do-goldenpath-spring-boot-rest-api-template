@@ -1,0 +1,36 @@
+{
+  enabled: true
+  name: "High Memory Usage"
+  description: "This alert is triggered when the Memory Usage is above 55%."
+  nrql: {
+    query: "FROM Metric SELECT latest(k8s.container.memoryWorkingSetUtilization) AS Memory WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-dev' FACET k8s.podName, k8s.containerName"
+  }
+  expiration: null
+  runbookUrl: null
+  signal: {
+    aggregationDelay: 120
+    aggregationMethod: EVENT_FLOW
+    aggregationTimer: null
+    fillValue: null
+    aggregationWindow: 60
+    fillOption: LAST_VALUE
+    slideBy: null
+  }
+  terms: [
+      {
+        operator: ABOVE
+        threshold: 85
+        priority: CRITICAL
+        thresholdDuration: 60
+        thresholdOccurrences: ALL
+      }
+      {
+        operator: ABOVE
+        threshold: 70
+        priority: WARNING
+        thresholdDuration: 60
+        thresholdOccurrences: ALL
+      }
+  ]
+  violationTimeLimitSeconds: 86400
+}

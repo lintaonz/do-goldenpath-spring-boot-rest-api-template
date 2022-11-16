@@ -1,0 +1,52 @@
+apiVersion: twg.co.nz/v1alpha1
+kind: newrelicAlert
+metadata:
+  policies:
+    - name: "{{cookiecutter.prefix|upper}} | {{cookiecutter.artifact_id}} | TEST"
+      incidentPreference: PER_POLICY
+      conditions:
+        - name: Error rate
+          definition: error-rate-condition.gql
+          tags:
+            - key: service
+              value: {{cookiecutter.artifact_id}}
+            - key: environment
+              value: test
+            - key: criticality
+              value: medium
+        - name: Traffic
+          definition: traffic-condition.gql
+          tags:
+            - key: service
+              value: {{cookiecutter.artifact_id}}
+            - key: environment
+              value: test
+            - key: criticality
+              value: medium
+        - name: Latency
+          definition: latency-condition.gql
+          tags:
+            - key: service
+              value: {{cookiecutter.artifact_id}}
+            - key: environment
+              value: test
+            - key: criticality
+              value: medium
+        - name: High CPU Utilization
+          definition: high-cpu-utilization-condition.gql
+          tags:
+            - key: service
+              value: {{cookiecutter.artifact_id}}
+            - key: environment
+              value: test
+            - key: criticality
+              value: medium
+        - name: High Memory Usage
+          definition: high-memory-usage-condition.gql
+          tags:
+            - key: service
+              value: {{cookiecutter.artifact_id}}
+            - key: environment
+              value: test
+            - key: criticality
+              value: medium
