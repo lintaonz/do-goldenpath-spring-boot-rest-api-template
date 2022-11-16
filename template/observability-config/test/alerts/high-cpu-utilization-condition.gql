@@ -1,0 +1,36 @@
+{
+  enabled: true
+  name: "High CPU Utilization"
+  description: "This alert is triggered when the CPU utilization is above 80% for at least 3 minutes."
+  nrql: {
+    query: "FROM Metric SELECT latest(k8s.container.cpuUsedCores)/latest(k8s.container.cpuLimitCores) * 100 as '% CPU' WHERE `label.app.kubernetes.io/name` = 'do-bitbucket-scm-event-api' AND namespaceName = '{{cookiecutter.prefix}}-test' FACET k8s.podName, k8s.containerName"
+  }
+  expiration: null
+  runbookUrl: null
+  signal: {
+    aggregationDelay: 120
+    aggregationMethod: EVENT_FLOW
+    aggregationTimer: null
+    fillValue: null
+    aggregationWindow: 60
+    fillOption: LAST_VALUE
+    slideBy: null
+  }
+  terms: [
+      {
+        operator: ABOVE
+        threshold: 80
+        priority: CRITICAL
+        thresholdDuration: 180
+        thresholdOccurrences: ALL
+      }
+      {
+        operator: ABOVE
+        threshold: 70
+        priority: WARNING
+        thresholdDuration: 120
+        thresholdOccurrences: ALL
+      }
+  ]
+  violationTimeLimitSeconds: 86400
+}

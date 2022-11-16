@@ -18,7 +18,7 @@ pipeline {
 
   environment {
     NEW_RELIC_API_KEY = credentials('NEW_RELIC_API_KEY')
-    NEW_RELIC_TOOLING_DOCKER_IMAGE = 'twgorg/do-newrelic-utils:a8580cadc4245dd5477971a5ba0d71a1e491b8cd'
+    NEW_RELIC_TOOLING_DOCKER_IMAGE = 'twgorg/do-newrelic-utils:149f291afc5dd06a135910d5cfb2a4376aed7368'
   }
 
   stages {
@@ -39,6 +39,9 @@ pipeline {
                 sh "ls -l observability-config/${ENV}/dashboards"
                 echo 'Create / Update Dashboards'
                 sh "/scripts/dashboard.sh ${ENV}"
+                sh "ls -l observability-config/${ENV}/alerts"
+                echo 'Create / Update Alerts'
+                sh "/scripts/alert.sh ${ENV}"
               }
             }
           }
@@ -69,6 +72,9 @@ pipeline {
                 sh "ls -l observability-config/${ENV}/dashboards"
                 echo 'Create / Update Dashboards'
                 sh "/scripts/dashboard.sh ${ENV}"
+                sh "ls -l observability-config/${ENV}/alerts"
+                echo 'Create / Update Alerts'
+                sh "/scripts/alert.sh ${ENV}"
               }
             }
           }
@@ -99,6 +105,9 @@ pipeline {
                 sh "ls -l observability-config/${ENV}/dashboards"
                 echo 'Create / Update Dashboards'
                 sh "/scripts/dashboard.sh ${ENV}"
+                sh "ls -l observability-config/${ENV}/alerts"
+                echo 'Create / Update Alerts'
+                sh "/scripts/alert.sh ${ENV}"
               }
             }
           }
