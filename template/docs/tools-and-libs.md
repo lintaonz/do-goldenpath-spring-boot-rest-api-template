@@ -64,15 +64,3 @@ and
     +-commons-io:commons-io:2.1
 ```
 
-## OWASP Dependency Vulnerability Check
-
-The OWASP Dependency Vulnerability Check is built into the project's build lifecycle.
-One can execute the check by enabling the `dependencyCheck` profile.
-
-```bash
-mvn clean verify -DskipTests -P dependencyCheck
-```
-
-The first execution will take a while, but subsequent runs should be much faster.
-
-The generated report can be found under `target/dependency-check-report.html`.

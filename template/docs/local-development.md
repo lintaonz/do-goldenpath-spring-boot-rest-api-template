@@ -10,7 +10,11 @@ for details.
 
 To build the project you will need to issue the following command;
 
-```
+```bash
+# First build
+mvn clean package -s settings.xml
+
+# Subsequent builds
 mvn clean package
 ```
 
@@ -20,6 +24,19 @@ recognize the generated classes.
 
 This can be done AFTER the import, but will require the maven project be reloaded (the IDE can be smart enough
 to reload itself, but sometimes it requires a manual reload).
+
+The `-s settings.xml` option is required for the first build to allow some TWG specific common libraries in the TWG Nexus
+to be downloaded into the local `.m2` cache. Once they're in the cache, this option can be skipped.
+
+If you have no access to the TWG internal network, you may need to download the missing libraries from Bitbucket and run
+`mvn install` on each of them manually. The projects to download and install are:
+- do-lib-twg-annotation
+- do-lib-twg-common
+- do-lib-twg-jsonschema2pojo
+- do-lib-twg-openapigenerator
+
+For more information about these libraries, please read the [SDEM Encryption & Decryption](sdem-encryption-decryption.md)
+documentation.
 
 ### Generated sources
 
