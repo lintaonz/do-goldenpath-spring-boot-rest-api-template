@@ -50,6 +50,12 @@
         <jkube.skipHealthCheck>true</jkube.skipHealthCheck>
         <!-- this is to ensure template generator script does not override groupId for common libs -->
         <twg.do.groupId>nz.co.twg.do</twg.do.groupId>
+
+        <snyk.plugin.version>2.2.0</snyk.plugin.version>
+        <snyk.skip>false</snyk.skip>
+        <snyk.orgId>{{cookiecutter.snyk_org_id}}</snyk.orgId>
+        <snyk.failOnIssues>false</snyk.failOnIssues>
+        <snyk.skipContainerTest>true</snyk.skipContainerTest>
     </properties>
 
     <build>
@@ -1039,6 +1045,9 @@
                 <jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/app</jkube.targetDir>
                 <jkube.kubernetesManifest>${project.build.outputDirectory}/META-INF/jkube/app/kubernetes.yml</jkube.kubernetesManifest>
                 <jkube.skipHealthCheck>false</jkube.skipHealthCheck>
+
+                <!-- if jkube is activated, obey the snyk.skip property -->
+                <snyk.skipContainerTest>${snyk.skip}</snyk.skipContainerTest>
             </properties>
             <build>
                 <plugins>
@@ -1128,6 +1137,61 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>snyk</id>
+            <activation>
+                <!-- Only activate if SNYK_TOKEN env var is defined -->
+                <property>
+                    <name>env.SNYK_TOKEN</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.snyk</groupId>
+                        <artifactId>snyk-maven-plugin</artifactId>
+                        <version>${snyk.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>snyk-test</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>snyk-code-test</id>
+                                <goals>
+                                    <goal>code-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>snyk-container-test</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>container-test</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- This property can be controlled by the jkube profile! -->
+                                    <skip>${snyk.skipContainerTest}</skip>
+                                    <args>
+                                        <arg>--org=${snyk.orgId}</arg>
+                                        <arg>twgorg/${project.artifactId}:${project.version}</arg>
+                                    </args>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <apiToken>${env.SNYK_TOKEN}</apiToken>
+                            <failOnIssues>${snyk.failOnIssues}</failOnIssues>
+                            <args>
+                                <arg>--org=${snyk.orgId}</arg>
+                            </args>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

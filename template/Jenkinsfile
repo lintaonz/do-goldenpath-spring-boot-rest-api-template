@@ -125,7 +125,7 @@ pipeline {
                             '-v /home/ec2-user/.sonar:/root/.sonar ' +
                             '--network host') {
                             echo "appversion is ${env.GIT_COMMIT}."
-                            sh "KUBECONFIG=/root/.kube/config mvn -U ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,${sonarProfile} -s ./settings.xml"
+                            sh "KUBECONFIG=/root/.kube/config mvn -U -Dsnyk.skip ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,${sonarProfile} -s ./settings.xml"
                         }
 
                         String imageTag = "twgorg/${serviceName}:${env.GIT_COMMIT}"

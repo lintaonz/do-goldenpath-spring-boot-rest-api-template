@@ -22,7 +22,8 @@ If the `jkube` profile is active and the application's docker image is created, 
 goal will be executed to check the container image layers for vulnerabilities.
 
 For the `snyk-maven-plugin` to work properly, please ensure the `SNYK_TOKEN` environment variable contains your Snyk
-token. This can be found under your account settings.
+token. This can be found under your account settings. If `SNYK_TOKEN` is not defined, the maven plugin will stay inactive
+and will not perform any tests.
 
 ![report-dependency](snyk-security/snyk-token.png)
 
