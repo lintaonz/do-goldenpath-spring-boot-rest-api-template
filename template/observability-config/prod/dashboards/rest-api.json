@@ -1,5 +1,5 @@
 {
-  "name": "{{cookiecutter.prefix|upper}} | REST API - {{cookiecutter.artifact_id}} | PROD",
+  "name": "PROD | REST API - {{cookiecutter.artifact_id}} | {{cookiecutter.prefix|upper}}",
   "description": null,
   "permissions": "PUBLIC_READ_ONLY",
   "pages": [

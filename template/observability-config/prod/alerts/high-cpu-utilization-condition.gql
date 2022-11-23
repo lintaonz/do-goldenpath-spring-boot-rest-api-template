@@ -1,7 +1,7 @@
 {
   enabled: true
-  name: "High CPU Utilization"
-  description: "This alert is triggered when the CPU utilization is above 80% for at least 3 minutes."
+  name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check CPU Utilization >70% for 2m"
+  description: "This alert is triggered when the CPU utilization is above 70% for at least 2 minutes."
   nrql: {
     query: "FROM Metric SELECT latest(k8s.container.cpuUsedCores)/latest(k8s.container.cpuLimitCores) * 100 as '% CPU' WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-prod' FACET k8s.podName, k8s.containerName"
   }

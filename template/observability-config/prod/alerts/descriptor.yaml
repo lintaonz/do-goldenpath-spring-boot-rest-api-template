@@ -2,10 +2,10 @@ apiVersion: twg.co.nz/v1alpha1
 kind: newrelicAlert
 metadata:
   policies:
-    - name: "{{cookiecutter.prefix|upper}} | {{cookiecutter.artifact_id}} | PROD"
+    - name: "INFO | PROD | {{cookiecutter.artifact_id}} | {{cookiecutter.prefix|upper}}"
       incidentPreference: PER_POLICY
       conditions:
-        - name: Error rate
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Error Request Count >10 for 1m"
           definition: error-rate-condition.gql
           tags:
             - key: service
@@ -14,7 +14,7 @@ metadata:
               value: prod
             - key: criticality
               value: medium
-        - name: Traffic
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Request Count >20 for 2m"
           definition: traffic-condition.gql
           tags:
             - key: service
@@ -23,7 +23,7 @@ metadata:
               value: prod
             - key: criticality
               value: medium
-        - name: Latency
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Request Latency >1s for 2m"
           definition: latency-condition.gql
           tags:
             - key: service
@@ -32,7 +32,7 @@ metadata:
               value: prod
             - key: criticality
               value: medium
-        - name: High CPU Utilization
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check CPU Utilization >70% for 2m"
           definition: high-cpu-utilization-condition.gql
           tags:
             - key: service
@@ -41,7 +41,7 @@ metadata:
               value: prod
             - key: criticality
               value: medium
-        - name: High Memory Usage
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Memory Usage >70% for 1m"
           definition: high-memory-usage-condition.gql
           tags:
             - key: service
