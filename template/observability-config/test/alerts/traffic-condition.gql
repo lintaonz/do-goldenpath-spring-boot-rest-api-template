@@ -1,7 +1,7 @@
 {
   enabled: true
-  name: "Traffic"
-  description: null
+  name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Request Count >20 for 2m"
+  description: "The total number of requests your application received at this endpoint is above 20 for at least 2 minutes."
   nrql: {
     query: "SELECT sum(http_server_requests_seconds_count) FROM Metric WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-test' FACET uri, method"
   }

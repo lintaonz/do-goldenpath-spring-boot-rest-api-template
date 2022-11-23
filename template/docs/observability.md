@@ -57,11 +57,11 @@ kind: newrelicAlert
 metadata:
   policies:
     # The policy name
-    - name: "{{cookiecutter.prefix|upper}} | {{cookiecutter.artifact_id}} | PROD"
+    - name: "INFO | PROD | {{cookiecutter.artifact_id}} | {{cookiecutter.prefix|upper}}"
       incidentPreference: PER_POLICY
       conditions:
         # The condition name
-        - name: Error rate
+        - name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Error Request Count >10 for 1m"
           # The condition NerdGraph (GraphQL) code file
           definition: error-rate-condition.gql
           # The condition tags

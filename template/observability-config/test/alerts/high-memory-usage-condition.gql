@@ -1,7 +1,7 @@
 {
   enabled: true
-  name: "High Memory Usage"
-  description: "This alert is triggered when the Memory Usage is above 55%."
+  name: "P5 | Kubernetes | {{cookiecutter.artifact_id}} | Check Memory Usage >70% for 1m"
+  description: "This alert is triggered when the Memory Usage is above 70%."
   nrql: {
     query: "FROM Metric SELECT latest(k8s.container.memoryWorkingSetUtilization) AS Memory WHERE `label.app.kubernetes.io/name` = '{{cookiecutter.artifact_id}}' AND namespaceName = '{{cookiecutter.prefix}}-test' FACET k8s.podName, k8s.containerName"
   }
