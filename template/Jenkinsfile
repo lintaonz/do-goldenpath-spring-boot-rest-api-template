@@ -36,6 +36,8 @@ def snykGroupId = 'e5cbe235-3135-4861-aa56-a9836b51511a'
 def snykOrgName = '{{cookiecutter.prefix}}'
 def snykFailOnActionNeeded = false
 
+def mavenLocalRepoOpts = '-Dmaven.repo.local=/home/ec2-user/m2cache/repository'
+
 pipeline {
 
     tools {
@@ -75,7 +77,7 @@ pipeline {
 
                         snykTool(
                             'test',
-                            "--org=${snykOrgSlug}",
+                            "--org=${snykOrgSlug}  -- ${mavenLocalRepoOpts} -s ./settings.xml",
                             null, // context specific options
                             SnykConstants.OUTPUT_FILE,
                             snykFailOnActionNeeded)
@@ -118,15 +120,10 @@ pipeline {
                     }
 
                     withDockerRegistry([credentialsId: dockerRegistryCredId, url: '']) {
-                        docker.image('maven:3.8-openjdk-11').inside(
-                            '-v /var/run/docker.sock:/var/run/docker.sock ' +
-                            '-v /home/ec2-user/m2cache:/root/.m2 ' +
-                            '-v /home/ec2-user/.kube:/root/.kube ' +
-                            '-v /home/ec2-user/.sonar:/root/.sonar ' +
-                            '--network host') {
-                            echo "appversion is ${env.GIT_COMMIT}."
-                            sh "KUBECONFIG=/root/.kube/config mvn -U -Dsnyk.skip ${sonarOpts} -Drevision=${env.GIT_COMMIT} clean verify -P jkube,${sonarProfile} -s ./settings.xml"
-                        }
+                        echo "appversion is ${env.GIT_COMMIT}."
+                        sh """KUBECONFIG=/home/ec2-user/.kube/config ./mvnw \
+                            -U ${mavenLocalRepoOpts} -Dsnyk.skip ${sonarOpts} -Drevision=${env.GIT_COMMIT} \
+                            clean verify -Pjkube,${sonarProfile} -s ./settings.xml"""
 
                         String imageTag = "twgorg/${serviceName}:${env.GIT_COMMIT}"
 
