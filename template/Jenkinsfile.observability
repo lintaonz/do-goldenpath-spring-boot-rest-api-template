@@ -18,7 +18,7 @@ pipeline {
 
   environment {
     NEW_RELIC_API_KEY = credentials('NEW_RELIC_API_KEY')
-    NEW_RELIC_TOOLING_DOCKER_IMAGE = 'twgorg/do-newrelic-utils:149f291afc5dd06a135910d5cfb2a4376aed7368'
+    NEW_RELIC_TOOLING_DOCKER_IMAGE = 'twgorg/do-newrelic-utils:95e7e9ee2752c051e9b23141945a10d9a9f5c872'
   }
 
   stages {
