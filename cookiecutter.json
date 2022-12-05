@@ -7,5 +7,7 @@
     "owner": "{{ cookiecutter.project|lower }}-team",
     "artifact_id": "{{cookiecutter.component_id}}",
     "java_package_name": "{{cookiecutter.component_id|replace('-', '')}}",
-    "http_port": 8080
+    "http_port": 8080,
+    "snyk_org_id": "do-goldenpath-spring-boot-kafka-kstream",
+    "created_by": "scaffolding@thewarehouse.co.nz"    
 }
